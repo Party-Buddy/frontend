@@ -22,7 +22,12 @@ class _GameListState extends State<GameList> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      OptionSwitcher<GameType>(options: GameType.values, onTap: (t) => setState(() => gameType = t), initialOption: gameType),
+      OptionSwitcher<GameType>(
+        options: GameType.values, 
+        onTap: (t) => setState(() => gameType = t), 
+        initialOption: gameType,
+        stringMapper: (t) => t == GameType.owned ? "Ваши" : "Публичные",
+      ),
     ]);
   }
 }
