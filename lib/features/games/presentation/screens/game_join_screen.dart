@@ -45,7 +45,7 @@ class _GameJoinScreenState extends State<GameJoinScreen>
         ),
         body: Container(
           width: double.infinity,
-          decoration: const BoxDecoration(gradient: kBackgroundGradient),
+          decoration: BoxDecoration(gradient: kBackgroundGradient),
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
             Stack(
               alignment: Alignment.center,
@@ -55,7 +55,7 @@ class _GameJoinScreenState extends State<GameJoinScreen>
                   height: 200,
                   width: 200,
                   decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 229, 123, 255),
+                      color: kPrimaryColor,
                       borderRadius: BorderRadius.all(Radius.circular(20.0))),
                 ),
                 Lottie.network(

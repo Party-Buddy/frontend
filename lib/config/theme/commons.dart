@@ -6,12 +6,12 @@ ThemeData theme() {
       fontFamily: 'Muli',
       appBarTheme: appBarTheme(),
       textSelectionTheme: const TextSelectionThemeData(
-          selectionColor: Color.fromARGB(255, 197, 18, 228)));
+          selectionColor: kPrimaryColor));
 }
 
 AppBarTheme appBarTheme() {
-  return const AppBarTheme(
-    color: Color.fromARGB(255, 94, 0, 128),
+  return AppBarTheme(
+    color: kAppBarColor,
     elevation: 7,
     centerTitle: true,
     shape: RoundedRectangleBorder(
@@ -23,7 +23,9 @@ AppBarTheme appBarTheme() {
   );
 }
 
-Widget backButton(BuildContext context) {
+DecorationImage standardDecorationImage({BoxFit fit = BoxFit.cover}) => DecorationImage(image: const AssetImage("assets/images/background.jpg"), fit: fit);
+
+IconButton backButton(BuildContext context) {
   return IconButton(
       onPressed: () => Navigator.pop(context),
       icon: const Icon(Icons.arrow_back_ios_new, size: 20, color: kFontColor));
@@ -41,9 +43,9 @@ InputDecoration inputDecoration({String? labelText, Color? borderColor}) {
       border: OutlineInputBorder(
           borderRadius: kBorderRadius,
           borderSide: BorderSide(color: borderColor ?? kBorderColor)),
-      focusedBorder: const OutlineInputBorder(
+      focusedBorder: OutlineInputBorder(
           borderRadius: kBorderRadius,
-          borderSide: BorderSide(color: Color.fromARGB(255, 255, 191, 237))));
+          borderSide: BorderSide(color: lighten(kPrimaryColor, .2))));
 }
 
 Border border() => Border.all(color: kBorderColor, width: 1);

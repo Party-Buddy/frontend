@@ -10,7 +10,7 @@ class AppRoutes {
         return _materialRoute(const MainMenuScreen());
 
       case '/CreateGame':
-        return _materialRoute(const GameCreateScreen());
+        return _materialRoute(const GameStartScreen());
 
       case '/JoinGame':
         return _materialRoute(const GameJoinScreen());

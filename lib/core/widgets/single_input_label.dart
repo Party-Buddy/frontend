@@ -32,6 +32,7 @@ class _SingleLineInputLabelState extends State<SingleLineInputLabel> {
     return TextField(
       controller: controller,
       onSubmitted: (s) => setState(() {
+        s = s.trim();
         initialText = s;
         submitResult = widget.onSubmitted(s);
       }),

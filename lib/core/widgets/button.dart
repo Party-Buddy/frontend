@@ -24,11 +24,11 @@ class _CustomButtonState extends State<CustomButton> {
             borderRadius: kBorderRadius,
           )),
           animationDuration: kAnimationDuration,
-          side: MaterialStateProperty.all(const BorderSide(
+          side: MaterialStateProperty.all(BorderSide(
               color: kBorderColor, width: 1.0, style: BorderStyle.solid)),
           textStyle: const MaterialStatePropertyAll(
               TextStyle(fontSize: 18, fontFamily: kFontFamily)),
-          overlayColor: MaterialStatePropertyAll(kFillColor),
+          overlayColor: MaterialStatePropertyAll(kFillColor.withOpacity(.8)),
           backgroundColor: const MaterialStatePropertyAll(Colors.transparent),
           foregroundColor: const MaterialStatePropertyAll(kFontColor)),
       onPressed: widget.onPressed,

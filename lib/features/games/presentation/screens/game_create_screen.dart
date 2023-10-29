@@ -9,14 +9,14 @@ import 'package:party_games_app/features/games/presentation/widgets/game_header.
 import 'package:party_games_app/core/widgets/single_input_label.dart';
 import 'package:party_games_app/config/theme/commons.dart';
 
-class GameCreateScreen extends StatefulWidget {
-  const GameCreateScreen({super.key});
+class GameStartScreen extends StatefulWidget {
+  const GameStartScreen({super.key});
 
   @override
-  State<GameCreateScreen> createState() => _GameCreateScreenState();
+  State<GameStartScreen> createState() => _GameStartScreenState();
 }
 
-class _GameCreateScreenState extends State<GameCreateScreen> {
+class _GameStartScreenState extends State<GameStartScreen> {
   final playersCount = ValueNotifier(2);
 
   @override
@@ -29,7 +29,7 @@ class _GameCreateScreenState extends State<GameCreateScreen> {
         ),
         body: Container(
           width: double.infinity,
-          decoration: const BoxDecoration(gradient: kBackgroundGradient),
+          decoration:  BoxDecoration(gradient: kBackgroundGradient),
           padding: const EdgeInsets.all(20.0),
           alignment: Alignment.center,
           child: Column(
@@ -60,10 +60,10 @@ class _GameCreateScreenState extends State<GameCreateScreen> {
                         decoration: BoxDecoration(
                             borderRadius: kBorderRadius, border: border()),
                         padding: const EdgeInsets.all(12),
-                        child: const Icon(
+                        child: Icon(
                           Icons.person_2,
                           size: 30,
-                          color: Color.fromARGB(255, 230, 40, 255),
+                          color: kBorderColor,
                         ),
                       )
                     ],
@@ -97,11 +97,11 @@ class _GameCreateScreenState extends State<GameCreateScreen> {
                                   ),
                                   Slider(
                                       activeColor:
-                                          Color.fromARGB(255, 185, 3, 172),
+                                          kPrimaryColor.withOpacity(.8),
                                       thumbColor:
-                                          Color.fromARGB(255, 208, 0, 194),
+                                          kPrimaryColor,
                                       inactiveColor:
-                                          Color.fromARGB(255, 72, 48, 86),
+                                          kPrimaryColor.withOpacity(.3),
                                       value: value.toDouble(),
                                       min: 2,
                                       max: 12,

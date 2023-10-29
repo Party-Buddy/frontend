@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/button.dart';
 
@@ -17,7 +18,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
         backgroundColor: kBackgorundColor,
         body: Container(
           width: double.infinity,
-          decoration: const BoxDecoration(gradient: kBackgroundGradient),
+          decoration: BoxDecoration(gradient: kBackgroundGradient),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -29,9 +30,13 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                   ),
                 ),
                 Expanded(
+                  // child: Container(
+                  //   alignment: Alignment.topCenter,
+                  //   child: SizedBox(width: 250, child: Image.asset("assets/images/logo.png")),
+                  // ),
                   child: Lottie.network(
                     // dancing haires
-                    'https://lottie.host/f273e7ef-deaa-4928-bb62-d745829aa6d1/BtzodHU8c2.json',
+                    'https://lottie.host/f273e7ef-deaa-4928-bb62-d745829aa6d1/BtzodHU8c2.json'
                   ),
                 ),
                 Expanded(

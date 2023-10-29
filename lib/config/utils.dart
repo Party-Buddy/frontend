@@ -16,7 +16,7 @@ void showMessage(BuildContext context, message) {
                           fontFamily: kFontFamily,
                           fontSize: 18)),
                   padding: 15.0,
-                  fillColor: Color.fromARGB(202, 35, 0, 48))
+                  fillColor: darken(kPrimaryColor, .6))
             ]),
           ));
 }
