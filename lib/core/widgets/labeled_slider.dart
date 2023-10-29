@@ -30,7 +30,7 @@ class _LabeledSliderState extends State<LabeledSlider> {
       children: [
         BorderWrapper(
           child: Text(widget.displayValue(currValue),
-              style: standardTextStyle(),)),
+              style: defaultTextStyle(),)),
         const SizedBox(height: kPadding,),
         Slider(
           activeColor: kPrimaryColor.withOpacity(.8),

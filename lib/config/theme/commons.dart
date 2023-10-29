@@ -52,7 +52,7 @@ InputDecoration inputDecoration({String? labelText, Color? borderColor}) {
 
 Border border() => Border.all(color: kBorderColor, width: 1);
 
-TextStyle standardTextStyle({double fontSize = 18}) {
+TextStyle defaultTextStyle({double fontSize = 18}) {
   return TextStyle(
       fontFamily: kFontFamily, fontSize: fontSize, color: kFontColor);
 }

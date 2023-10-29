@@ -67,6 +67,9 @@ dependencies:
   # Flutter toast messages
   fluttertoast: ^8.0.7
 
+  # Flutter switch
+  toggle_switch: ^2.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -4,6 +4,7 @@ import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
 import 'package:party_games_app/core/widgets/labeled_slider.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
+import 'package:party_games_app/features/games/presentation/widgets/game_list.dart';
 import 'package:party_games_app/features/players/domain/usecases/select_nickname.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 import 'package:party_games_app/core/widgets/button.dart';
@@ -72,7 +73,7 @@ class _GameStartScreenState extends State<GameStartScreen> {
                     height: kPadding * 2,
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: () => showWidget(context, GameList(onTapOnGame: (_) {})),
                     child: GameHeader(
                         game: Game(
                             name: "Minecraft",
