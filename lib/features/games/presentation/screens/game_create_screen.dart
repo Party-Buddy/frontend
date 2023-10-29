@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:party_games_app/config/utils.dart';
 import 'package:party_games_app/config/view_config.dart';
+import 'package:party_games_app/core/widgets/border_wrapper.dart';
+import 'package:party_games_app/core/widgets/labeled_slider.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/players/domain/usecases/select_nickname.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
@@ -83,33 +85,7 @@ class _GameStartScreenState extends State<GameStartScreen> {
                   const SizedBox(
                     height: kPadding * 2,
                   ),
-                  borderWrapper(
-                      ValueListenableBuilder(
-                          valueListenable: playersCount,
-                          builder: (context, value, child) => Column(
-                                children: [
-                                  borderWrapper(Text(
-                                    "Количество игроков: ${playersCount.value}",
-                                    style: standardTextStyle(),
-                                  )),
-                                  const SizedBox(
-                                    height: kPadding,
-                                  ),
-                                  Slider(
-                                      activeColor:
-                                          kPrimaryColor.withOpacity(.8),
-                                      thumbColor:
-                                          kPrimaryColor,
-                                      inactiveColor:
-                                          kPrimaryColor.withOpacity(.3),
-                                      value: value.toDouble(),
-                                      min: 2,
-                                      max: 12,
-                                      onChanged: (newVal) =>
-                                          playersCount.value = newVal.round())
-                                ],
-                              )),
-                      padding: kPadding)
+                  BorderWrapper(child: LabeledSlider(min: 2, max: 12, initial: 2, onChanged: (_) {}, displayValue: (playersCount) => "Количество игроков: $playersCount")),
                 ],
               ),
               Column(

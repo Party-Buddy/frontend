@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/view_config.dart';
+import 'package:party_games_app/core/widgets/border_wrapper.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 
 class GameHeader extends StatelessWidget {
@@ -21,7 +22,8 @@ class GameHeader extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                borderWrapper(Text(
+                BorderWrapper(
+                    child: Text(
                   game.name,
                   style: const TextStyle(
                       fontFamily: kFontFamily, fontSize: 18, color: kFontColor),
@@ -29,7 +31,8 @@ class GameHeader extends StatelessWidget {
                 const SizedBox(
                   height: kPadding,
                 ),
-                borderWrapper(Text(
+                BorderWrapper(
+                    child: Text(
                   getTasksCountLabel(),
                   style: const TextStyle(
                       fontFamily: kFontFamily, fontSize: 16, color: kFontColor),

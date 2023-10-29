@@ -5,8 +5,8 @@ ThemeData theme() {
   return ThemeData(
       fontFamily: 'Muli',
       appBarTheme: appBarTheme(),
-      textSelectionTheme: const TextSelectionThemeData(
-          selectionColor: kPrimaryColor));
+      textSelectionTheme:
+          const TextSelectionThemeData(selectionColor: kPrimaryColor));
 }
 
 AppBarTheme appBarTheme() {
@@ -14,16 +14,18 @@ AppBarTheme appBarTheme() {
     color: kAppBarColor,
     elevation: 7,
     centerTitle: true,
-    shape: RoundedRectangleBorder(
+    shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
             bottomRight: Radius.circular(20), bottomLeft: Radius.circular(20))),
-    iconTheme: IconThemeData(color: kFontColor),
-    titleTextStyle:
-        TextStyle(color: kFontColor, fontSize: 20, fontFamily: kFontFamily),
+    iconTheme: const IconThemeData(color: kFontColor),
+    titleTextStyle: const TextStyle(
+        color: kFontColor, fontSize: 20, fontFamily: kFontFamily),
   );
 }
 
-DecorationImage standardDecorationImage({BoxFit fit = BoxFit.cover}) => DecorationImage(image: const AssetImage("assets/images/background.jpg"), fit: fit);
+DecorationImage standardDecorationImage({BoxFit fit = BoxFit.cover}) =>
+    DecorationImage(
+        image: const AssetImage("assets/images/background.jpg"), fit: fit);
 
 IconButton backButton(BuildContext context) {
   return IconButton(
@@ -49,15 +51,6 @@ InputDecoration inputDecoration({String? labelText, Color? borderColor}) {
 }
 
 Border border() => Border.all(color: kBorderColor, width: 1);
-
-Widget borderWrapper(Widget child, {double padding = 10.0, Color? fillColor}) {
-  return Container(
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          borderRadius: kBorderRadius, color: fillColor, border: border()),
-      padding: EdgeInsets.all(padding),
-      child: child);
-}
 
 TextStyle standardTextStyle({double fontSize = 18}) {
   return TextStyle(

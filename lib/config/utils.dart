@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'theme/commons.dart';
+import 'package:party_games_app/core/widgets/border_wrapper.dart';
 import 'view_config.dart';
 
 void showMessage(BuildContext context, message) {
@@ -9,14 +9,15 @@ void showMessage(BuildContext context, message) {
             backgroundColor: Colors.transparent,
             alignment: Alignment.center,
             content: Column(mainAxisSize: MainAxisSize.min, children: [
-              borderWrapper(
-                  Text(message,
-                      style: const TextStyle(
-                          color: kFontColor,
-                          fontFamily: kFontFamily,
-                          fontSize: 18)),
-                  padding: 15.0,
-                  fillColor: darken(kPrimaryColor, .6))
+              BorderWrapper(
+                padding: 15.0,
+                fillColor: darken(kPrimaryColor, .6),
+                child: Text(message,
+                    style: const TextStyle(
+                        color: kFontColor,
+                        fontFamily: kFontFamily,
+                        fontSize: 18)),
+              )
             ]),
           ));
 }

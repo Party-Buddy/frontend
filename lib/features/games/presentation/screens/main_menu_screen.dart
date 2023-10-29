@@ -35,9 +35,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                   //   child: SizedBox(width: 250, child: Image.asset("assets/images/logo.png")),
                   // ),
                   child: Lottie.network(
-                    // dancing haires
-                    'https://lottie.host/f273e7ef-deaa-4928-bb62-d745829aa6d1/BtzodHU8c2.json'
-                  ),
+                      // dancing haires
+                      'https://lottie.host/f273e7ef-deaa-4928-bb62-d745829aa6d1/BtzodHU8c2.json'),
                 ),
                 Expanded(
                   child: Column(children: [
