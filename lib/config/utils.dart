@@ -31,7 +31,7 @@ void showWidget(BuildContext context, Widget widget) {
             contentPadding: const EdgeInsets.all(0),
             content: Column(mainAxisSize: MainAxisSize.min, children: [
               BorderWrapper(
-                padding: 15.0,
+                // padding: 15.0,
                 fillColor: darken(kPrimaryColor, .6),
                 child: widget,
               )
