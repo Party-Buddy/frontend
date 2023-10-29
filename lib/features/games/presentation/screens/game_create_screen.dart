@@ -19,8 +19,6 @@ class GameStartScreen extends StatefulWidget {
 }
 
 class _GameStartScreenState extends State<GameStartScreen> {
-  final playersCount = ValueNotifier(2);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,8 +29,8 @@ class _GameStartScreenState extends State<GameStartScreen> {
         ),
         body: Container(
           width: double.infinity,
-          decoration:  BoxDecoration(gradient: kBackgroundGradient),
-          padding: const EdgeInsets.all(20.0),
+          decoration: BoxDecoration(gradient: kBackgroundGradient),
+          padding: const EdgeInsets.all(kPadding * 2),
           alignment: Alignment.center,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -85,7 +83,14 @@ class _GameStartScreenState extends State<GameStartScreen> {
                   const SizedBox(
                     height: kPadding * 2,
                   ),
-                  BorderWrapper(child: LabeledSlider(min: 2, max: 12, initial: 2, onChanged: (_) {}, displayValue: (playersCount) => "Количество игроков: $playersCount")),
+                  BorderWrapper(
+                      child: LabeledSlider(
+                          min: minPlayersCount,
+                          max: maxPlayersCount,
+                          initial: minPlayersCount,
+                          onChanged: (_) {},
+                          displayValue: (playersCount) =>
+                              "Количество игроков: $playersCount")),
                 ],
               ),
               Column(
