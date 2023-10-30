@@ -7,6 +7,7 @@ class Game {
   String name;
   String? photoUrl;
   List<Task> tasks;
+  int lastModifiedTime;
 
-  Game({required this.name, this.photoUrl, required this.tasks});
+  Game({required this.name, this.photoUrl, required this.tasks, required this.lastModifiedTime});
 }
