@@ -6,6 +6,7 @@ import 'package:party_games_app/core/widgets/labeled_slider.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/games/presentation/widgets/game_list.dart';
 import 'package:party_games_app/features/players/domain/usecases/select_nickname.dart';
+import 'package:party_games_app/features/tasks/domain/entities/checked_text_task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 import 'package:party_games_app/core/widgets/button.dart';
 import 'package:party_games_app/features/games/presentation/widgets/game_header.dart';
@@ -76,10 +77,14 @@ class _GameStartScreenState extends State<GameStartScreen> {
                     onTap: () => showWidget(context, GameList(onTapOnGame: (_) {})),
                     child: GameHeader(
                         game: Game(
-                            name: "Minecraft",
-                            photoUrl:
-                                "https://cdn.iconscout.com/icon/free/png-256/free-minecraft-15-282774.png",
-                            tasks: [Task(), Task()])),
+                          name: "Minecraft",
+                          imageId: "https://cdn.iconscout.com/icon/free/png-256/free-minecraft-15-282774.png",
+                          tasks: [const CheckedTextTask(
+                            name:"Basics1",
+                            description: "what is the max stack size for swords?",
+                            duration: 10,
+                            answer: "1"),],
+                            lastModifiedTime: DateTime.now().millisecondsSinceEpoch)),
                   ),
                   const SizedBox(
                     height: kPadding * 2,

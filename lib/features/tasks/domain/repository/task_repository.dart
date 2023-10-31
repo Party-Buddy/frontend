@@ -4,11 +4,11 @@ import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 abstract class TaskRepository {
 
   // API
-  Future<List<Task>> getPublishedTasks();
+  Future<DataState<List<Task>>> getPublishedTasks();
 
 
   // Database
-  Future<DataState<List<Task>>> getLocalTasks();
+  Future<List<Task>> getLocalTasks();
 
   Future<void> saveTask(Task task);
 

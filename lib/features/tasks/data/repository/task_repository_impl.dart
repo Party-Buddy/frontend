@@ -11,13 +11,13 @@ class TaskRepositoryImpl implements TaskRepository {
   TaskRepositoryImpl(this._tasksGenerator);
   
   @override
-  Future<DataState<List<TaskModel>>> getLocalTasks() async {
-    return DataSuccess(_tasksGenerator.generateTasks()); 
+  Future<List<TaskModel>> getLocalTasks() async {
+    return _tasksGenerator.generateTasks(); 
   }
 
   @override
-  Future<List<Task>> getPublishedTasks() async {
-    return _tasksGenerator.generateTasks(); 
+  Future<DataState<List<Task>>> getPublishedTasks() async {
+    return DataSuccess(_tasksGenerator.generateTasks()); 
   }
 
   @override
