@@ -14,7 +14,19 @@ class GameRepositoryImpl implements GameRepository {
   
   @override
   Future<List<Game>> getLocalGames() async {
-    return _database.gameDao.getAllGames(); 
+    return _database.gameDao.getAllGames()
+    .then((rows) => rows.map(
+      (row) {
+        return Game(
+          id: row.id,
+          name: row.name,
+          description: row.description,
+          tasks: [], // TODO
+          createdAt: row.createdAt,
+          updatedAt: row.updatedAt);
+      })
+      .toList()
+      ); 
   }
 
   @override

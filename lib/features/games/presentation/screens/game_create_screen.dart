@@ -86,7 +86,7 @@ class _GameStartScreenState extends State<GameStartScreen> {
                             description: "what is the max stack size for swords?",
                             duration: 10,
                             answer: "1"),],
-                            lastModifiedTime: DateTime.now().millisecondsSinceEpoch)),
+                            updatedAt: DateTime.now())),
                   ),
                   const SizedBox(
                     height: kPadding * 2,

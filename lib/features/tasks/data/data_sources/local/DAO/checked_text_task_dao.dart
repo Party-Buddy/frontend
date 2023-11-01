@@ -21,7 +21,8 @@ class CheckedTextTaskDao extends DatabaseAccessor<AppDatabase> with _$CheckedTex
     .then((rows) => rows.map(
       (row) {
         return CheckedTextTaskModel(baseTask: row.readTable(baseTasks), checkedTextTask: row.readTable(checkedTextTasks));
-      }).toList()
+      })
+      .toList()
       );
   }
 

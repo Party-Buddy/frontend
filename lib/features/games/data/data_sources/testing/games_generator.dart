@@ -15,7 +15,7 @@ class GamesGenerator {
           description: "what is the max stack size for wood?",
           duration: 10,
           answer: "64"),],
-        lastModifiedTime: DateTime.now().millisecondsSinceEpoch),
+        updatedAt: DateTime.now()),
       Game(
         id: 0,
         name: "Terraria",
@@ -26,7 +26,7 @@ class GamesGenerator {
           description: "what is the best melee weapon?",
           duration: 15,
           answer: "zenith"),],
-        lastModifiedTime: DateTime.now().millisecondsSinceEpoch)
+        updatedAt: DateTime.now())
       ];
   }
 
@@ -42,7 +42,7 @@ class GamesGenerator {
           description: "what is the max stack size for swords?",
           duration: 10,
           answer: "1"),],
-        lastModifiedTime: DateTime.now().millisecondsSinceEpoch),
+        updatedAt: DateTime.now()),
       Game(
         id:18020,
         name: "CS:GO",
@@ -53,7 +53,7 @@ class GamesGenerator {
           description: "Draw a fork skin",
           duration: 150,
           pollAnswerType: PollTaskAnswerType.image),],
-        lastModifiedTime: DateTime.now().millisecondsSinceEpoch)
+        updatedAt: DateTime.now())
       ];
   }
 

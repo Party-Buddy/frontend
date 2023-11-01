@@ -876,7 +876,9 @@ class $CheckedTextTasksTable extends CheckedTextTasks
   @override
   late final GeneratedColumn<int?> baseTaskId = GeneratedColumn<int?>(
       'base_task_id', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: false);
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'REFERENCES base_tasks (id) ON DELETE CASCADE');
   final VerificationMeta _answerMeta = const VerificationMeta('answer');
   @override
   late final GeneratedColumn<String?> answer = GeneratedColumn<String?>(
@@ -922,12 +924,227 @@ class $CheckedTextTasksTable extends CheckedTextTasks
   }
 }
 
+class TaskBinding extends DataClass implements Insertable<TaskBinding> {
+  final int id;
+  final int baseTaskId;
+  final int gameId;
+  TaskBinding(
+      {required this.id, required this.baseTaskId, required this.gameId});
+  factory TaskBinding.fromData(Map<String, dynamic> data, GeneratedDatabase db,
+      {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return TaskBinding(
+      id: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      baseTaskId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}base_task_id'])!,
+      gameId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}game_id'])!,
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['base_task_id'] = Variable<int>(baseTaskId);
+    map['game_id'] = Variable<int>(gameId);
+    return map;
+  }
+
+  TaskBindingsCompanion toCompanion(bool nullToAbsent) {
+    return TaskBindingsCompanion(
+      id: Value(id),
+      baseTaskId: Value(baseTaskId),
+      gameId: Value(gameId),
+    );
+  }
+
+  factory TaskBinding.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return TaskBinding(
+      id: serializer.fromJson<int>(json['id']),
+      baseTaskId: serializer.fromJson<int>(json['baseTaskId']),
+      gameId: serializer.fromJson<int>(json['gameId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'baseTaskId': serializer.toJson<int>(baseTaskId),
+      'gameId': serializer.toJson<int>(gameId),
+    };
+  }
+
+  TaskBinding copyWith({int? id, int? baseTaskId, int? gameId}) => TaskBinding(
+        id: id ?? this.id,
+        baseTaskId: baseTaskId ?? this.baseTaskId,
+        gameId: gameId ?? this.gameId,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('TaskBinding(')
+          ..write('id: $id, ')
+          ..write('baseTaskId: $baseTaskId, ')
+          ..write('gameId: $gameId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, baseTaskId, gameId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TaskBinding &&
+          other.id == this.id &&
+          other.baseTaskId == this.baseTaskId &&
+          other.gameId == this.gameId);
+}
+
+class TaskBindingsCompanion extends UpdateCompanion<TaskBinding> {
+  final Value<int> id;
+  final Value<int> baseTaskId;
+  final Value<int> gameId;
+  const TaskBindingsCompanion({
+    this.id = const Value.absent(),
+    this.baseTaskId = const Value.absent(),
+    this.gameId = const Value.absent(),
+  });
+  TaskBindingsCompanion.insert({
+    this.id = const Value.absent(),
+    required int baseTaskId,
+    required int gameId,
+  })  : baseTaskId = Value(baseTaskId),
+        gameId = Value(gameId);
+  static Insertable<TaskBinding> custom({
+    Expression<int>? id,
+    Expression<int>? baseTaskId,
+    Expression<int>? gameId,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (baseTaskId != null) 'base_task_id': baseTaskId,
+      if (gameId != null) 'game_id': gameId,
+    });
+  }
+
+  TaskBindingsCompanion copyWith(
+      {Value<int>? id, Value<int>? baseTaskId, Value<int>? gameId}) {
+    return TaskBindingsCompanion(
+      id: id ?? this.id,
+      baseTaskId: baseTaskId ?? this.baseTaskId,
+      gameId: gameId ?? this.gameId,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (baseTaskId.present) {
+      map['base_task_id'] = Variable<int>(baseTaskId.value);
+    }
+    if (gameId.present) {
+      map['game_id'] = Variable<int>(gameId.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TaskBindingsCompanion(')
+          ..write('id: $id, ')
+          ..write('baseTaskId: $baseTaskId, ')
+          ..write('gameId: $gameId')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TaskBindingsTable extends TaskBindings
+    with TableInfo<$TaskBindingsTable, TaskBinding> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TaskBindingsTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+      'id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  final VerificationMeta _baseTaskIdMeta = const VerificationMeta('baseTaskId');
+  @override
+  late final GeneratedColumn<int?> baseTaskId = GeneratedColumn<int?>(
+      'base_task_id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'REFERENCES base_tasks (id) ON DELETE RESTRICT');
+  final VerificationMeta _gameIdMeta = const VerificationMeta('gameId');
+  @override
+  late final GeneratedColumn<int?> gameId = GeneratedColumn<int?>(
+      'game_id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'REFERENCES local_games (id) ON DELETE CASCADE');
+  @override
+  List<GeneratedColumn> get $columns => [id, baseTaskId, gameId];
+  @override
+  String get aliasedName => _alias ?? 'task_bindings';
+  @override
+  String get actualTableName => 'task_bindings';
+  @override
+  VerificationContext validateIntegrity(Insertable<TaskBinding> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('base_task_id')) {
+      context.handle(
+          _baseTaskIdMeta,
+          baseTaskId.isAcceptableOrUnknown(
+              data['base_task_id']!, _baseTaskIdMeta));
+    } else if (isInserting) {
+      context.missing(_baseTaskIdMeta);
+    }
+    if (data.containsKey('game_id')) {
+      context.handle(_gameIdMeta,
+          gameId.isAcceptableOrUnknown(data['game_id']!, _gameIdMeta));
+    } else if (isInserting) {
+      context.missing(_gameIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TaskBinding map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return TaskBinding.fromData(data, attachedDatabase,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $TaskBindingsTable createAlias(String alias) {
+    return $TaskBindingsTable(attachedDatabase, alias);
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   late final $LocalGamesTable localGames = $LocalGamesTable(this);
   late final $BaseTasksTable baseTasks = $BaseTasksTable(this);
   late final $CheckedTextTasksTable checkedTextTasks =
       $CheckedTextTasksTable(this);
+  late final $TaskBindingsTable taskBindings = $TaskBindingsTable(this);
   late final GameDao gameDao = GameDao(this as AppDatabase);
   late final CheckedTextTaskDao checkedTextTaskDao =
       CheckedTextTaskDao(this as AppDatabase);
@@ -935,5 +1152,5 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [localGames, baseTasks, checkedTextTasks];
+      [localGames, baseTasks, checkedTextTasks, taskBindings];
 }

@@ -57,7 +57,7 @@ class _GameListState extends State<GameList> {
         height: kPadding,
       ),
       FutureBuilderWrapper(
-          future: gameType == GameType.public ? convertFuture(_getLocalGamesUseCase.call()) : convertFutureDataState(_getPublishedGamesUseCase.call()),
+          future: gameType == GameType.public ? convertFutureDataState(_getPublishedGamesUseCase.call()) : convertFuture(_getLocalGamesUseCase.call()),
           notFoundWidget: () => Container(), // TO DO: handle errors
           builder: (data) {
             if (data.error != null) {
