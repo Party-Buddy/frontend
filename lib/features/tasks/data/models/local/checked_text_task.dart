@@ -1,24 +1,20 @@
-import 'package:floor/floor.dart';
-import 'package:party_games_app/features/tasks/data/models/local/base_task.dart';
+import 'package:moor_flutter/moor_flutter.dart';
+import 'package:party_games_app/features/games/data/data_sources/local/app_database.dart';
 
-@Entity(tableName: 'checked_text_task', foreignKeys: [
-  ForeignKey(
-    childColumns: ['base_task_id'],
-    parentColumns: ['id'],
-    entity: BaseTaskModel,
-    onDelete: ForeignKeyAction.cascade
-    )
-])
-class CheckedTextTaskModel{
+class CheckedTextTasks extends Table{
   
-  @PrimaryKey()
-  @ColumnInfo(name: 'base_task_id')
-  final int baseTaskId;
-  final String answer;
+  IntColumn get baseTaskId => integer()();
+  TextColumn get answer => text()();
 
-  const CheckedTextTaskModel({
-    required this.baseTaskId,
-    required this.answer
-    });
+  @override
+  Set<Column> get primaryKey => {baseTaskId};
+
+}
+
+class CheckedTextTaskModel {
+  final BaseTask baseTask;
+  final CheckedTextTask checkedTextTask;
+
+  CheckedTextTaskModel({required this.baseTask, required this.checkedTextTask});
 
 }

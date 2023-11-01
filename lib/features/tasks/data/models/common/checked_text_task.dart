@@ -1,8 +1,6 @@
-import 'package:floor/floor.dart';
 import 'package:party_games_app/features/tasks/data/models/common/task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 
-@Entity(tableName: 'checked_text_task', primaryKeys: ['id'])
 class CheckedTextTaskModel extends TaskModel{
   
   final String answer;

@@ -1,24 +1,13 @@
-import 'package:floor/floor.dart';
-import 'package:party_games_app/features/games/domain/entities/game.dart';
+import 'package:moor_flutter/moor_flutter.dart';
 
-@Entity(tableName: 'games')
-class LocalGameModel{
-
-  @PrimaryKey(autoGenerate: true)
-  final int id;
-  final String description;
-  final String name;
-  final String? imageUri;
-  final int createdAt;
-  final int updatedAt;
-
-  const LocalGameModel({
-    required this.id,
-    required this.name,
-    required this.description,
-    this.imageUri,
-    required this.createdAt,
-    required this.updatedAt
-    });
+@DataClassName('LocalGame')
+class LocalGames extends Table{
+  
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text().withLength(min: 1, max: 30)();
+  TextColumn get description => text().nullable().withLength(min: 1, max: 255)();
+  TextColumn get imageUri => text().nullable()();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get updatedAt => dateTime()();
 
 }

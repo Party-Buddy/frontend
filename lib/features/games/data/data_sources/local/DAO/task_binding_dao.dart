@@ -1,4 +1,4 @@
-import 'package:floor/floor.dart';
+/*
 import 'package:party_games_app/features/games/data/models/task_binding.dart';
 
 @dao
@@ -13,3 +13,4 @@ abstract class TaskBindingDao {
   @Query('SELECT * FROM task_bindings')
   Future<List<TaskBinding>> getBindings();
 }
+*/

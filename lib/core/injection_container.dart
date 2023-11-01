@@ -15,7 +15,7 @@ Future<void> initializeDependenices() async {
 
   // database
 
-  final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+  final database = AppDatabase();
 
   sl.registerSingleton<AppDatabase>(database);
 
@@ -26,7 +26,7 @@ Future<void> initializeDependenices() async {
   sl.registerSingleton<TaskRepository>(TaskRepositoryImpl(sl()));
 
   sl.registerSingleton<GamesGenerator>(GamesGenerator());
-  sl.registerSingleton<GameRepository>(GameRepositoryImpl(sl()));
+  sl.registerSingleton<GameRepository>(GameRepositoryImpl(sl(),sl()));
 
 
   // usecases

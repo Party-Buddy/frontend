@@ -1,24 +1,16 @@
-import 'package:floor/floor.dart';
-import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 
-@Entity(tableName: 'task')
-class BaseTaskModel{
+import 'package:moor_flutter/moor_flutter.dart';
+
+@DataClassName('BaseTask')
+class BaseTasks extends Table{
   
-  @PrimaryKey(autoGenerate: true)
-  final int id;
-  final String name;
-  final String description;
-  final String? imageUri;
-  final int duration;
-  final TaskTypes type;
-
-  const BaseTaskModel({
-    required this.id,
-    required this.name,
-    required this.description,
-    this.imageUri,
-    required this.duration,
-    required this.type});
-
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text().withLength(min: 1, max: 30)();
+  TextColumn get description => text().withLength(min: 1, max: 255)();
+  TextColumn get imageUri => text().nullable()();
+  IntColumn get duration => integer()();
+  TextColumn get type => text()();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get updatedAt => dateTime()();
 
 }
