@@ -77,9 +77,11 @@ class _GameStartScreenState extends State<GameStartScreen> {
                     onTap: () => showWidget(context, GameList(onTapOnGame: (_) {})),
                     child: GameHeader(
                         game: Game(
+                          id: 1,
                           name: "Minecraft",
                           imageId: "https://cdn.iconscout.com/icon/free/png-256/free-minecraft-15-282774.png",
                           tasks: [const CheckedTextTask(
+                            id: 1,
                             name:"Basics1",
                             description: "what is the max stack size for swords?",
                             duration: 10,

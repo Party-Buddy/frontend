@@ -6,6 +6,7 @@ class PollTask extends Task{
   final PollTaskAnswerType pollAnswerType;
   
   const PollTask({
+    required super.id,
     required super.name,
     required super.description,
     super.imageId,

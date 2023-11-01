@@ -4,6 +4,7 @@ class CheckedTextTask extends Task{
   final String answer;
 
   const CheckedTextTask({
+    required super.id,
     required super.name,
     required super.description,
     super.imageId,

@@ -12,6 +12,7 @@ class ChoiceTask extends Task{
   final List<ChoiceTaskOption> options;
   
   const ChoiceTask({
+    required super.id,
     required super.name,
     required super.description,
     super.imageId,

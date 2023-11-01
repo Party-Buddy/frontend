@@ -1,6 +1,5 @@
 import 'package:party_games_app/core/resources/data_state.dart';
 import 'package:party_games_app/features/tasks/data/data_sources/testing/tasks_generator.dart';
-import 'package:party_games_app/features/tasks/data/models/task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 import 'package:party_games_app/features/tasks/domain/repository/task_repository.dart';
 
@@ -11,7 +10,7 @@ class TaskRepositoryImpl implements TaskRepository {
   TaskRepositoryImpl(this._tasksGenerator);
   
   @override
-  Future<List<TaskModel>> getLocalTasks() async {
+  Future<List<Task>> getLocalTasks() async {
     return _tasksGenerator.generateTasks(); 
   }
 

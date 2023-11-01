@@ -5,6 +5,7 @@ enum TaskTypes {
 }
 
 class Task {
+  final int id;
   final String name;
   final String description;
   final String? imageId;
@@ -12,5 +13,11 @@ class Task {
   final TaskTypes type;
   
   
-  const Task({required this.name, required this.description, this.imageId, required this.duration, required this.type});
+  const Task({
+    required this.id,
+    required this.name,
+    required this.description,
+    this.imageId,
+    required this.duration,
+    required this.type});
 }
