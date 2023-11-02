@@ -1,5 +1,5 @@
 import 'package:moor_flutter/moor_flutter.dart';
-import 'package:party_games_app/features/games/data/data_sources/local/app_database.dart';
+import 'package:party_games_app/core/database/app_database.dart';
 import 'package:party_games_app/features/tasks/data/models/task_model.dart';
 import 'package:party_games_app/features/tasks/domain/entities/checked_text_task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
@@ -21,7 +21,7 @@ class CheckedTextTaskModel extends TaskModel{
 
 
 
-  // Json
+  // JSON
 
   factory CheckedTextTaskModel.fromJson(Map<String, dynamic> map) {
     return CheckedTextTaskModel(

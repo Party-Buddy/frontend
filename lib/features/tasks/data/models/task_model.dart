@@ -1,5 +1,5 @@
 import 'package:moor_flutter/moor_flutter.dart';
-import 'package:party_games_app/features/games/data/data_sources/local/app_database.dart';
+import 'package:party_games_app/core/database/app_database.dart';
 import 'package:party_games_app/features/tasks/data/models/checked_text_task_model.dart';
 import 'package:party_games_app/features/tasks/domain/entities/checked_text_task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
@@ -27,16 +27,9 @@ class TaskModel {
     this.updatedAt
     });
 
-  /*
-  factory LocalBaseTaskModel.fromDataClass(DataClass task){
-    if (task is LocalCheckedTextTask) {
-      return CheckedTextTaskModel.fromDataClass(task);
-    }
-    else{
-      throw Error();
-    }
-  }
-  */
+
+
+  // Domain
 
   factory TaskModel.fromEntity(Task task){
     if (task is CheckedTextTask) {
@@ -57,7 +50,8 @@ class TaskModel {
   }
 
 
-  // Json
+
+  // JSON
 
   factory TaskModel.fromJson(Map<String, dynamic> map) {
     TaskType type = TaskType.values
@@ -69,6 +63,8 @@ class TaskModel {
         throw ArgumentError('Invalid type');
     }
   }
+
+
 
   // Storage
 

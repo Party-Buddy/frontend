@@ -1,5 +1,5 @@
+import 'package:party_games_app/core/database/app_database.dart';
 import 'package:party_games_app/core/resources/data_state.dart';
-import 'package:party_games_app/features/games/data/data_sources/local/app_database.dart';
 import 'package:party_games_app/features/games/data/data_sources/testing/games_generator.dart';
 import 'package:party_games_app/features/games/data/models/game_model.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
@@ -13,6 +13,19 @@ class GameRepositoryImpl implements GameRepository {
 
   GameRepositoryImpl(this._gamesGenerator, this._database);
   
+
+  
+  // API
+
+  @override
+  Future<DataState<List<Game>>> getPublishedGames() async {
+    return DataSuccess(_gamesGenerator.generateGames2()); 
+  }
+
+
+
+  // Database
+
   @override
   Future<List<Game>> getLocalGames() async {
     var allGames = await _database.gameDao.getAllGames();
@@ -25,12 +38,7 @@ class GameRepositoryImpl implements GameRepository {
   }
 
   @override
-  Future<DataState<List<Game>>> getPublishedGames() async {
-    return DataSuccess(_gamesGenerator.generateGames2()); 
-  }
-
-  @override
-  Future<Game> saveGame(Game game) async {
+  Future<Game> saveGame(Game game) {
     return _database.gameDao.insertGame(GameModel.fromEntity(game))
     .then((gameId) {
       Game gameWithId = game.copyWith(id:gameId);

@@ -1,5 +1,5 @@
+import 'package:party_games_app/core/database/app_database.dart';
 import 'package:party_games_app/core/resources/data_state.dart';
-import 'package:party_games_app/features/games/data/data_sources/local/app_database.dart';
 import 'package:party_games_app/features/tasks/data/data_sources/testing/tasks_generator.dart';
 import 'package:party_games_app/features/tasks/data/models/checked_text_task_model.dart';
 import 'package:party_games_app/features/tasks/domain/entities/checked_text_task.dart';
@@ -14,20 +14,22 @@ class TaskRepositoryImpl implements TaskRepository {
 
   TaskRepositoryImpl(this._database, this._tasksGenerator);
   
-  @override
-  Future<List<Task>> getLocalTasks() async {
-    return _tasksGenerator.generateTasks(); 
-  }
+
+  
+  // API
 
   @override
   Future<DataState<List<Task>>> getPublishedTasks() async {
     return DataSuccess(_tasksGenerator.generateTasks()); 
   }
 
+
+
+  // Database
+
   @override
-  Future<void> removeTask(Task task) {
-    // TODO: implement removeTask
-    throw UnimplementedError();
+  Future<List<Task>> getLocalTasks() async {
+    return _tasksGenerator.generateTasks(); 
   }
 
   @override
@@ -39,6 +41,18 @@ class TaskRepositoryImpl implements TaskRepository {
     else{
       throw Error();
     }
+  }
+  
+  @override
+  Future<void> removeTask(Task task) {
+    // TODO: implement removeTask
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateTask(Task task) {
+    // TODO: implement updateTask
+    throw UnimplementedError();
   }
 
 }

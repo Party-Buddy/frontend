@@ -1,5 +1,5 @@
 import 'package:moor_flutter/moor_flutter.dart';
-import 'package:party_games_app/features/games/data/data_sources/local/app_database.dart';
+import 'package:party_games_app/core/database/app_database.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/tasks/data/models/task_model.dart';
 
@@ -52,6 +52,7 @@ class GameModel {
   }
 
 
+
   // Storage
 
   Insertable<LocalGame> toInsertable(){
@@ -84,7 +85,8 @@ class GameModel {
   }
 
 
-  // Json
+
+  // JSON
 
   factory GameModel.fromJson(Map<String, dynamic> map) {
       return GameModel(

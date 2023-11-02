@@ -1,5 +1,5 @@
 import 'package:moor_flutter/moor_flutter.dart';
-import 'package:party_games_app/features/games/data/data_sources/local/app_database.dart';
+import 'package:party_games_app/core/database/app_database.dart';
 import 'package:party_games_app/features/games/data/data_sources/local/tables/local_game.dart';
 import 'package:party_games_app/features/games/data/models/game_model.dart';
 import 'package:party_games_app/features/games/data/data_sources/local/tables/task_binding.dart';

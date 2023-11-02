@@ -1,5 +1,5 @@
 import 'package:moor_flutter/moor_flutter.dart';
-import 'package:party_games_app/features/games/data/data_sources/local/app_database.dart';
+import 'package:party_games_app/core/database/app_database.dart';
 import 'package:party_games_app/features/tasks/data/data_sources/local/tables/base_task.dart';
 import 'package:party_games_app/features/tasks/data/data_sources/local/tables/checked_text_task.dart';
 import 'package:party_games_app/features/tasks/data/models/checked_text_task_model.dart';
@@ -45,11 +45,9 @@ class CheckedTextTaskDao extends DatabaseAccessor<AppDatabase> with _$CheckedTex
       );
   }
 
-  Future<int> insertTask(CheckedTextTaskModel task) async {
-    int id = await into(baseTasks).insert(task.baseToInsertable()).
-    then((baseId) => into(checkedTextTasks).insert(task.toInsertable(baseId: baseId)));
-    
-    return id;
+  Future<int> insertTask(CheckedTextTaskModel task) {
+    return into(baseTasks).insert(task.baseToInsertable())
+    .then((baseId) => into(checkedTextTasks).insert(task.toInsertable(baseId: baseId)));
     }
 
   Future updateBaseTask(CheckedTextTaskModel task) async {
