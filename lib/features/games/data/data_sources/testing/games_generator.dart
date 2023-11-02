@@ -8,7 +8,7 @@ class GamesGenerator {
       Game(
         id: 2,
         name: "Minecraft",
-        imageId: "https://cdn.iconscout.com/icon/free/png-256/free-minecraft-15-282774.png",
+        imageUri: "https://cdn.iconscout.com/icon/free/png-256/free-minecraft-15-282774.png",
         tasks: [const CheckedTextTask(
           id: 0,
           name:"Basics0",
@@ -19,7 +19,7 @@ class GamesGenerator {
       Game(
         id: 0,
         name: "Terraria",
-        imageId: "https://i.postimg.cc/x12wFcdv/pngegg.png",
+        imageUri: "https://i.postimg.cc/x12wFcdv/pngegg.png",
         tasks: [const CheckedTextTask(
           id: 1,
           name:"The Weapon",
@@ -35,7 +35,7 @@ class GamesGenerator {
       Game(
         id: 18,
         name: "Minecraft",
-        imageId: "https://cdn.iconscout.com/icon/free/png-256/free-minecraft-15-282774.png",
+        imageUri: "https://cdn.iconscout.com/icon/free/png-256/free-minecraft-15-282774.png",
         tasks: [const CheckedTextTask(
           id: 999,
           name:"Basics1",
@@ -46,7 +46,7 @@ class GamesGenerator {
       Game(
         id:18020,
         name: "CS:GO",
-        imageId: "https://seeklogo.com/images/C/counter-strike-global-offensive-logo-CFCEFBBCE2-seeklogo.com.png",
+        imageUri: "https://seeklogo.com/images/C/counter-strike-global-offensive-logo-CFCEFBBCE2-seeklogo.com.png",
         tasks: [const PollTask(
           id: 998,
           name:"Skins",

@@ -6,12 +6,14 @@ class PollTask extends Task{
   final PollTaskAnswerType pollAnswerType;
   
   const PollTask({
-    required super.id,
+    super.id,
     required super.name,
     required super.description,
-    super.imageId,
+    super.imageUri,
     required super.duration,
+    super.createdAt,
+    super.updatedAt,
     
     required this.pollAnswerType
-    }): super(type: TaskTypes.poll);
+    }): super(type: TaskType.poll);
 }

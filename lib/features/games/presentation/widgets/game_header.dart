@@ -42,7 +42,7 @@ class GameHeader extends StatelessWidget {
             ClipRRect(
               borderRadius: kBorderRadius,
               child: Image.network(
-                game.imageId ?? "TO DO",
+                game.imageUri ?? "TO DO",
                 height: 90,
               ),
             )

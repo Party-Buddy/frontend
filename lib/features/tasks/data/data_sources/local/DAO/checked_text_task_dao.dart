@@ -12,7 +12,20 @@ class CheckedTextTaskDao extends DatabaseAccessor<AppDatabase> with _$CheckedTex
 
   CheckedTextTaskDao(this.db) : super(db);
 
-  Future<List<CheckedTextTaskModel>> getAllBaseTasks() {
+  Future<CheckedTextTaskModel> getTask(int taskId) {
+    return (select(checkedTextTasks)
+    ..where((t) => t.baseTaskId.equals(taskId)))
+    .join([
+      leftOuterJoin(baseTasks, baseTasks.id.equalsExp(checkedTextTasks.baseTaskId))
+    ])
+    .getSingle()
+    .then(
+      (row) {
+        return CheckedTextTaskModel(baseTask: row.readTable(baseTasks), checkedTextTask: row.readTable(checkedTextTasks));
+      });
+  }
+
+  Future<List<CheckedTextTaskModel>> getAllTasks() {
     return select(checkedTextTasks)
     .join([
       leftOuterJoin(baseTasks, baseTasks.id.equalsExp(checkedTextTasks.baseTaskId))
@@ -26,10 +39,10 @@ class CheckedTextTaskDao extends DatabaseAccessor<AppDatabase> with _$CheckedTex
       );
   }
 
-  Future<int> insertBaseTask(Insertable<CheckedTextTask> task) => into(checkedTextTasks).insert(task);
+  Future<int> insertBaseTask(Insertable<LocalCheckedTextTask> task) => into(checkedTextTasks).insert(task);
 
-  Future updateBaseTask(Insertable<CheckedTextTask> task) => update(checkedTextTasks).replace(task);
+  Future updateBaseTask(Insertable<LocalCheckedTextTask> task) => update(checkedTextTasks).replace(task);
   
-  Future deleteBaseTask(Insertable<CheckedTextTask> task) => delete(checkedTextTasks).delete(task);
+  Future deleteBaseTask(Insertable<LocalCheckedTextTask> task) => delete(checkedTextTasks).delete(task);
 
 }

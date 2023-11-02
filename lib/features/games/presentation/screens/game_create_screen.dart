@@ -79,7 +79,7 @@ class _GameStartScreenState extends State<GameStartScreen> {
                         game: Game(
                           id: 1,
                           name: "Minecraft",
-                          imageId: "https://cdn.iconscout.com/icon/free/png-256/free-minecraft-15-282774.png",
+                          imageUri: "https://cdn.iconscout.com/icon/free/png-256/free-minecraft-15-282774.png",
                           tasks: [const CheckedTextTask(
                             id: 1,
                             name:"Basics1",

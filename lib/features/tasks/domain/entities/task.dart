@@ -1,23 +1,28 @@
-enum TaskTypes {
+enum TaskType {
   poll,
   checkedText,
   choice
 }
 
 class Task {
-  final int id;
+  final int? id;
   final String name;
   final String description;
-  final String? imageId;
+  final String? imageUri;
   final int duration;
-  final TaskTypes type;
+  final TaskType type;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
   
   
   const Task({
-    required this.id,
+    this.id,
     required this.name,
     required this.description,
-    this.imageId,
+    this.imageUri,
     required this.duration,
-    required this.type});
+    required this.type,
+    this.createdAt,
+    this.updatedAt
+    });
 }

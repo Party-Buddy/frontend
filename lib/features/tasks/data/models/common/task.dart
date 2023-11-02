@@ -7,15 +7,15 @@ class TaskModel extends Task{
     required super.id,
     required super.name,
     required super.description,
-    super.imageId,
+    super.imageUri,
     required super.duration,
     required super.type});
 
     factory TaskModel.fromJson(Map<String, dynamic> map) {
-      TaskTypes type = TaskTypes.values
+      TaskType type = TaskType.values
         .firstWhere((element) => element.toString() == 'TaskTypes.${map['type']}');
       switch (type) {
-        case TaskTypes.checkedText:
+        case TaskType.checkedText:
           return CheckedTextTaskModel.fromJson(map);
         default:
           throw ArgumentError('Invalid type');

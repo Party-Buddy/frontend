@@ -1,6 +1,7 @@
 import 'package:party_games_app/core/resources/data_state.dart';
 import 'package:party_games_app/features/games/data/data_sources/local/app_database.dart';
 import 'package:party_games_app/features/games/data/data_sources/testing/games_generator.dart';
+import 'package:party_games_app/features/games/data/models/local_game.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/games/domain/repository/game_repository.dart';
 
@@ -14,19 +15,13 @@ class GameRepositoryImpl implements GameRepository {
   
   @override
   Future<List<Game>> getLocalGames() async {
-    return _database.gameDao.getAllGames()
-    .then((rows) => rows.map(
-      (row) {
-        return Game(
-          id: row.id,
-          name: row.name,
-          description: row.description,
-          tasks: [], // TODO
-          createdAt: row.createdAt,
-          updatedAt: row.updatedAt);
-      })
-      .toList()
-      ); 
+    var allGames = await _database.gameDao.getAllGames();
+    return Future.wait(allGames.map((game) async {
+      return GameModel(
+          localGame : game,
+          tasks: await _database.taskBindingDao.getAllTasks(game.id)
+        );
+    })).then((e) => e.map((e) => e.toEntity()).toList());
   }
 
   @override

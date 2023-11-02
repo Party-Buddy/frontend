@@ -21,6 +21,7 @@ class GameDao extends DatabaseAccessor<AppDatabase> with _$GameDaoMixin {
     ]))
     .get();
   }
+  
   Future<List<LocalGame>> getAllGamesSortedByName(bool ascending) {
     return (select(localGames)
     ..orderBy([

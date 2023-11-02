@@ -341,7 +341,7 @@ class $LocalGamesTable extends LocalGames
   }
 }
 
-class BaseTask extends DataClass implements Insertable<BaseTask> {
+class LocalBaseTask extends DataClass implements Insertable<LocalBaseTask> {
   final int id;
   final String name;
   final String description;
@@ -350,7 +350,7 @@ class BaseTask extends DataClass implements Insertable<BaseTask> {
   final String type;
   final DateTime createdAt;
   final DateTime updatedAt;
-  BaseTask(
+  LocalBaseTask(
       {required this.id,
       required this.name,
       required this.description,
@@ -359,10 +359,11 @@ class BaseTask extends DataClass implements Insertable<BaseTask> {
       required this.type,
       required this.createdAt,
       required this.updatedAt});
-  factory BaseTask.fromData(Map<String, dynamic> data, GeneratedDatabase db,
+  factory LocalBaseTask.fromData(
+      Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
-    return BaseTask(
+    return LocalBaseTask(
       id: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       name: const StringType()
@@ -412,10 +413,10 @@ class BaseTask extends DataClass implements Insertable<BaseTask> {
     );
   }
 
-  factory BaseTask.fromJson(Map<String, dynamic> json,
+  factory LocalBaseTask.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
-    return BaseTask(
+    return LocalBaseTask(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       description: serializer.fromJson<String>(json['description']),
@@ -441,7 +442,7 @@ class BaseTask extends DataClass implements Insertable<BaseTask> {
     };
   }
 
-  BaseTask copyWith(
+  LocalBaseTask copyWith(
           {int? id,
           String? name,
           String? description,
@@ -450,7 +451,7 @@ class BaseTask extends DataClass implements Insertable<BaseTask> {
           String? type,
           DateTime? createdAt,
           DateTime? updatedAt}) =>
-      BaseTask(
+      LocalBaseTask(
         id: id ?? this.id,
         name: name ?? this.name,
         description: description ?? this.description,
@@ -462,7 +463,7 @@ class BaseTask extends DataClass implements Insertable<BaseTask> {
       );
   @override
   String toString() {
-    return (StringBuffer('BaseTask(')
+    return (StringBuffer('LocalBaseTask(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
@@ -481,7 +482,7 @@ class BaseTask extends DataClass implements Insertable<BaseTask> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is BaseTask &&
+      (other is LocalBaseTask &&
           other.id == this.id &&
           other.name == this.name &&
           other.description == this.description &&
@@ -492,7 +493,7 @@ class BaseTask extends DataClass implements Insertable<BaseTask> {
           other.updatedAt == this.updatedAt);
 }
 
-class BaseTasksCompanion extends UpdateCompanion<BaseTask> {
+class BaseTasksCompanion extends UpdateCompanion<LocalBaseTask> {
   final Value<int> id;
   final Value<String> name;
   final Value<String> description;
@@ -526,7 +527,7 @@ class BaseTasksCompanion extends UpdateCompanion<BaseTask> {
         type = Value(type),
         createdAt = Value(createdAt),
         updatedAt = Value(updatedAt);
-  static Insertable<BaseTask> custom({
+  static Insertable<LocalBaseTask> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<String>? description,
@@ -616,7 +617,7 @@ class BaseTasksCompanion extends UpdateCompanion<BaseTask> {
 }
 
 class $BaseTasksTable extends BaseTasks
-    with TableInfo<$BaseTasksTable, BaseTask> {
+    with TableInfo<$BaseTasksTable, LocalBaseTask> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -678,7 +679,7 @@ class $BaseTasksTable extends BaseTasks
   @override
   String get actualTableName => 'base_tasks';
   @override
-  VerificationContext validateIntegrity(Insertable<BaseTask> instance,
+  VerificationContext validateIntegrity(Insertable<LocalBaseTask> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -733,8 +734,8 @@ class $BaseTasksTable extends BaseTasks
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  BaseTask map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return BaseTask.fromData(data, attachedDatabase,
+  LocalBaseTask map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return LocalBaseTask.fromData(data, attachedDatabase,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
@@ -744,15 +745,16 @@ class $BaseTasksTable extends BaseTasks
   }
 }
 
-class CheckedTextTask extends DataClass implements Insertable<CheckedTextTask> {
+class LocalCheckedTextTask extends DataClass
+    implements Insertable<LocalCheckedTextTask> {
   final int baseTaskId;
   final String answer;
-  CheckedTextTask({required this.baseTaskId, required this.answer});
-  factory CheckedTextTask.fromData(
+  LocalCheckedTextTask({required this.baseTaskId, required this.answer});
+  factory LocalCheckedTextTask.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
-    return CheckedTextTask(
+    return LocalCheckedTextTask(
       baseTaskId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}base_task_id'])!,
       answer: const StringType()
@@ -774,10 +776,10 @@ class CheckedTextTask extends DataClass implements Insertable<CheckedTextTask> {
     );
   }
 
-  factory CheckedTextTask.fromJson(Map<String, dynamic> json,
+  factory LocalCheckedTextTask.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
-    return CheckedTextTask(
+    return LocalCheckedTextTask(
       baseTaskId: serializer.fromJson<int>(json['baseTaskId']),
       answer: serializer.fromJson<String>(json['answer']),
     );
@@ -791,14 +793,14 @@ class CheckedTextTask extends DataClass implements Insertable<CheckedTextTask> {
     };
   }
 
-  CheckedTextTask copyWith({int? baseTaskId, String? answer}) =>
-      CheckedTextTask(
+  LocalCheckedTextTask copyWith({int? baseTaskId, String? answer}) =>
+      LocalCheckedTextTask(
         baseTaskId: baseTaskId ?? this.baseTaskId,
         answer: answer ?? this.answer,
       );
   @override
   String toString() {
-    return (StringBuffer('CheckedTextTask(')
+    return (StringBuffer('LocalCheckedTextTask(')
           ..write('baseTaskId: $baseTaskId, ')
           ..write('answer: $answer')
           ..write(')'))
@@ -810,12 +812,12 @@ class CheckedTextTask extends DataClass implements Insertable<CheckedTextTask> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is CheckedTextTask &&
+      (other is LocalCheckedTextTask &&
           other.baseTaskId == this.baseTaskId &&
           other.answer == this.answer);
 }
 
-class CheckedTextTasksCompanion extends UpdateCompanion<CheckedTextTask> {
+class CheckedTextTasksCompanion extends UpdateCompanion<LocalCheckedTextTask> {
   final Value<int> baseTaskId;
   final Value<String> answer;
   const CheckedTextTasksCompanion({
@@ -826,7 +828,7 @@ class CheckedTextTasksCompanion extends UpdateCompanion<CheckedTextTask> {
     this.baseTaskId = const Value.absent(),
     required String answer,
   }) : answer = Value(answer);
-  static Insertable<CheckedTextTask> custom({
+  static Insertable<LocalCheckedTextTask> custom({
     Expression<int>? baseTaskId,
     Expression<String>? answer,
   }) {
@@ -867,7 +869,7 @@ class CheckedTextTasksCompanion extends UpdateCompanion<CheckedTextTask> {
 }
 
 class $CheckedTextTasksTable extends CheckedTextTasks
-    with TableInfo<$CheckedTextTasksTable, CheckedTextTask> {
+    with TableInfo<$CheckedTextTasksTable, LocalCheckedTextTask> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -891,7 +893,8 @@ class $CheckedTextTasksTable extends CheckedTextTasks
   @override
   String get actualTableName => 'checked_text_tasks';
   @override
-  VerificationContext validateIntegrity(Insertable<CheckedTextTask> instance,
+  VerificationContext validateIntegrity(
+      Insertable<LocalCheckedTextTask> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -913,8 +916,8 @@ class $CheckedTextTasksTable extends CheckedTextTasks
   @override
   Set<GeneratedColumn> get $primaryKey => {baseTaskId};
   @override
-  CheckedTextTask map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return CheckedTextTask.fromData(data, attachedDatabase,
+  LocalCheckedTextTask map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return LocalCheckedTextTask.fromData(data, attachedDatabase,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
@@ -1148,6 +1151,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final GameDao gameDao = GameDao(this as AppDatabase);
   late final CheckedTextTaskDao checkedTextTaskDao =
       CheckedTextTaskDao(this as AppDatabase);
+  late final TaskBindingDao taskBindingDao =
+      TaskBindingDao(this as AppDatabase);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override

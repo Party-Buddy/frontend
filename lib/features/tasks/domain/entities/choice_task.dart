@@ -12,13 +12,15 @@ class ChoiceTask extends Task{
   final List<ChoiceTaskOption> options;
   
   const ChoiceTask({
-    required super.id,
+    super.id,
     required super.name,
     required super.description,
-    super.imageId,
+    super.imageUri,
     required super.duration,
+    super.createdAt,
+    super.updatedAt,
 
     required this.answer,
     required this.options
-    }): super(type: TaskTypes.choice);
+    }): super(type: TaskType.choice);
 }
