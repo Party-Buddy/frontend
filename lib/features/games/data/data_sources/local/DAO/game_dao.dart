@@ -1,6 +1,7 @@
 import 'package:moor_flutter/moor_flutter.dart';
 import 'package:party_games_app/features/games/data/data_sources/local/app_database.dart';
-import 'package:party_games_app/features/games/data/models/local_game.dart';
+import 'package:party_games_app/features/games/data/data_sources/local/tables/local_game.dart';
+import 'package:party_games_app/features/games/data/models/game_model.dart';
 
 part 'game_dao.g.dart';
 
@@ -30,10 +31,10 @@ class GameDao extends DatabaseAccessor<AppDatabase> with _$GameDaoMixin {
     .get();
   }
 
-  Future<int> insertGame(Insertable<LocalGame> game) => into(localGames).insert(game);
+  Future<int> insertGame(GameModel game) => into(localGames).insert(game.toInsertable());
 
-  Future updateGame(Insertable<LocalGame> game) => update(localGames).replace(game);
+  Future updateGame(GameModel game) => update(localGames).replace(game.toInsertable());
 
-  Future deleteGame(Insertable<LocalGame> game) => delete(localGames).delete(game);
+  Future deleteGame(GameModel game) => delete(localGames).delete(game.toInsertable());
 
 }

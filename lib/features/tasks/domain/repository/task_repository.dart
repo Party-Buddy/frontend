@@ -10,7 +10,7 @@ abstract class TaskRepository {
   // Database
   Future<List<Task>> getLocalTasks();
 
-  Future<void> saveTask(Task task);
+  Future<Task> saveTask(Task task);
 
   Future<void> removeTask(Task task);
 

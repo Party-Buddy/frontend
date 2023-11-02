@@ -14,4 +14,41 @@ class CheckedTextTask extends Task{
     
     required this.answer
     }) : super(type: TaskType.checkedText); 
+
+  factory CheckedTextTask.fromOtherTask(Task baseTask, String answer) {
+      return CheckedTextTask(
+        id: baseTask.id,
+        name: baseTask.name,
+        description: baseTask.description,
+        imageUri: baseTask.imageUri,
+        duration: baseTask.duration,
+        createdAt: baseTask.createdAt,
+        updatedAt: baseTask.updatedAt,
+        answer: answer);
+    }
+
+  @override
+  Task copyWith({
+    int? id,
+    String? name,
+    String? description,
+    String? imageUri,
+    int? duration,
+    TaskType? type,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? answer
+  }) {
+    return CheckedTextTask(
+      id: id ?? super.id,
+      name: name ?? super.name,
+      description: description ?? super.description,
+      imageUri: imageUri ?? super.imageUri,
+      duration: duration ?? super.duration,
+      createdAt: createdAt ?? super.createdAt,
+      updatedAt: updatedAt ?? super.updatedAt,
+      answer: answer ?? this.answer
+    );
+  }
+
 }

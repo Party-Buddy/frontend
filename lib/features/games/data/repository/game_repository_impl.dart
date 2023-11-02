@@ -1,7 +1,7 @@
 import 'package:party_games_app/core/resources/data_state.dart';
 import 'package:party_games_app/features/games/data/data_sources/local/app_database.dart';
 import 'package:party_games_app/features/games/data/data_sources/testing/games_generator.dart';
-import 'package:party_games_app/features/games/data/models/local_game.dart';
+import 'package:party_games_app/features/games/data/models/game_model.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/games/domain/repository/game_repository.dart';
 
@@ -17,9 +17,9 @@ class GameRepositoryImpl implements GameRepository {
   Future<List<Game>> getLocalGames() async {
     var allGames = await _database.gameDao.getAllGames();
     return Future.wait(allGames.map((game) async {
-      return GameModel(
-          localGame : game,
-          tasks: await _database.taskBindingDao.getAllTasks(game.id)
+      return GameModel.fromTables(
+          game,
+          await _database.taskBindingDao.getAllTasks(game.id)
         );
     })).then((e) => e.map((e) => e.toEntity()).toList());
   }
@@ -30,14 +30,25 @@ class GameRepositoryImpl implements GameRepository {
   }
 
   @override
+  Future<Game> saveGame(Game game) async {
+    return _database.gameDao.insertGame(GameModel.fromEntity(game))
+    .then((gameId) {
+      Game gameWithId = game.copyWith(id:gameId);
+      _database.taskBindingDao.bindAllTasksToGame(GameModel.fromEntity(gameWithId));
+      return gameWithId;
+      });
+  }
+  
+  @override
   Future<void> removeGame(Game game) {
-    // TODO: implement removeTask
+    // TODO: implement removeGame
     throw UnimplementedError();
   }
 
+
   @override
-  Future<void> saveGame(Game game) {
-    // TODO: implement saveTask
+  Future<void> updateGame(Game game) {
+    // TODO: implement updateGame
     throw UnimplementedError();
   }
 

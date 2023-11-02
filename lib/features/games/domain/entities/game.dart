@@ -21,4 +21,25 @@ class Game {
     this.createdAt,
     this.updatedAt
     });
+
+  Game copyWith({
+    int? id,
+    String? name,
+    String? description,
+    String? imageUri,
+    List<Task>? tasks,
+    DateTime? createdAt,
+    DateTime? updatedAt
+  }) {
+    return Game(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      imageUri: imageUri ?? this.imageUri,
+      tasks: tasks ?? this.tasks,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt
+    );
+  }
+  
 }

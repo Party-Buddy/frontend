@@ -8,7 +8,6 @@ class ChoiceTaskOption {
 }
 
 class ChoiceTask extends Task{
-  final String answer;
   final List<ChoiceTaskOption> options;
   
   const ChoiceTask({
@@ -20,7 +19,44 @@ class ChoiceTask extends Task{
     super.createdAt,
     super.updatedAt,
 
-    required this.answer,
     required this.options
     }): super(type: TaskType.choice);
+
+
+  factory ChoiceTask.fromOtherTask(Task baseTask, List<ChoiceTaskOption> options) {
+      return ChoiceTask(
+        id: baseTask.id,
+        name: baseTask.name,
+        description: baseTask.description,
+        imageUri: baseTask.imageUri,
+        duration: baseTask.duration,
+        createdAt: baseTask.createdAt,
+        updatedAt: baseTask.updatedAt,
+        options: options);
+    }
+
+  @override
+  Task copyWith({
+    int? id,
+    String? name,
+    String? description,
+    String? imageUri,
+    int? duration,
+    TaskType? type,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    List<ChoiceTaskOption>? options
+  }) {
+    return ChoiceTask(
+      id: id ?? super.id,
+      name: name ?? super.name,
+      description: description ?? super.description,
+      imageUri: imageUri ?? super.imageUri,
+      duration: duration ?? super.duration,
+      createdAt: createdAt ?? super.createdAt,
+      updatedAt: updatedAt ?? super.updatedAt,
+      options: options ?? this.options
+    );
+  }
+  
 }

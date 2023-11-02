@@ -10,8 +10,10 @@ abstract class GameRepository {
   // Database
   Future<List<Game>> getLocalGames();
 
-  Future<void> saveGame(Game task);
+  Future<Game> saveGame(Game game);
 
-  Future<void> removeGame(Game task);
+  Future<void> removeGame(Game game);
+
+  Future<void> updateGame(Game game);
 
 } 

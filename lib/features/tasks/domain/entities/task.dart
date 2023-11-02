@@ -25,4 +25,29 @@ class Task {
     this.createdAt,
     this.updatedAt
     });
+
+  Task get baseTask => this;
+
+  Task copyWith({
+    int? id,
+    String? name,
+    String? description,
+    String? imageUri,
+    int? duration,
+    TaskType? type,
+    DateTime? createdAt,
+    DateTime? updatedAt
+  }) {
+    return Task(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      imageUri: imageUri ?? this.imageUri,
+      duration: duration ?? this.duration,
+      type : type ?? this.type,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt
+    );
+  }
+
 }

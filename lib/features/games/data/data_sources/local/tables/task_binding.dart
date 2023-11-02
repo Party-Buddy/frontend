@@ -1,6 +1,6 @@
 import 'package:moor_flutter/moor_flutter.dart';
-import 'package:party_games_app/features/games/data/models/local_game.dart';
-import 'package:party_games_app/features/tasks/data/models/local/base_task.dart';
+import 'package:party_games_app/features/games/data/data_sources/local/tables/local_game.dart';
+import 'package:party_games_app/features/tasks/data/data_sources/local/tables/base_task.dart';
 
 class TaskBindings extends Table{
 
