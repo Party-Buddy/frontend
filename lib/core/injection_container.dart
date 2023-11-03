@@ -17,6 +17,7 @@ import 'package:party_games_app/features/username/data/repository/username_repos
 import 'package:party_games_app/features/username/domain/repository/username_repository.dart';
 import 'package:party_games_app/features/username/domain/usecases/get_username.dart';
 import 'package:party_games_app/features/username/domain/usecases/save_username.dart';
+import 'package:party_games_app/features/username/domain/usecases/validate_username.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final sl = GetIt.instance;
@@ -56,5 +57,7 @@ Future<void> initializeDependenices() async {
   //   username
   sl.registerSingleton(GetUsernameUseCase(sl()));
   sl.registerSingleton(SaveUsernameUseCase(sl()));
+  sl.registerSingleton(ValidateUsernameUseCase());
+  
 
 }
