@@ -12,6 +12,12 @@ import 'package:party_games_app/features/tasks/domain/repository/task_repository
 import 'package:party_games_app/features/tasks/domain/usecases/get_local_tasks.dart';
 import 'package:party_games_app/features/tasks/domain/usecases/get_published_tasks.dart';
 import 'package:party_games_app/features/tasks/domain/usecases/save_task.dart';
+import 'package:party_games_app/features/username/data/data_sources/local/local_username_datasource.dart';
+import 'package:party_games_app/features/username/data/repository/username_repository_impl.dart';
+import 'package:party_games_app/features/username/domain/repository/username_repository.dart';
+import 'package:party_games_app/features/username/domain/usecases/get_username.dart';
+import 'package:party_games_app/features/username/domain/usecases/save_username.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final sl = GetIt.instance;
 
@@ -21,6 +27,9 @@ Future<void> initializeDependenices() async {
   final database = AppDatabase();
   sl.registerSingleton<AppDatabase>(database);
 
+  // SharedPreferences
+  final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  sl.registerSingleton<SharedPreferences>(sharedPreferences);
 
 
   // repositories
@@ -30,7 +39,9 @@ Future<void> initializeDependenices() async {
   //   tasks
   sl.registerSingleton<TasksGenerator>(TasksGenerator());
   sl.registerSingleton<TaskRepository>(TaskRepositoryImpl(sl(), sl()));
-
+  //   username
+  sl.registerSingleton(LocalUsernameDatasource(sl()));
+  sl.registerSingleton<UsernameRepository>(UsernameRepositoryImpl(sl()));
 
 
   // usecases
@@ -42,5 +53,8 @@ Future<void> initializeDependenices() async {
   sl.registerSingleton(GetPublishedTasksUseCase(sl()));
   sl.registerSingleton(GetLocalTasksUseCase(sl()));
   sl.registerSingleton(SaveTaskUseCase(sl()));
+  //   username
+  sl.registerSingleton(GetUsernameUseCase(sl()));
+  sl.registerSingleton(SaveUsernameUseCase(sl()));
 
 }
