@@ -4,8 +4,11 @@ import 'package:party_games_app/features/tasks/data/data_sources/local/tables/ba
 
 class TaskBindings extends Table{
 
-  IntColumn get id => integer().autoIncrement()();
+  IntColumn get gameOrder => integer()();
   IntColumn get baseTaskId => integer().references(BaseTasks, #id, onDelete: KeyAction.restrict)();
   IntColumn get gameId => integer().references(LocalGames, #id, onDelete: KeyAction.cascade)();
 
+  @override
+  Set<Column> get primaryKey => {gameId, gameOrder};
+  
 }

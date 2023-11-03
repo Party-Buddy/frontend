@@ -15,8 +15,8 @@ abstract class TaskRepository {
 
   Future<Task> saveTask(Task task);
 
-  Future<void> updateTask(Task task);
+  Future<Task> updateTask(Task task);
 
-  Future<void> removeTask(Task task);
+  Future<void> deleteTask(Task task);
 
 } 

@@ -928,17 +928,19 @@ class $CheckedTextTasksTable extends CheckedTextTasks
 }
 
 class TaskBinding extends DataClass implements Insertable<TaskBinding> {
-  final int id;
+  final int gameOrder;
   final int baseTaskId;
   final int gameId;
   TaskBinding(
-      {required this.id, required this.baseTaskId, required this.gameId});
+      {required this.gameOrder,
+      required this.baseTaskId,
+      required this.gameId});
   factory TaskBinding.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return TaskBinding(
-      id: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      gameOrder: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}game_order'])!,
       baseTaskId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}base_task_id'])!,
       gameId: const IntType()
@@ -948,7 +950,7 @@ class TaskBinding extends DataClass implements Insertable<TaskBinding> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['game_order'] = Variable<int>(gameOrder);
     map['base_task_id'] = Variable<int>(baseTaskId);
     map['game_id'] = Variable<int>(gameId);
     return map;
@@ -956,7 +958,7 @@ class TaskBinding extends DataClass implements Insertable<TaskBinding> {
 
   TaskBindingsCompanion toCompanion(bool nullToAbsent) {
     return TaskBindingsCompanion(
-      id: Value(id),
+      gameOrder: Value(gameOrder),
       baseTaskId: Value(baseTaskId),
       gameId: Value(gameId),
     );
@@ -966,7 +968,7 @@ class TaskBinding extends DataClass implements Insertable<TaskBinding> {
       {ValueSerializer? serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return TaskBinding(
-      id: serializer.fromJson<int>(json['id']),
+      gameOrder: serializer.fromJson<int>(json['gameOrder']),
       baseTaskId: serializer.fromJson<int>(json['baseTaskId']),
       gameId: serializer.fromJson<int>(json['gameId']),
     );
@@ -975,21 +977,22 @@ class TaskBinding extends DataClass implements Insertable<TaskBinding> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'gameOrder': serializer.toJson<int>(gameOrder),
       'baseTaskId': serializer.toJson<int>(baseTaskId),
       'gameId': serializer.toJson<int>(gameId),
     };
   }
 
-  TaskBinding copyWith({int? id, int? baseTaskId, int? gameId}) => TaskBinding(
-        id: id ?? this.id,
+  TaskBinding copyWith({int? gameOrder, int? baseTaskId, int? gameId}) =>
+      TaskBinding(
+        gameOrder: gameOrder ?? this.gameOrder,
         baseTaskId: baseTaskId ?? this.baseTaskId,
         gameId: gameId ?? this.gameId,
       );
   @override
   String toString() {
     return (StringBuffer('TaskBinding(')
-          ..write('id: $id, ')
+          ..write('gameOrder: $gameOrder, ')
           ..write('baseTaskId: $baseTaskId, ')
           ..write('gameId: $gameId')
           ..write(')'))
@@ -997,47 +1000,48 @@ class TaskBinding extends DataClass implements Insertable<TaskBinding> {
   }
 
   @override
-  int get hashCode => Object.hash(id, baseTaskId, gameId);
+  int get hashCode => Object.hash(gameOrder, baseTaskId, gameId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is TaskBinding &&
-          other.id == this.id &&
+          other.gameOrder == this.gameOrder &&
           other.baseTaskId == this.baseTaskId &&
           other.gameId == this.gameId);
 }
 
 class TaskBindingsCompanion extends UpdateCompanion<TaskBinding> {
-  final Value<int> id;
+  final Value<int> gameOrder;
   final Value<int> baseTaskId;
   final Value<int> gameId;
   const TaskBindingsCompanion({
-    this.id = const Value.absent(),
+    this.gameOrder = const Value.absent(),
     this.baseTaskId = const Value.absent(),
     this.gameId = const Value.absent(),
   });
   TaskBindingsCompanion.insert({
-    this.id = const Value.absent(),
+    required int gameOrder,
     required int baseTaskId,
     required int gameId,
-  })  : baseTaskId = Value(baseTaskId),
+  })  : gameOrder = Value(gameOrder),
+        baseTaskId = Value(baseTaskId),
         gameId = Value(gameId);
   static Insertable<TaskBinding> custom({
-    Expression<int>? id,
+    Expression<int>? gameOrder,
     Expression<int>? baseTaskId,
     Expression<int>? gameId,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
+      if (gameOrder != null) 'game_order': gameOrder,
       if (baseTaskId != null) 'base_task_id': baseTaskId,
       if (gameId != null) 'game_id': gameId,
     });
   }
 
   TaskBindingsCompanion copyWith(
-      {Value<int>? id, Value<int>? baseTaskId, Value<int>? gameId}) {
+      {Value<int>? gameOrder, Value<int>? baseTaskId, Value<int>? gameId}) {
     return TaskBindingsCompanion(
-      id: id ?? this.id,
+      gameOrder: gameOrder ?? this.gameOrder,
       baseTaskId: baseTaskId ?? this.baseTaskId,
       gameId: gameId ?? this.gameId,
     );
@@ -1046,8 +1050,8 @@ class TaskBindingsCompanion extends UpdateCompanion<TaskBinding> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
+    if (gameOrder.present) {
+      map['game_order'] = Variable<int>(gameOrder.value);
     }
     if (baseTaskId.present) {
       map['base_task_id'] = Variable<int>(baseTaskId.value);
@@ -1061,7 +1065,7 @@ class TaskBindingsCompanion extends UpdateCompanion<TaskBinding> {
   @override
   String toString() {
     return (StringBuffer('TaskBindingsCompanion(')
-          ..write('id: $id, ')
+          ..write('gameOrder: $gameOrder, ')
           ..write('baseTaskId: $baseTaskId, ')
           ..write('gameId: $gameId')
           ..write(')'))
@@ -1075,13 +1079,11 @@ class $TaskBindingsTable extends TaskBindings
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $TaskBindingsTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _idMeta = const VerificationMeta('id');
+  final VerificationMeta _gameOrderMeta = const VerificationMeta('gameOrder');
   @override
-  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
-      'id', aliasedName, false,
-      type: const IntType(),
-      requiredDuringInsert: false,
-      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  late final GeneratedColumn<int?> gameOrder = GeneratedColumn<int?>(
+      'game_order', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _baseTaskIdMeta = const VerificationMeta('baseTaskId');
   @override
   late final GeneratedColumn<int?> baseTaskId = GeneratedColumn<int?>(
@@ -1097,7 +1099,7 @@ class $TaskBindingsTable extends TaskBindings
       requiredDuringInsert: true,
       defaultConstraints: 'REFERENCES local_games (id) ON DELETE CASCADE');
   @override
-  List<GeneratedColumn> get $columns => [id, baseTaskId, gameId];
+  List<GeneratedColumn> get $columns => [gameOrder, baseTaskId, gameId];
   @override
   String get aliasedName => _alias ?? 'task_bindings';
   @override
@@ -1107,8 +1109,11 @@ class $TaskBindingsTable extends TaskBindings
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    if (data.containsKey('game_order')) {
+      context.handle(_gameOrderMeta,
+          gameOrder.isAcceptableOrUnknown(data['game_order']!, _gameOrderMeta));
+    } else if (isInserting) {
+      context.missing(_gameOrderMeta);
     }
     if (data.containsKey('base_task_id')) {
       context.handle(
@@ -1128,7 +1133,7 @@ class $TaskBindingsTable extends TaskBindings
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {gameId, gameOrder};
   @override
   TaskBinding map(Map<String, dynamic> data, {String? tablePrefix}) {
     return TaskBinding.fromData(data, attachedDatabase,

@@ -15,8 +15,8 @@ abstract class GameRepository {
 
   Future<Game> saveGame(Game game);
 
-  Future<void> removeGame(Game game);
+  Future<void> deleteGame(Game game);
 
-  Future<void> updateGame(Game game);
+  Future<Game> updateGame(Game game);
 
 } 

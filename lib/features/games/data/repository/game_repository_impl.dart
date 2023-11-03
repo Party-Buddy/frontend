@@ -48,16 +48,15 @@ class GameRepositoryImpl implements GameRepository {
   }
   
   @override
-  Future<void> removeGame(Game game) {
-    // TODO: implement removeGame
-    throw UnimplementedError();
+  Future<void> deleteGame(Game game) async{
+    await _database.gameDao.deleteGame(GameModel.fromEntity(game));
   }
 
 
   @override
-  Future<void> updateGame(Game game) {
-    // TODO: implement updateGame
-    throw UnimplementedError();
+  Future<Game> updateGame(Game game) async{
+    await _database.gameDao.updateGame(GameModel.fromEntity(game));
+    return game;
   }
 
 }

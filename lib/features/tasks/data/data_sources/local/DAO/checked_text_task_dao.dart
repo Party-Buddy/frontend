@@ -50,12 +50,12 @@ class CheckedTextTaskDao extends DatabaseAccessor<AppDatabase> with _$CheckedTex
     .then((baseId) => into(checkedTextTasks).insert(task.toInsertable(baseId: baseId)));
     }
 
-  Future updateBaseTask(CheckedTextTaskModel task) async {
+  Future updateTask(CheckedTextTaskModel task) async {
     update(baseTasks).replace(task.baseToInsertable());
     update(checkedTextTasks).replace(task.toInsertable());
     }
   
-  Future deleteBaseTask(CheckedTextTaskModel task) async {
+  Future deleteTask(CheckedTextTaskModel task) async {
     delete(baseTasks).delete(task.baseToInsertable());
     }
 

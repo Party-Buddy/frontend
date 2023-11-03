@@ -61,15 +61,17 @@ class GameModel {
       name: name != null ? Value(name!) : const Value.absent(),
       description: description != null ? Value(description!) : const Value.absent(),
       imageUri: imageUri != null ? Value(imageUri!) : const Value.absent(),
-      createdAt: Value(DateTime.now()),
+      createdAt: createdAt != null ? Value(createdAt!) : Value(DateTime.now()) ,
       updatedAt: Value(DateTime.now())
     );
   }
 
-  Insertable<TaskBinding> toBinding({int? taskId}){
+  Insertable<TaskBinding> toBinding({int? taskId, int? taskOrder}){
     return TaskBindingsCompanion(
       gameId: id != null ? Value(id!) : const Value.absent(),
-      baseTaskId: taskId != null ? Value(taskId) : const Value.absent()
+      baseTaskId: taskId != null ? Value(taskId) : const Value.absent(),
+      gameOrder: taskOrder != null ? Value(taskOrder) : const Value.absent()
+      
     );
   }
 

@@ -44,15 +44,26 @@ class TaskRepositoryImpl implements TaskRepository {
   }
   
   @override
-  Future<void> removeTask(Task task) {
-    // TODO: implement removeTask
-    throw UnimplementedError();
+  Future<Task> updateTask(Task task) async {
+    if (task is CheckedTextTask){
+      await _database.checkedTextTaskDao.updateTask(CheckedTextTaskModel.fromEntity(task));
+      return task;
+    }
+    else{
+      throw Error();
+    }
   }
 
   @override
-  Future<void> updateTask(Task task) {
-    // TODO: implement updateTask
-    throw UnimplementedError();
+  Future<void> deleteTask(Task task) async {
+    if (task is CheckedTextTask){
+      await _database.checkedTextTaskDao.deleteTask(CheckedTextTaskModel.fromEntity(task));
+    }
+    else{
+      throw Error();
+    }
+    
   }
+
 
 }
