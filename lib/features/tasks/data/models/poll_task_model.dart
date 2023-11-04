@@ -16,7 +16,7 @@ class PollTaskModel extends TaskModel {
       super.createdAt,
       super.updatedAt,
       this.pollAnswerType})
-      : super(type: TaskType.checkedText);
+      : super(type: TaskType.poll);
 
   // JSON
 
