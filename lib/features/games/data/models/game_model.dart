@@ -33,7 +33,7 @@ class GameModel {
       name: name ?? "",
       description: description,
       imageUri: imageUri,
-      tasks: tasks?.map(TaskModel.toEntity).toList() ?? [],
+      tasks: tasks?.map((task) => task.toEntity()).toList() ?? [],
       createdAt: createdAt,
       updatedAt: updatedAt);
   }

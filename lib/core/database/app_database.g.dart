@@ -1329,6 +1329,264 @@ class $PollTasksTable extends PollTasks
   }
 }
 
+class LocalChoiceTaskOption extends DataClass
+    implements Insertable<LocalChoiceTaskOption> {
+  final int id;
+  final int baseTaskId;
+  final String answer;
+  final bool correct;
+  LocalChoiceTaskOption(
+      {required this.id,
+      required this.baseTaskId,
+      required this.answer,
+      required this.correct});
+  factory LocalChoiceTaskOption.fromData(
+      Map<String, dynamic> data, GeneratedDatabase db,
+      {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return LocalChoiceTaskOption(
+      id: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      baseTaskId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}base_task_id'])!,
+      answer: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}answer'])!,
+      correct: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}correct'])!,
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['base_task_id'] = Variable<int>(baseTaskId);
+    map['answer'] = Variable<String>(answer);
+    map['correct'] = Variable<bool>(correct);
+    return map;
+  }
+
+  ChoiceTaskOptionsCompanion toCompanion(bool nullToAbsent) {
+    return ChoiceTaskOptionsCompanion(
+      id: Value(id),
+      baseTaskId: Value(baseTaskId),
+      answer: Value(answer),
+      correct: Value(correct),
+    );
+  }
+
+  factory LocalChoiceTaskOption.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return LocalChoiceTaskOption(
+      id: serializer.fromJson<int>(json['id']),
+      baseTaskId: serializer.fromJson<int>(json['baseTaskId']),
+      answer: serializer.fromJson<String>(json['answer']),
+      correct: serializer.fromJson<bool>(json['correct']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'baseTaskId': serializer.toJson<int>(baseTaskId),
+      'answer': serializer.toJson<String>(answer),
+      'correct': serializer.toJson<bool>(correct),
+    };
+  }
+
+  LocalChoiceTaskOption copyWith(
+          {int? id, int? baseTaskId, String? answer, bool? correct}) =>
+      LocalChoiceTaskOption(
+        id: id ?? this.id,
+        baseTaskId: baseTaskId ?? this.baseTaskId,
+        answer: answer ?? this.answer,
+        correct: correct ?? this.correct,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('LocalChoiceTaskOption(')
+          ..write('id: $id, ')
+          ..write('baseTaskId: $baseTaskId, ')
+          ..write('answer: $answer, ')
+          ..write('correct: $correct')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, baseTaskId, answer, correct);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LocalChoiceTaskOption &&
+          other.id == this.id &&
+          other.baseTaskId == this.baseTaskId &&
+          other.answer == this.answer &&
+          other.correct == this.correct);
+}
+
+class ChoiceTaskOptionsCompanion
+    extends UpdateCompanion<LocalChoiceTaskOption> {
+  final Value<int> id;
+  final Value<int> baseTaskId;
+  final Value<String> answer;
+  final Value<bool> correct;
+  const ChoiceTaskOptionsCompanion({
+    this.id = const Value.absent(),
+    this.baseTaskId = const Value.absent(),
+    this.answer = const Value.absent(),
+    this.correct = const Value.absent(),
+  });
+  ChoiceTaskOptionsCompanion.insert({
+    this.id = const Value.absent(),
+    required int baseTaskId,
+    required String answer,
+    required bool correct,
+  })  : baseTaskId = Value(baseTaskId),
+        answer = Value(answer),
+        correct = Value(correct);
+  static Insertable<LocalChoiceTaskOption> custom({
+    Expression<int>? id,
+    Expression<int>? baseTaskId,
+    Expression<String>? answer,
+    Expression<bool>? correct,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (baseTaskId != null) 'base_task_id': baseTaskId,
+      if (answer != null) 'answer': answer,
+      if (correct != null) 'correct': correct,
+    });
+  }
+
+  ChoiceTaskOptionsCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? baseTaskId,
+      Value<String>? answer,
+      Value<bool>? correct}) {
+    return ChoiceTaskOptionsCompanion(
+      id: id ?? this.id,
+      baseTaskId: baseTaskId ?? this.baseTaskId,
+      answer: answer ?? this.answer,
+      correct: correct ?? this.correct,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (baseTaskId.present) {
+      map['base_task_id'] = Variable<int>(baseTaskId.value);
+    }
+    if (answer.present) {
+      map['answer'] = Variable<String>(answer.value);
+    }
+    if (correct.present) {
+      map['correct'] = Variable<bool>(correct.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ChoiceTaskOptionsCompanion(')
+          ..write('id: $id, ')
+          ..write('baseTaskId: $baseTaskId, ')
+          ..write('answer: $answer, ')
+          ..write('correct: $correct')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ChoiceTaskOptionsTable extends ChoiceTaskOptions
+    with TableInfo<$ChoiceTaskOptionsTable, LocalChoiceTaskOption> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ChoiceTaskOptionsTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+      'id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  final VerificationMeta _baseTaskIdMeta = const VerificationMeta('baseTaskId');
+  @override
+  late final GeneratedColumn<int?> baseTaskId = GeneratedColumn<int?>(
+      'base_task_id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'REFERENCES base_tasks (id) ON DELETE CASCADE');
+  final VerificationMeta _answerMeta = const VerificationMeta('answer');
+  @override
+  late final GeneratedColumn<String?> answer = GeneratedColumn<String?>(
+      'answer', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _correctMeta = const VerificationMeta('correct');
+  @override
+  late final GeneratedColumn<bool?> correct = GeneratedColumn<bool?>(
+      'correct', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (correct IN (0, 1))');
+  @override
+  List<GeneratedColumn> get $columns => [id, baseTaskId, answer, correct];
+  @override
+  String get aliasedName => _alias ?? 'choice_task_options';
+  @override
+  String get actualTableName => 'choice_task_options';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<LocalChoiceTaskOption> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('base_task_id')) {
+      context.handle(
+          _baseTaskIdMeta,
+          baseTaskId.isAcceptableOrUnknown(
+              data['base_task_id']!, _baseTaskIdMeta));
+    } else if (isInserting) {
+      context.missing(_baseTaskIdMeta);
+    }
+    if (data.containsKey('answer')) {
+      context.handle(_answerMeta,
+          answer.isAcceptableOrUnknown(data['answer']!, _answerMeta));
+    } else if (isInserting) {
+      context.missing(_answerMeta);
+    }
+    if (data.containsKey('correct')) {
+      context.handle(_correctMeta,
+          correct.isAcceptableOrUnknown(data['correct']!, _correctMeta));
+    } else if (isInserting) {
+      context.missing(_correctMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  LocalChoiceTaskOption map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return LocalChoiceTaskOption.fromData(data, attachedDatabase,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $ChoiceTaskOptionsTable createAlias(String alias) {
+    return $ChoiceTaskOptionsTable(attachedDatabase, alias);
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   late final $LocalGamesTable localGames = $LocalGamesTable(this);
@@ -1337,15 +1595,25 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $CheckedTextTasksTable(this);
   late final $TaskBindingsTable taskBindings = $TaskBindingsTable(this);
   late final $PollTasksTable pollTasks = $PollTasksTable(this);
+  late final $ChoiceTaskOptionsTable choiceTaskOptions =
+      $ChoiceTaskOptionsTable(this);
   late final GameDao gameDao = GameDao(this as AppDatabase);
-  late final CheckedTextTaskDao checkedTextTaskDao =
-      CheckedTextTaskDao(this as AppDatabase);
   late final TaskBindingDao taskBindingDao =
       TaskBindingDao(this as AppDatabase);
+  late final BaseTaskDao baseTaskDao = BaseTaskDao(this as AppDatabase);
+  late final CheckedTextTaskDao checkedTextTaskDao =
+      CheckedTextTaskDao(this as AppDatabase);
   late final PollTaskDao pollTaskDao = PollTaskDao(this as AppDatabase);
+  late final ChoiceTaskDao choiceTaskDao = ChoiceTaskDao(this as AppDatabase);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [localGames, baseTasks, checkedTextTasks, taskBindings, pollTasks];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+        localGames,
+        baseTasks,
+        checkedTextTasks,
+        taskBindings,
+        pollTasks,
+        choiceTaskOptions
+      ];
 }

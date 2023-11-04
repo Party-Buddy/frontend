@@ -12,4 +12,7 @@ mixin _$TaskBindingDaoMixin on DatabaseAccessor<AppDatabase> {
   $TaskBindingsTable get taskBindings => attachedDatabase.taskBindings;
   $CheckedTextTasksTable get checkedTextTasks =>
       attachedDatabase.checkedTextTasks;
+  $PollTasksTable get pollTasks => attachedDatabase.pollTasks;
+  $ChoiceTaskOptionsTable get choiceTaskOptions =>
+      attachedDatabase.choiceTaskOptions;
 }

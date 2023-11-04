@@ -5,19 +5,28 @@ import 'package:party_games_app/features/games/data/models/game_model.dart';
 import 'package:party_games_app/features/games/data/data_sources/local/tables/task_binding.dart';
 import 'package:party_games_app/features/tasks/data/data_sources/local/tables/base_task.dart';
 import 'package:party_games_app/features/tasks/data/data_sources/local/tables/checked_text_task.dart';
+import 'package:party_games_app/features/tasks/data/data_sources/local/tables/choice_task_options.dart';
+import 'package:party_games_app/features/tasks/data/data_sources/local/tables/poll_task.dart';
 import 'package:party_games_app/features/tasks/data/models/task_model.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 
 part 'task_binding_dao.g.dart';
 
-@UseDao(tables: [LocalGames, BaseTasks, TaskBindings, CheckedTextTasks])
+@UseDao(tables: [
+  LocalGames,
+  BaseTasks,
+  TaskBindings,
+  CheckedTextTasks,
+  PollTasks,
+  ChoiceTaskOptions
+])
 class TaskBindingDao extends DatabaseAccessor<AppDatabase>
     with _$TaskBindingDaoMixin {
   final AppDatabase db;
 
   TaskBindingDao(this.db) : super(db);
 
-  Future<List<TaskModel>> getAllTasks(int gameId) {
+  Future<List<LocalBaseTask>> getAllTasks(int gameId) {
     return (select(taskBindings)
           ..where((tbl) => tbl.gameId.equals(gameId))
           ..orderBy([
@@ -29,16 +38,8 @@ class TaskBindingDao extends DatabaseAccessor<AppDatabase>
               baseTasks, baseTasks.id.equalsExp(taskBindings.baseTaskId))
         ])
         .get()
-        .then((rows) => Future.wait(rows.map((row) {
-              LocalBaseTask baseTask = row.readTable(baseTasks);
-              TaskType type = TaskType.values
-                  .firstWhere((type) => type.toString() == baseTask.type);
-              switch (type) {
-                case TaskType.checkedText:
-                  return db.checkedTextTaskDao.getTask(baseTask.id);
-                default:
-                  throw Error();
-              }
+        .then((rows) => Future.wait(rows.map((row) async {
+              return row.readTable(baseTasks);
             })));
   }
 
