@@ -1,5 +1,4 @@
 import 'package:party_games_app/config/defaults/username.dart';
-import 'package:party_games_app/core/resources/data_state.dart';
 import 'package:party_games_app/features/username/data/data_sources/local/local_username_datasource.dart';
 import 'package:party_games_app/features/username/data/model/username_model.dart';
 import 'package:party_games_app/features/username/domain/entities/username.dart';

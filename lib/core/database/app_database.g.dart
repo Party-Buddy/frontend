@@ -1146,6 +1146,189 @@ class $TaskBindingsTable extends TaskBindings
   }
 }
 
+class LocalPollTask extends DataClass implements Insertable<LocalPollTask> {
+  final int baseTaskId;
+  final String pollAnswerType;
+  LocalPollTask({required this.baseTaskId, required this.pollAnswerType});
+  factory LocalPollTask.fromData(
+      Map<String, dynamic> data, GeneratedDatabase db,
+      {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return LocalPollTask(
+      baseTaskId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}base_task_id'])!,
+      pollAnswerType: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}poll_answer_type'])!,
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['base_task_id'] = Variable<int>(baseTaskId);
+    map['poll_answer_type'] = Variable<String>(pollAnswerType);
+    return map;
+  }
+
+  PollTasksCompanion toCompanion(bool nullToAbsent) {
+    return PollTasksCompanion(
+      baseTaskId: Value(baseTaskId),
+      pollAnswerType: Value(pollAnswerType),
+    );
+  }
+
+  factory LocalPollTask.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return LocalPollTask(
+      baseTaskId: serializer.fromJson<int>(json['baseTaskId']),
+      pollAnswerType: serializer.fromJson<String>(json['pollAnswerType']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'baseTaskId': serializer.toJson<int>(baseTaskId),
+      'pollAnswerType': serializer.toJson<String>(pollAnswerType),
+    };
+  }
+
+  LocalPollTask copyWith({int? baseTaskId, String? pollAnswerType}) =>
+      LocalPollTask(
+        baseTaskId: baseTaskId ?? this.baseTaskId,
+        pollAnswerType: pollAnswerType ?? this.pollAnswerType,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('LocalPollTask(')
+          ..write('baseTaskId: $baseTaskId, ')
+          ..write('pollAnswerType: $pollAnswerType')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(baseTaskId, pollAnswerType);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LocalPollTask &&
+          other.baseTaskId == this.baseTaskId &&
+          other.pollAnswerType == this.pollAnswerType);
+}
+
+class PollTasksCompanion extends UpdateCompanion<LocalPollTask> {
+  final Value<int> baseTaskId;
+  final Value<String> pollAnswerType;
+  const PollTasksCompanion({
+    this.baseTaskId = const Value.absent(),
+    this.pollAnswerType = const Value.absent(),
+  });
+  PollTasksCompanion.insert({
+    this.baseTaskId = const Value.absent(),
+    required String pollAnswerType,
+  }) : pollAnswerType = Value(pollAnswerType);
+  static Insertable<LocalPollTask> custom({
+    Expression<int>? baseTaskId,
+    Expression<String>? pollAnswerType,
+  }) {
+    return RawValuesInsertable({
+      if (baseTaskId != null) 'base_task_id': baseTaskId,
+      if (pollAnswerType != null) 'poll_answer_type': pollAnswerType,
+    });
+  }
+
+  PollTasksCompanion copyWith(
+      {Value<int>? baseTaskId, Value<String>? pollAnswerType}) {
+    return PollTasksCompanion(
+      baseTaskId: baseTaskId ?? this.baseTaskId,
+      pollAnswerType: pollAnswerType ?? this.pollAnswerType,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (baseTaskId.present) {
+      map['base_task_id'] = Variable<int>(baseTaskId.value);
+    }
+    if (pollAnswerType.present) {
+      map['poll_answer_type'] = Variable<String>(pollAnswerType.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PollTasksCompanion(')
+          ..write('baseTaskId: $baseTaskId, ')
+          ..write('pollAnswerType: $pollAnswerType')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PollTasksTable extends PollTasks
+    with TableInfo<$PollTasksTable, LocalPollTask> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PollTasksTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _baseTaskIdMeta = const VerificationMeta('baseTaskId');
+  @override
+  late final GeneratedColumn<int?> baseTaskId = GeneratedColumn<int?>(
+      'base_task_id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'REFERENCES base_tasks (id) ON DELETE CASCADE');
+  final VerificationMeta _pollAnswerTypeMeta =
+      const VerificationMeta('pollAnswerType');
+  @override
+  late final GeneratedColumn<String?> pollAnswerType = GeneratedColumn<String?>(
+      'poll_answer_type', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [baseTaskId, pollAnswerType];
+  @override
+  String get aliasedName => _alias ?? 'poll_tasks';
+  @override
+  String get actualTableName => 'poll_tasks';
+  @override
+  VerificationContext validateIntegrity(Insertable<LocalPollTask> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('base_task_id')) {
+      context.handle(
+          _baseTaskIdMeta,
+          baseTaskId.isAcceptableOrUnknown(
+              data['base_task_id']!, _baseTaskIdMeta));
+    }
+    if (data.containsKey('poll_answer_type')) {
+      context.handle(
+          _pollAnswerTypeMeta,
+          pollAnswerType.isAcceptableOrUnknown(
+              data['poll_answer_type']!, _pollAnswerTypeMeta));
+    } else if (isInserting) {
+      context.missing(_pollAnswerTypeMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {baseTaskId};
+  @override
+  LocalPollTask map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return LocalPollTask.fromData(data, attachedDatabase,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $PollTasksTable createAlias(String alias) {
+    return $PollTasksTable(attachedDatabase, alias);
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   late final $LocalGamesTable localGames = $LocalGamesTable(this);
@@ -1153,14 +1336,16 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $CheckedTextTasksTable checkedTextTasks =
       $CheckedTextTasksTable(this);
   late final $TaskBindingsTable taskBindings = $TaskBindingsTable(this);
+  late final $PollTasksTable pollTasks = $PollTasksTable(this);
   late final GameDao gameDao = GameDao(this as AppDatabase);
   late final CheckedTextTaskDao checkedTextTaskDao =
       CheckedTextTaskDao(this as AppDatabase);
   late final TaskBindingDao taskBindingDao =
       TaskBindingDao(this as AppDatabase);
+  late final PollTaskDao pollTaskDao = PollTaskDao(this as AppDatabase);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [localGames, baseTasks, checkedTextTasks, taskBindings];
+      [localGames, baseTasks, checkedTextTasks, taskBindings, pollTasks];
 }
