@@ -58,8 +58,8 @@ class _GameListState extends State<GameList> {
           future: gameType == GameType.public
               ? convertFutureDataState(_getPublishedGamesUseCase.call())
               : convertFuture(_getLocalGamesUseCase.call()),
-          notFoundWidget: () => buildNotFoundWidget(
-              text: "У вас пока нет своих игр"),
+          notFoundWidget: () =>
+              buildNotFoundWidget(text: "У вас пока нет своих игр"),
           builder: (data) {
             if (data.error != null) {
               return Container(); // TO DO: handle errors
@@ -81,7 +81,8 @@ class _GameListState extends State<GameList> {
                     .map((game) => Padding(
                         padding:
                             const EdgeInsets.symmetric(vertical: kPadding / 2),
-                        child: GameHeader(game: game, onTap: () => widget.onTapOnGame(game))))
+                        child: GameHeader(
+                            game: game, onTap: () => widget.onTapOnGame(game))))
                     .toList(),
               ),
             );

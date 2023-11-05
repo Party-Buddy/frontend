@@ -22,43 +22,45 @@ class _GameHeaderState extends State<GameHeader> {
       onTap: widget.onTap,
       onHover: (h) => setState(() => _hovered = h),
       child: BorderWrapper(
-        fillColor: _hovered ? kPrimaryDarkColor.withOpacity(.3) : null,
+          fillColor: _hovered ? kPrimaryDarkColor.withOpacity(.3) : null,
           child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.all(kPadding / 2),
-                child: Text(
-                  widget.game.name,
-                  style: const TextStyle(
-                      fontFamily: kFontFamily, fontSize: 18, color: kFontColor),
-                ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(kPadding / 2),
+                    child: Text(
+                      widget.game.name,
+                      style: const TextStyle(
+                          fontFamily: kFontFamily,
+                          fontSize: 18,
+                          color: kFontColor),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: kPadding,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(kPadding / 2),
+                    child: Text(
+                      getTasksCountLabel(),
+                      style: TextStyle(
+                          fontFamily: kFontFamily,
+                          fontSize: 16,
+                          color: kFontColor.withOpacity(.9)),
+                    ),
+                  )
+                ],
               ),
-              const SizedBox(
-                height: kPadding,
+              Image.network(
+                widget.game.imageUri ?? "TO DO",
+                height: 90,
               ),
-              Container(
-                padding: const EdgeInsets.all(kPadding / 2),
-                child: Text(
-                  getTasksCountLabel(),
-                  style: TextStyle(
-                      fontFamily: kFontFamily,
-                      fontSize: 16,
-                      color: kFontColor.withOpacity(.9)),
-                ),
-              )
             ],
-          ),
-          Image.network(
-              widget.game.imageUri ?? "TO DO",
-              height: 90,
-          ),
-        ],
-      )),
+          )),
     );
   }
 

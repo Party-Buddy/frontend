@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:party_games_app/config/utils.dart';
 import 'package:party_games_app/config/view_config.dart';
+import 'package:party_games_app/core/widgets/base_screen.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
 import 'package:party_games_app/core/widgets/labeled_slider.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
@@ -38,18 +39,9 @@ class _GameStartScreenState extends State<GameStartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: kBackgorundColor,
-        appBar: AppBar(
-          leading: backButton(context),
-          title: const Text("Создание новой игры"),
-        ),
-        body: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(gradient: kBackgroundGradient),
-          padding: const EdgeInsets.all(kPadding * 2),
-          alignment: Alignment.center,
-          child: Column(
+      return BaseScreen(
+      appBarTitle: "Начать игру",
+      content: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
@@ -124,6 +116,6 @@ class _GameStartScreenState extends State<GameStartScreen> {
               )
             ],
           ),
-        ));
+        );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:party_games_app/features/games/presentation/screens/game_create_screen.dart';
+import 'package:party_games_app/features/games/presentation/screens/game_start_screen.dart';
 import 'package:party_games_app/features/games/presentation/screens/game_join_screen.dart';
 import 'package:party_games_app/features/games/presentation/screens/main_menu_screen.dart';
 
