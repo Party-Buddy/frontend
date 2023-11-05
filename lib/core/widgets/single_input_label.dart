@@ -27,44 +27,53 @@ class _SingleLineInputLabelState extends State<SingleLineInputLabel> {
     super.dispose();
   }
 
+  Color get shadowColor => switch (submitResult) {
+    SubmitResult.success => const Color.fromARGB(255, 64, 238, 70),
+    SubmitResult.error => Colors.red,
+    _ => Colors.transparent
+  };
+
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      onSubmitted: (s) => setState(() {
-        s = s.trim();
-        initialText = s;
-        submitResult = widget.onSubmitted(s);
-      }),
-      cursorColor: Colors.white,
-      focusNode: focusNode,
-      onTapOutside: (e) {
-        focusNode.unfocus();
-        String current = controller.text;
-        if (current.isEmpty) {
-          initialText = current;
-          setState(() {
-            submitResult = SubmitResult.empty;
-          });
-          return;
-        }
-
-        if (current != initialText) {
-          initialText = current;
-          setState(() {
-            submitResult = widget.onSubmitted(current);
-          });
-        }
-      },
-      style: const TextStyle(
-          fontSize: 18, fontFamily: kFontFamily, color: Colors.white),
-      decoration: inputDecoration(
-          labelText: widget.labelText,
-          borderColor: switch (submitResult) {
-            SubmitResult.success => Color.fromARGB(255, 19, 255, 2),
-            SubmitResult.error => Colors.redAccent,
-            _ => null
-          }),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: kBorderRadius,
+        boxShadow: submitResult == SubmitResult.empty ? [] : [
+          BoxShadow(color: shadowColor, blurRadius: 10)
+        ]
+      ),
+      child: TextField(
+        controller: controller,
+        onSubmitted: (s) => setState(() {
+          s = s.trim();
+          initialText = s;
+          submitResult = widget.onSubmitted(s);
+        }),
+        cursorColor: Colors.white,
+        focusNode: focusNode,
+        onTapOutside: (e) {
+          focusNode.unfocus();
+          String current = controller.text;
+          if (current.isEmpty) {
+            initialText = current;
+            setState(() {
+              submitResult = SubmitResult.empty;
+            });
+            return;
+          }
+    
+          if (current != initialText) {
+            initialText = current;
+            setState(() {
+              submitResult = widget.onSubmitted(current);
+            });
+          }
+        },
+        style: const TextStyle(
+            fontSize: 18, fontFamily: kFontFamily, color: Colors.white),
+        decoration: inputDecoration(
+            labelText: widget.labelText),
+      ),
     );
   }
 }

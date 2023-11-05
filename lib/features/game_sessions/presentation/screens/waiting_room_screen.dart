@@ -143,7 +143,7 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                         text: "Показать QR",
                         onPressed: () => showWidget(
                             context,
-                            Container(
+                            content: Container(
                                 height: 250,
                                 width: 250,
                                 color: Colors.white,
@@ -154,8 +154,10 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                     ),
                     CustomButton(
                         text: "Покинуть игру",
-                        onPressed: () => Navigator.pushNamed(
-                            context, MainMenuScreen.routeName)),
+                        onPressed: () => showConfirmationDialog(context,
+                            text: "Вы точно хотите выйти?",
+                            onConfirmed: () => Navigator.pushNamed(
+                                context, MainMenuScreen.routeName))),
                   ],
                 ))
           ],

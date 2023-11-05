@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/view_config.dart';
 
 class CustomButton extends StatefulWidget {
-  const CustomButton({super.key, required this.text, required this.onPressed});
+  const CustomButton(
+      {super.key,
+      required this.text,
+      required this.onPressed,
+      this.width = 200,
+      this.fontSize = 20,
+      this.padding = kPadding * 1.5});
 
   final String text;
   final VoidCallback onPressed;
+  final double width;
+  final double padding;
+  final double fontSize;
 
   @override
   State<CustomButton> createState() => _CustomButtonState();
@@ -23,30 +33,21 @@ class _CustomButtonState extends State<CustomButton> {
       onTap: widget.onPressed,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 100),
-        width: 200,
+        width: widget.width,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: !_hovered ? Colors.blueGrey.shade900 :
-            Colors.grey.shade900,
-          borderRadius: kBorderRadius,
-          boxShadow: !_hovered
-            ? []
-            : [
-              const BoxShadow(
-                color: Color.fromARGB(255, 255, 89, 227),
-                blurRadius: 15
-              )
-              ]
-        ),
-        padding: const EdgeInsets.all(kPadding * 1.5),
-        margin: const EdgeInsets.all(kPadding / 4),
+            color: !_hovered ? kAppBarColor : darken(kAppBarColor, .05),
+            borderRadius: kBorderRadius,
+            boxShadow: !_hovered
+                ? []
+                : [
+                    highlightShadow()
+                  ]),
+        padding: EdgeInsets.all(widget.padding),
         child: Text(
           widget.text,
-          style: const TextStyle(
-            color: Colors.white,
-            fontFamily: kFontFamily,
-            fontSize: 20
-          ),
+          style: TextStyle(
+              color: Colors.white, fontFamily: kFontFamily, fontSize: widget.fontSize),
         ),
       ),
     );

@@ -4,13 +4,14 @@ import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
 
 class LabeledSlider extends StatefulWidget {
-  const LabeledSlider({super.key,
-                       required this.min, 
-                       required this.max, 
-                       required this.initial, 
-                       required this.onChanged,
-                       required this.displayValue});
-  
+  const LabeledSlider(
+      {super.key,
+      required this.min,
+      required this.max,
+      required this.initial,
+      required this.onChanged,
+      required this.displayValue});
+
   final int min;
   final int max;
   final int initial;
@@ -29,23 +30,28 @@ class _LabeledSliderState extends State<LabeledSlider> {
     return Column(
       children: [
         BorderWrapper(
-          child: Text(widget.displayValue(currValue),
-              style: defaultTextStyle(),)),
-        const SizedBox(height: kPadding,),
+            fillColor: lighten(kAppBarColor, 0.1),
+            child: Text(
+              widget.displayValue(currValue),
+              style: defaultTextStyle(),
+            )),
+        const SizedBox(
+          height: kPadding,
+        ),
         Slider(
-          activeColor: kPrimaryDarkColor.withOpacity(.8),
-          thumbColor: kPrimaryDarkColor,
-          inactiveColor: kPrimaryDarkColor.withOpacity(.3),
-          value: currValue.toDouble(),
-          min: widget.min.toDouble(),
-          max: widget.max.toDouble(),
-          onChanged: (newVal) {
-            setState(() {
-              currValue = newVal.round();
-              widget.onChanged(currValue);
-            });
-          })
-            
-    ],);
+            activeColor: kPrimaryColor.withOpacity(.8),
+            thumbColor: kPrimaryColor,
+            inactiveColor: kPrimaryDarkColor.withOpacity(.3),
+            value: currValue.toDouble(),
+            min: widget.min.toDouble(),
+            max: widget.max.toDouble(),
+            onChanged: (newVal) {
+              setState(() {
+                currValue = newVal.round();
+                widget.onChanged(currValue);
+              });
+            })
+      ],
+    );
   }
 }

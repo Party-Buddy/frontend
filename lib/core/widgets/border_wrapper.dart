@@ -19,7 +19,7 @@ class BorderWrapper extends StatelessWidget {
         duration: kAnimationDuration,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            borderRadius: kBorderRadius, color: fillColor, border: border()),
+            borderRadius: kBorderRadius, color: fillColor?? kAppBarColor),
         padding: EdgeInsets.all(padding),
         child: child);
   }

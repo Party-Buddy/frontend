@@ -68,10 +68,8 @@ class _GameStartScreenState extends State<GameStartScreen> {
                   const SizedBox(
                     width: kPadding,
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: kBorderRadius, border: border()),
-                    padding: const EdgeInsets.all(12),
+                  BorderWrapper(
+                    padding: kPadding * 1.35,
                     child: Icon(
                       Icons.person_2,
                       size: 30,
@@ -87,7 +85,7 @@ class _GameStartScreenState extends State<GameStartScreen> {
                 game: game,
                 onTap: () => showWidget(
                     context,
-                    GameList(
+                    content: GameList(
                         onTapOnGame: (selectedGame) => setState(() {
                               Navigator.pop(context);
                               game = selectedGame;

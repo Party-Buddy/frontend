@@ -33,21 +33,24 @@ IconButton backButton(BuildContext context) {
       icon: const Icon(Icons.arrow_back_ios_new, size: 20, color: kFontColor));
 }
 
-InputDecoration inputDecoration({String? labelText, Color? borderColor}) {
+InputDecoration inputDecoration({String? labelText, Color? fillColor}) {
   return InputDecoration(
       labelText: labelText,
       filled: true,
-      fillColor: Colors.transparent,
+      fillColor: fillColor?? kAppBarColor,
       labelStyle: const TextStyle(color: kFontColor, fontFamily: kFontFamily),
       enabledBorder: OutlineInputBorder(
           borderRadius: kBorderRadius,
-          borderSide: BorderSide(color: borderColor ?? kBorderColor)),
+          borderSide: BorderSide(color: kAppBarColor)
+      ),
       border: OutlineInputBorder(
           borderRadius: kBorderRadius,
-          borderSide: BorderSide(color: borderColor ?? kBorderColor)),
+          borderSide: BorderSide(color: kAppBarColor)
+      ),
       focusedBorder: OutlineInputBorder(
           borderRadius: kBorderRadius,
-          borderSide: BorderSide(color: lighten(kPrimaryDarkColor, .2))));
+          borderSide: BorderSide(color: lighten(kPrimaryDarkColor, .2))
+      ));
 }
 
 Border border() => Border.all(color: kBorderColor, width: 1);
@@ -56,3 +59,7 @@ TextStyle defaultTextStyle({double fontSize = 18}) {
   return TextStyle(
       fontFamily: kFontFamily, fontSize: fontSize, color: kFontColor);
 }
+
+BoxShadow highlightShadow() => const BoxShadow(
+                        color: Color.fromARGB(255, 255, 89, 227),
+                        blurRadius: 15);

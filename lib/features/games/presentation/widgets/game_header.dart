@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
@@ -21,43 +22,52 @@ class _GameHeaderState extends State<GameHeader> {
     return InkWell(
       onTap: widget.onTap,
       onHover: (h) => setState(() => _hovered = h),
-      child: BorderWrapper(
-          fillColor: _hovered ? kPrimaryDarkColor.withOpacity(.3) : null,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(kPadding / 2),
-                    child: Text(
-                      widget.game.name,
-                      style: const TextStyle(
-                          fontFamily: kFontFamily,
-                          fontSize: 18,
-                          color: kFontColor),
+      child: AnimatedContainer(
+        duration: kAnimationDuration,
+        decoration: BoxDecoration(
+          borderRadius: kBorderRadius,
+          boxShadow: _hovered ? [highlightShadow()] : []
+        ),
+        child: BorderWrapper(
+            // fillColor: _hovered ? kPrimaryDarkColor : null,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    BorderWrapper(
+                      fillColor: lighten(kAppBarColor, .1),
+                      child: Text(
+                        widget.game.name,
+                        style: const TextStyle(
+                            fontFamily: kFontFamily,
+                            fontSize: 18,
+                            color: kFontColor),
+                      ),
                     ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(kPadding / 2),
-                    child: Text(
-                      getTasksCountLabel(),
-                      style: TextStyle(
-                          fontFamily: kFontFamily,
-                          fontSize: 16,
-                          color: kFontColor.withOpacity(.9)),
-                    ),
-                  )
-                ],
-              ),
-              Image.network(
-                widget.game.imageUri ?? "TO DO",
-                height: 90,
-              ),
-            ],
-          )),
+                    const SizedBox(height: kPadding / 2,),
+                    BorderWrapper(
+                      fillColor: lighten(kAppBarColor, .1),
+                      child: Text(
+                        getTasksCountLabel(),
+                        style: TextStyle(
+                            fontFamily: kFontFamily,
+                            fontSize: 16,
+                            color: kFontColor.withOpacity(.9)),
+                      ),
+                    )
+                  ],
+                ),
+                Image.network(
+                  widget.game.imageUri ?? "TO DO",
+                  height: 90,
+                ),
+              ],
+            )),
+      ),
     );
   }
 
