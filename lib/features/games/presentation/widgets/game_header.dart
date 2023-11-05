@@ -2,78 +2,63 @@ import 'package:flutter/material.dart';
 import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
+import 'package:party_games_app/core/widgets/inkwell_border_wrapper.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 
-class GameHeader extends StatefulWidget {
+class GameHeader extends StatelessWidget {
   const GameHeader({super.key, required this.game, required this.onTap});
 
   final Game game;
   final VoidCallback onTap;
 
   @override
-  State<StatefulWidget> createState() => _GameHeaderState();
-}
-
-class _GameHeaderState extends State<GameHeader> {
-  bool _hovered = false;
-
-  @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: widget.onTap,
-      onHover: (h) => setState(() => _hovered = h),
-      child: AnimatedContainer(
-        duration: kAnimationDuration,
-        decoration: BoxDecoration(
-          borderRadius: kBorderRadius,
-          boxShadow: _hovered ? [highlightShadow()] : []
-        ),
-        child: BorderWrapper(
-            // fillColor: _hovered ? kPrimaryDarkColor : null,
-            child: Row(
+    return SelectableBorderWrapper(
+        onPressed: onTap,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    BorderWrapper(
-                      fillColor: lighten(kAppBarColor, .1),
-                      child: Text(
-                        widget.game.name,
-                        style: const TextStyle(
-                            fontFamily: kFontFamily,
-                            fontSize: 18,
-                            color: kFontColor),
-                      ),
-                    ),
-                    const SizedBox(height: kPadding / 2,),
-                    BorderWrapper(
-                      fillColor: lighten(kAppBarColor, .1),
-                      child: Text(
-                        getTasksCountLabel(),
-                        style: TextStyle(
-                            fontFamily: kFontFamily,
-                            fontSize: 16,
-                            color: kFontColor.withOpacity(.9)),
-                      ),
-                    )
-                  ],
+                BorderWrapper(
+                  fillColor: lighten(kAppBarColor, .1),
+                  child: Text(
+                    game.name,
+                    style: const TextStyle(
+                        fontFamily: kFontFamily,
+                        fontSize: 18,
+                        color: kFontColor),
+                  ),
                 ),
-                Image.network(
-                  widget.game.imageUri ?? "TO DO",
-                  height: 90,
+                const SizedBox(
+                  height: kPadding / 2,
                 ),
+                BorderWrapper(
+                  fillColor: lighten(kAppBarColor, .1),
+                  child: Text(
+                    getTasksCountLabel(),
+                    style: TextStyle(
+                        fontFamily: kFontFamily,
+                        fontSize: 16,
+                        color: kFontColor.withOpacity(.9)),
+                  ),
+                )
               ],
-            )),
-      ),
-    );
+            ),
+            Image.network(
+              game.imageUri ?? "TO DO",
+              height: 90,
+            ),
+          ],
+        ));
   }
 
   String getTasksCountLabel() {
     String? postfix;
-    String strCount = widget.game.tasks.length.toString();
+    String strCount = game.tasks.length.toString();
 
     if (strCount.endsWith("1") && !strCount.endsWith("11")) postfix = "задание";
     if (strCount.endsWith("2") && !strCount.endsWith("12")) postfix = "задания";

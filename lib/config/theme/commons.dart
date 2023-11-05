@@ -17,7 +17,7 @@ AppBarTheme appBarTheme() {
     shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
             bottomRight: Radius.circular(20), bottomLeft: Radius.circular(20))),
-    iconTheme: const IconThemeData(color: kFontColor),
+    iconTheme: const IconThemeData(color: kPrimaryColor),
     titleTextStyle: const TextStyle(
         color: kFontColor, fontSize: 20, fontFamily: kFontFamily),
   );
@@ -30,7 +30,7 @@ DecorationImage standardDecorationImage({BoxFit fit = BoxFit.cover}) =>
 IconButton backButton(BuildContext context) {
   return IconButton(
       onPressed: () => Navigator.pop(context),
-      icon: const Icon(Icons.arrow_back_ios_new, size: 20, color: kFontColor));
+      icon: const Icon(Icons.arrow_back_ios_new, size: 20, color: kPrimaryColor));
 }
 
 InputDecoration inputDecoration({String? labelText, Color? fillColor}) {
