@@ -9,6 +9,8 @@ import 'package:party_games_app/core/widgets/button.dart';
 class GameJoinScreen extends StatefulWidget {
   const GameJoinScreen({super.key});
 
+  static const routeName = "/JoinGame";
+
   @override
   State<StatefulWidget> createState() => _GameJoinScreenState();
 }

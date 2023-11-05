@@ -6,7 +6,7 @@ ThemeData theme() {
       fontFamily: 'Muli',
       appBarTheme: appBarTheme(),
       textSelectionTheme:
-          const TextSelectionThemeData(selectionColor: kPrimaryDarkColor));
+          TextSelectionThemeData(selectionColor: kPrimaryColor.withOpacity(.5)));
 }
 
 AppBarTheme appBarTheme() {

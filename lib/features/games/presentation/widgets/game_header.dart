@@ -40,9 +40,6 @@ class _GameHeaderState extends State<GameHeader> {
                           color: kFontColor),
                     ),
                   ),
-                  const SizedBox(
-                    height: kPadding,
-                  ),
                   Container(
                     padding: const EdgeInsets.all(kPadding / 2),
                     child: Text(

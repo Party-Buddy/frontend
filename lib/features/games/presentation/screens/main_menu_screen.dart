@@ -3,9 +3,13 @@ import 'package:lottie/lottie.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/base_screen.dart';
 import 'package:party_games_app/core/widgets/button.dart';
+import 'package:party_games_app/features/games/presentation/screens/game_join_screen.dart';
+import 'package:party_games_app/features/games/presentation/screens/game_start_screen.dart';
 
 class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({super.key});
+
+  static const routeName = "/";
 
   @override
   State<MainMenuScreen> createState() => _MainMenuScreenState();
@@ -37,13 +41,13 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             child: Column(children: [
               CustomButton(
                   text: "Создать игру",
-                  onPressed: () => Navigator.pushNamed(context, "/CreateGame")),
+                  onPressed: () => Navigator.pushNamed(context, GameStartScreen.routeName)),
               const SizedBox(
                 height: kPadding,
               ),
               CustomButton(
                   text: "Присоединиться",
-                  onPressed: () => Navigator.pushNamed(context, "/JoinGame"))
+                  onPressed: () => Navigator.pushNamed(context, GameJoinScreen.routeName))
             ]),
           ),
         ],

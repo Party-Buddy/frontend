@@ -4,6 +4,7 @@ import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/base_screen.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
 import 'package:party_games_app/core/widgets/labeled_slider.dart';
+import 'package:party_games_app/features/game_sessions/presentation/screens/waiting_room_screen.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/games/presentation/widgets/game_list.dart';
 import 'package:party_games_app/features/players/domain/usecases/select_nickname.dart';
@@ -16,6 +17,8 @@ import 'package:party_games_app/config/theme/commons.dart';
 
 class GameStartScreen extends StatefulWidget {
   const GameStartScreen({super.key});
+
+  static const routeName = "/GameStart";
 
   @override
   State<GameStartScreen> createState() => _GameStartScreenState();
@@ -39,83 +42,88 @@ class _GameStartScreenState extends State<GameStartScreen> {
 
   @override
   Widget build(BuildContext context) {
-      return BaseScreen(
+    return BaseScreen(
       appBarTitle: "Начать игру",
       content: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
             children: [
-              Column(
+              const SizedBox(
+                height: kPadding,
+              ),
+              Row(
                 children: [
-                  const SizedBox(
-                    height: kPadding,
-                  ),
-                  Row(
-                    children: [
-                      Flexible(
-                        child: SingleLineInputLabel(
-                            labelText: "Ваш никнейм",
-                            onSubmitted: (s) {
-                              if (validateNickname(s)) {
-                                return SubmitResult.success;
-                              }
-                              showMessage(context, nicknameRequirements);
-                              return SubmitResult.error;
-                            }),
-                      ),
-                      const SizedBox(
-                        width: kPadding,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                            borderRadius: kBorderRadius, border: border()),
-                        padding: const EdgeInsets.all(12),
-                        child: Icon(
-                          Icons.person_2,
-                          size: 30,
-                          color: kBorderColor,
-                        ),
-                      )
-                    ],
+                  Flexible(
+                    child: SingleLineInputLabel(
+                        labelText: "Ваш никнейм",
+                        onSubmitted: (s) {
+                          if (validateNickname(s)) {
+                            return SubmitResult.success;
+                          }
+                          showMessage(context, nicknameRequirements);
+                          return SubmitResult.error;
+                        }),
                   ),
                   const SizedBox(
-                    height: kPadding * 2,
+                    width: kPadding,
                   ),
-                  GameHeader(
-                      game: game,
-                      onTap: () =>
-                        showWidget(context, GameList(onTapOnGame: (selectedGame) => setState(() {
-                          Navigator.pop(context);
-                          game = selectedGame;
-                        }))),
-                  ),
-                  const SizedBox(
-                    height: kPadding * 2,
-                  ),
-                  BorderWrapper(
-                      child: LabeledSlider(
-                          min: minPlayersCount,
-                          max: maxPlayersCount,
-                          initial: minPlayersCount,
-                          onChanged: (_) {},
-                          displayValue: (playersCount) =>
-                              "Количество игроков: $playersCount")),
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: kBorderRadius, border: border()),
+                    padding: const EdgeInsets.all(12),
+                    child: Icon(
+                      Icons.person_2,
+                      size: 30,
+                      color: kBorderColor,
+                    ),
+                  )
                 ],
               ),
-              Column(
-                children: [
-                  CustomButton(
-                      text: "Продолжить",
-                      onPressed: () => showMessage(context, "Еще делаем :)")),
-                  const SizedBox(
-                    height: kPadding,
-                  ),
-                  CustomButton(
-                      text: "Выйти",
-                      onPressed: () => Navigator.pushNamed(context, "/"))
-                ],
-              )
+              const SizedBox(
+                height: kPadding * 2,
+              ),
+              GameHeader(
+                game: game,
+                onTap: () => showWidget(
+                    context,
+                    GameList(
+                        onTapOnGame: (selectedGame) => setState(() {
+                              Navigator.pop(context);
+                              game = selectedGame;
+                            }))),
+              ),
+              const SizedBox(
+                height: kPadding * 2,
+              ),
+              BorderWrapper(
+                  child: LabeledSlider(
+                      min: minPlayersCount,
+                      max: maxPlayersCount,
+                      initial: minPlayersCount,
+                      onChanged: (_) {},
+                      displayValue: (playersCount) =>
+                          "Количество игроков: $playersCount")),
             ],
           ),
-        );
+          Column(
+            children: [
+              CustomButton(
+                  text: "Продолжить",
+                  onPressed: () => Navigator.pushNamed(
+                      context, WaitingRoomScreen.routeName,
+                      arguments: const WaitingRoomScreenArguments(
+                          players: playersMock, gameSession: gameSessionMock))),
+              const SizedBox(
+                height: kPadding,
+              ),
+              CustomButton(
+                  text: "Выйти",
+                  onPressed: () => Navigator.pushNamed(context, "/"))
+            ],
+          )
+        ],
+      ),
+    );
   }
 }
