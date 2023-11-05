@@ -18,9 +18,9 @@ class FutureBuilderWrapper<T> extends StatelessWidget {
           case ConnectionState.none:
         return notFoundWidget();
           case ConnectionState.waiting:
-        return const CircularProgressIndicator(color: kPrimaryColor,);
+        return const CircularProgressIndicator(color: kPrimaryDarkColor,);
           case ConnectionState.active:
-        return const CircularProgressIndicator(color: kPrimaryColor,);
+        return const CircularProgressIndicator(color: kPrimaryDarkColor,);
         }
       });
   }

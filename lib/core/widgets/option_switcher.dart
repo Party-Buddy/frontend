@@ -20,8 +20,8 @@ class OptionSwitcher<T> extends StatelessWidget {
         borderColor: [kBorderColor],
         borderWidth: 1,
         minWidth: minOptionWidth,
-        inactiveBgColor: darken(kPrimaryColor, .55),
-        activeBgColor: [darken(kPrimaryColor, .4)],
+        inactiveBgColor: darken(kPrimaryDarkColor, .55),
+        activeBgColor: [darken(kPrimaryDarkColor, .4)],
         labels: options.map(stringMapper).toList(),
         customTextStyles: List.filled(2, defaultTextStyle(fontSize: 16)),
         onToggle: (index) {

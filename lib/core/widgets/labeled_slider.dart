@@ -33,9 +33,9 @@ class _LabeledSliderState extends State<LabeledSlider> {
               style: defaultTextStyle(),)),
         const SizedBox(height: kPadding,),
         Slider(
-          activeColor: kPrimaryColor.withOpacity(.8),
-          thumbColor: kPrimaryColor,
-          inactiveColor: kPrimaryColor.withOpacity(.3),
+          activeColor: kPrimaryDarkColor.withOpacity(.8),
+          thumbColor: kPrimaryDarkColor,
+          inactiveColor: kPrimaryDarkColor.withOpacity(.3),
           value: currValue.toDouble(),
           min: widget.min.toDouble(),
           max: widget.max.toDouble(),

@@ -55,7 +55,7 @@ class _GameJoinScreenState extends State<GameJoinScreen>
                   height: 200,
                   width: 200,
                   decoration: const BoxDecoration(
-                      color: kPrimaryColor,
+                      color: kPrimaryDarkColor,
                       borderRadius: BorderRadius.all(Radius.circular(20.0))),
                 ),
                 Lottie.network(

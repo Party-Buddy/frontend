@@ -21,6 +21,21 @@ class GameStartScreen extends StatefulWidget {
 }
 
 class _GameStartScreenState extends State<GameStartScreen> {
+  Game game = Game(
+      id: 1,
+      name: "Minecraft",
+      imageUri:
+          "https://cdn.iconscout.com/icon/free/png-256/free-minecraft-15-282774.png",
+      tasks: [
+        const CheckedTextTask(
+            id: 1,
+            name: "Basics1",
+            description: "what is the max stack size for swords?",
+            duration: 10,
+            answer: "1"),
+      ],
+      updatedAt: DateTime.now());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,20 +88,13 @@ class _GameStartScreenState extends State<GameStartScreen> {
                   const SizedBox(
                     height: kPadding * 2,
                   ),
-                  InkWell(
-                    onTap: () => showWidget(context, GameList(onTapOnGame: (_) {})),
-                    child: GameHeader(
-                        game: Game(
-                          id: 1,
-                          name: "Minecraft",
-                          imageUri: "https://cdn.iconscout.com/icon/free/png-256/free-minecraft-15-282774.png",
-                          tasks: [const CheckedTextTask(
-                            id: 1,
-                            name:"Basics1",
-                            description: "what is the max stack size for swords?",
-                            duration: 10,
-                            answer: "1"),],
-                            updatedAt: DateTime.now())),
+                  GameHeader(
+                      game: game,
+                      onTap: () =>
+                        showWidget(context, GameList(onTapOnGame: (selectedGame) => setState(() {
+                          Navigator.pop(context);
+                          game = selectedGame;
+                        }))),
                   ),
                   const SizedBox(
                     height: kPadding * 2,

@@ -11,7 +11,7 @@ void showMessage(BuildContext context, String message) {
             content: Column(mainAxisSize: MainAxisSize.min, children: [
               BorderWrapper(
                 padding: 15.0,
-                fillColor: darken(kPrimaryColor, .6),
+                fillColor: darken(kPrimaryDarkColor, .6),
                 child: Text(message,
                     style: const TextStyle(
                         color: kFontColor,
@@ -29,10 +29,11 @@ void showWidget(BuildContext context, Widget widget) {
             backgroundColor: Colors.transparent,
             alignment: Alignment.center,
             contentPadding: const EdgeInsets.all(0),
+            insetPadding: const EdgeInsets.all(0),
             content: Column(mainAxisSize: MainAxisSize.min, children: [
               BorderWrapper(
-                // padding: 15.0,
-                fillColor: darken(kPrimaryColor, .6),
+                // padding: 0,
+                fillColor: darken(kPrimaryDarkColor, .6),
                 child: widget,
               )
             ]),

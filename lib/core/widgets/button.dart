@@ -12,27 +12,43 @@ class CustomButton extends StatefulWidget {
 }
 
 class _CustomButtonState extends State<CustomButton> {
-  bool isPressed = false;
+  var _hovered = false;
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-      style: ButtonStyle(
-          minimumSize: MaterialStateProperty.all(const Size(220.0, 60.0)),
-          padding: MaterialStateProperty.all(kPaddingAll),
-          shape: MaterialStateProperty.all(const RoundedRectangleBorder(
-            borderRadius: kBorderRadius,
-          )),
-          animationDuration: kAnimationDuration,
-          side: MaterialStateProperty.all(BorderSide(
-              color: kBorderColor, width: 1.0, style: BorderStyle.solid)),
-          textStyle: const MaterialStatePropertyAll(
-              TextStyle(fontSize: 18, fontFamily: kFontFamily)),
-          overlayColor: MaterialStatePropertyAll(kFillColor.withOpacity(.8)),
-          backgroundColor: const MaterialStatePropertyAll(Colors.transparent),
-          foregroundColor: const MaterialStatePropertyAll(kFontColor)),
-      onPressed: widget.onPressed,
-      child: Text(widget.text),
+    return InkWell(
+      onHover: (hovered) => setState(() {
+        _hovered = hovered;
+      }),
+      onTap: widget.onPressed,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 100),
+        width: 200,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: !_hovered ? Colors.blueGrey.shade900 :
+            Colors.grey.shade900,
+          borderRadius: kBorderRadius,
+          boxShadow: !_hovered
+            ? []
+            : [
+              const BoxShadow(
+                color: Color.fromARGB(255, 255, 89, 227),
+                blurRadius: 15
+              )
+              ]
+        ),
+        padding: const EdgeInsets.all(kPadding * 1.5),
+        margin: const EdgeInsets.all(kPadding / 4),
+        child: Text(
+          widget.text,
+          style: const TextStyle(
+            color: Colors.white,
+            fontFamily: kFontFamily,
+            fontSize: 20
+          ),
+        ),
+      ),
     );
   }
 }

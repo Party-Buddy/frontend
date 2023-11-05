@@ -6,7 +6,7 @@ ThemeData theme() {
       fontFamily: 'Muli',
       appBarTheme: appBarTheme(),
       textSelectionTheme:
-          const TextSelectionThemeData(selectionColor: kPrimaryColor));
+          const TextSelectionThemeData(selectionColor: kPrimaryDarkColor));
 }
 
 AppBarTheme appBarTheme() {
@@ -47,7 +47,7 @@ InputDecoration inputDecoration({String? labelText, Color? borderColor}) {
           borderSide: BorderSide(color: borderColor ?? kBorderColor)),
       focusedBorder: OutlineInputBorder(
           borderRadius: kBorderRadius,
-          borderSide: BorderSide(color: lighten(kPrimaryColor, .2))));
+          borderSide: BorderSide(color: lighten(kPrimaryDarkColor, .2))));
 }
 
 Border border() => Border.all(color: kBorderColor, width: 1);
