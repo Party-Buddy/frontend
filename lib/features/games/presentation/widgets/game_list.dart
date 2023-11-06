@@ -19,8 +19,6 @@ class GameList extends StatefulWidget {
   State<StatefulWidget> createState() => _GameListState();
 }
 
-enum GameType { owned, public }
-
 class _GameListState extends State<GameList> {
   GameType gameType = GameType.owned;
 

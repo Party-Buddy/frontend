@@ -3,11 +3,12 @@ import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/view_config.dart';
 
 class SelectableBorderWrapper extends StatefulWidget {
-  const SelectableBorderWrapper({super.key, required this.child, required this.onPressed, this.padding = kPadding});
+  const SelectableBorderWrapper({super.key, required this.child, required this.onPressed, this.padding = kPadding, this.fillColor});
 
   final Widget child;
   final VoidCallback onPressed;
   final double padding;
+  final Color? fillColor;
 
   @override
   State<SelectableBorderWrapper> createState() =>
@@ -29,7 +30,7 @@ class _SelectableBorderWrapperState extends State<SelectableBorderWrapper> {
           duration: kAnimationDuration,
           padding: EdgeInsets.all(widget.padding),
           decoration: BoxDecoration(
-              color: kAppBarColor,
+              color: widget.fillColor?? kAppBarColor,
               borderRadius: kBorderRadius,
               boxShadow: !_hovered ? [] : [highlightShadow()]),
           child: widget.child,

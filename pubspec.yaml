@@ -43,7 +43,6 @@ dependencies:
   lottie: ^2.6.0
   retrofit: ^3.0.1
   sqflite: ^2.3.0
-  toggle_switch: ^2.1.0
   moor_flutter: ^4.1.0
   moor: ^4.6.1+1
   shared_preferences: ^2.2.2

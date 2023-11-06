@@ -4,7 +4,7 @@ import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/utils.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/base_screen.dart';
-import 'package:party_games_app/core/widgets/button.dart';
+import 'package:party_games_app/core/widgets/custom_button.dart';
 
 class GameJoinScreen extends StatefulWidget {
   const GameJoinScreen({super.key});

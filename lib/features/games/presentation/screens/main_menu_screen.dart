@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/base_screen.dart';
-import 'package:party_games_app/core/widgets/button.dart';
+import 'package:party_games_app/core/widgets/custom_button.dart';
+import 'package:party_games_app/features/constructor/presentation/screens/constructor_screen.dart';
 import 'package:party_games_app/features/games/presentation/screens/game_join_screen.dart';
 import 'package:party_games_app/features/games/presentation/screens/game_start_screen.dart';
 
@@ -47,7 +48,13 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
               ),
               CustomButton(
                   text: "Присоединиться",
-                  onPressed: () => Navigator.pushNamed(context, GameJoinScreen.routeName))
+                  onPressed: () => Navigator.pushNamed(context, GameJoinScreen.routeName)),
+              const SizedBox(
+                height: kPadding,
+              ),
+              CustomButton(
+                  text: "Конструктор",
+                  onPressed: () => Navigator.pushNamed(context, ConstructorScreen.routeName)),
             ]),
           ),
         ],

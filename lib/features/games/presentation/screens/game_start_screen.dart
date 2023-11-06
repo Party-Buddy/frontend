@@ -10,7 +10,7 @@ import 'package:party_games_app/features/games/presentation/widgets/game_list.da
 import 'package:party_games_app/features/players/domain/usecases/select_nickname.dart';
 import 'package:party_games_app/features/tasks/domain/entities/checked_text_task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
-import 'package:party_games_app/core/widgets/button.dart';
+import 'package:party_games_app/core/widgets/custom_button.dart';
 import 'package:party_games_app/features/games/presentation/widgets/game_header.dart';
 import 'package:party_games_app/core/widgets/single_input_label.dart';
 import 'package:party_games_app/config/theme/commons.dart';

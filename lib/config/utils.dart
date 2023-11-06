@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
-import 'package:party_games_app/core/widgets/button.dart';
+import 'package:party_games_app/core/widgets/custom_button.dart';
 import 'view_config.dart';
 
 void showMessage(BuildContext context, String message) {

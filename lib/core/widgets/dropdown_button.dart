@@ -1,78 +1,62 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/view_config.dart';
+import 'package:party_games_app/core/widgets/border_wrapper.dart';
+import 'package:party_games_app/core/widgets/custom_button.dart';
 
-class CustomDropDownButton extends StatefulWidget {
+class CustomDropDownButton<T> extends StatefulWidget {
   const CustomDropDownButton(
       {super.key,
-      required this.question,
-      required this.answerPrefix,
+      required this.initialItem,
       required this.items,
+      required this.stringMapper,
       required this.onChanged});
 
-  final List<String> items;
-  final void Function(String?) onChanged;
-  final String question;
-  final String answerPrefix;
+  final List<T> items;
+  final T initialItem;
+  final void Function(T) onChanged;
+  final String Function(T) stringMapper;
 
   @override
-  State<StatefulWidget> createState() => _CustomDropDownButtonState();
+  State<CustomDropDownButton<T>> createState() => _CustomDropDownButtonState();
 }
 
-class _CustomDropDownButtonState extends State<CustomDropDownButton> {
-  String? value;
+class _CustomDropDownButtonState<T> extends State<CustomDropDownButton<T>> {
+  late T current = widget.initialItem;
 
   @override
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
-        child: DropdownButton2<String>(
-      customButton: Container(
-        width: double.infinity,
-        padding: kPaddingAll,
-        decoration: BoxDecoration(
-            borderRadius: kBorderRadius,
-            color: kInputLabelBackgroundColor.withOpacity(.8),
-            border: Border.all(color: kBorderColor)),
-        child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5.0),
-            child: Text(
-              value == null
-                  ? widget.question
-                  : "${widget.answerPrefix}: $value",
-              style: const TextStyle(
-                color: kFontColor,
-                fontSize: 18,
-                fontFamily: kFontFamily,
-              ),
-            )),
-      ),
+        child: DropdownButton2<T>(
+      // customButton: CustomButton(text: widget.stringMapper(current), width: 100, onPressed: () {}),
+      customButton: BorderWrapper(
+          child: Container(
+        alignment: Alignment.center,
+        width: 100,
+        padding: const EdgeInsets.all(kPadding * .35),
+        child: Text(widget.stringMapper(current)),
+      )),
       dropdownStyleData: DropdownStyleData(
           decoration: BoxDecoration(
               borderRadius: kBorderRadius,
-              color: kInputLabelBackgroundColor.withOpacity(.8))),
+              color: kAppBarColor.withOpacity(.8))),
       items: widget.items
-          .map((itemName) => DropdownMenuItem<String>(
-              value: itemName,
+          .map((item) => DropdownMenuItem<T>(
+              value: item,
               child: Text(
-                itemName,
-                style: const TextStyle(
-                  color: kFontColor,
-                  fontSize: 18,
-                  fontFamily: kFontFamily,
-                ),
+                widget.stringMapper(item),
+                style: defaultTextStyle(),
               )))
           .toList(),
-      onChanged: (itemName) {
+      onChanged: (item) {
+        if (item == null) return;
         setState(() {
-          value = itemName;
+          current = item;
         });
-        widget.onChanged(itemName);
+        widget.onChanged(item);
       },
-      style: const TextStyle(
-        color: Colors.black87,
-        fontSize: 18,
-        fontFamily: kFontFamily,
-      ),
+      style: defaultTextStyle(),
     ));
   }
 }

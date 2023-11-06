@@ -9,7 +9,7 @@ class CustomButton extends StatelessWidget {
       required this.onPressed,
       this.width = 200,
       this.fontSize = 20,
-      this.padding = kPadding * 1.5});
+      this.padding = kPadding});
 
   final String text;
   final VoidCallback onPressed;

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/utils.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/base_screen.dart';
-import 'package:party_games_app/core/widgets/button.dart';
+import 'package:party_games_app/core/widgets/custom_button.dart';
 import 'package:party_games_app/core/widgets/custom_check_box.dart';
+import 'package:party_games_app/core/widgets/custom_icon_button.dart';
 import 'package:party_games_app/features/games/presentation/screens/main_menu_screen.dart';
 import 'package:party_games_app/features/players/domain/entities/player.dart';
 import 'package:party_games_app/features/players/presentation/widget/player_header.dart';
@@ -114,7 +116,11 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                               fontFamily: "Roboto",
                               fontSize: 24),
                         ),
-                      )
+                      ),
+                      const SizedBox(
+                        width: kPadding,
+                      ),
+                      CustomIconButton(onPressed: () => Clipboard.setData(ClipboardData(text: widget.gameSession.sessionID)), iconData: Icons.link,)
                     ],
                   ),
                   const SizedBox(
@@ -141,14 +147,8 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                   children: [
                     CustomButton(
                         text: "Показать QR",
-                        onPressed: () => showWidget(
-                            context,
-                            content: Container(
-                                height: 250,
-                                width: 250,
-                                color: Colors.white,
-                                child: QrImageView(
-                                    data: widget.gameSession.sessionID)))),
+                        onPressed: () => showWidget(context,
+                            content: buildQRWidget())),
                     const SizedBox(
                       height: kPadding,
                     ),
@@ -162,5 +162,31 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                 ))
           ],
         ));
+  }
+
+  Widget buildQRWidget() {
+    return SizedBox(
+      width: 260,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+              height: 230,
+              width: 230,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: kBorderRadius
+              ),
+              child: QrImageView(data: widget.gameSession.sessionID)),
+          const SizedBox(height: kPadding,),
+          Center(
+            child: Text(
+              "Просканируйте для присоединения",
+              style: defaultTextStyle(),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
