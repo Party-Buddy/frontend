@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
-import 'package:party_games_app/core/widgets/custom_button.dart';
 
 class CustomDropDownButton<T> extends StatefulWidget {
   const CustomDropDownButton(
@@ -34,7 +33,7 @@ class _CustomDropDownButtonState<T> extends State<CustomDropDownButton<T>> {
           child: Container(
         alignment: Alignment.center,
         width: 100,
-        padding: const EdgeInsets.all(kPadding * .35),
+        padding: const EdgeInsets.all(kPadding * .08),
         child: Text(widget.stringMapper(current)),
       )),
       dropdownStyleData: DropdownStyleData(

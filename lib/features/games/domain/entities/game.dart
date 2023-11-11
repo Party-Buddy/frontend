@@ -3,7 +3,7 @@ import '../../../tasks/domain/entities/task.dart';
 const minPlayersCount = 2;
 const maxPlayersCount = 12;
 
-enum GameType { owned, public }
+enum Source { owned, public }
 
 class Game {
   final int? id;
