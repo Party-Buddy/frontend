@@ -9,7 +9,14 @@ class TasksGenerator {
           imageUri: 'https://s.turbifycdn.com/aah/mathmedia/what-is-the-difference-between-arithmetic-and-mathematics-44.jpg',
           description: '2+2',
           duration: 10,
-          type: TaskType.checkedText)
+          type: TaskType.checkedText),
+      const Task(
+          id: 1,
+          name: "Заминка",
+          imageUri: 'https://play-lh.googleusercontent.com/4TNXXl8p6TND87TlIXeFGMShtuymvj3yofJtdZFGfI9wRfshxJoTyzC1Ig-WdWuMABo',
+          description: '1+8280723',
+          duration: 15,
+          type: TaskType.checkedText),
     ];
   }
 }

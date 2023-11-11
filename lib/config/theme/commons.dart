@@ -47,9 +47,9 @@ InputDecoration inputDecoration({String? labelText, Color? fillColor}) {
           borderRadius: kBorderRadius,
           borderSide: BorderSide(color: kAppBarColor)
       ),
-      focusedBorder: OutlineInputBorder(
+      focusedBorder: const OutlineInputBorder(
           borderRadius: kBorderRadius,
-          borderSide: BorderSide(color: lighten(kPrimaryDarkColor, .2))
+          borderSide: BorderSide(color: kPrimaryColor)
       ));
 }
 

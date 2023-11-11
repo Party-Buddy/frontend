@@ -120,7 +120,11 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                       const SizedBox(
                         width: kPadding,
                       ),
-                      CustomIconButton(onPressed: () => Clipboard.setData(ClipboardData(text: widget.gameSession.sessionID)), iconData: Icons.link,)
+                      CustomIconButton(
+                        onPressed: () => Clipboard.setData(
+                            ClipboardData(text: widget.gameSession.sessionID)),
+                        iconData: Icons.link,
+                      )
                     ],
                   ),
                   const SizedBox(
@@ -141,25 +145,23 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                 ],
               ),
             ),
-            Container(
-                padding: kPaddingAll,
-                child: Column(
-                  children: [
-                    CustomButton(
-                        text: "Показать QR",
-                        onPressed: () => showWidget(context,
-                            content: buildQRWidget())),
-                    const SizedBox(
-                      height: kPadding,
-                    ),
-                    CustomButton(
-                        text: "Покинуть игру",
-                        onPressed: () => showConfirmationDialog(context,
-                            text: "Вы точно хотите выйти?",
-                            onConfirmed: () => Navigator.pushNamed(
-                                context, MainMenuScreen.routeName))),
-                  ],
-                ))
+            Column(
+              children: [
+                CustomButton(
+                    text: "Показать QR",
+                    onPressed: () =>
+                        showWidget(context, content: buildQRWidget())),
+                const SizedBox(
+                  height: kPadding,
+                ),
+                CustomButton(
+                    text: "Покинуть игру",
+                    onPressed: () => showConfirmationDialog(context,
+                        text: "Вы точно хотите выйти?",
+                        onConfirmed: () => Navigator.pushNamed(
+                            context, MainMenuScreen.routeName))),
+              ],
+            )
           ],
         ));
   }
@@ -174,11 +176,11 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
               height: 230,
               width: 230,
               decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: kBorderRadius
-              ),
+                  color: Colors.white, borderRadius: kBorderRadius),
               child: QrImageView(data: widget.gameSession.sessionID)),
-          const SizedBox(height: kPadding,),
+          const SizedBox(
+            height: kPadding,
+          ),
           Center(
             child: Text(
               "Просканируйте для присоединения",

@@ -41,7 +41,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
           Expanded(
             child: Column(children: [
               CustomButton(
-                  text: "Создать игру",
+                  text: "Начать игру",
                   onPressed: () => Navigator.pushNamed(context, GameStartScreen.routeName)),
               const SizedBox(
                 height: kPadding,

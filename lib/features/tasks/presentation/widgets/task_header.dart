@@ -51,9 +51,13 @@ class TaskHeader extends StatelessWidget {
                 )
               ],
             ),
-            Image.network(
-              task.imageUri ?? "TO DO",
-              height: 90,
+            Padding(
+              padding: const EdgeInsets.only(left: kPadding),
+              child: Image.network(
+                task.imageUri ?? "TO DO",
+                height: 90,
+                width: 90,
+              ),
             ),
           ],
         ));

@@ -19,9 +19,10 @@ class BaseScreen extends StatelessWidget {
                 title: Text(appBarTitle!),
               ),
         body: Container(
+            height: double.infinity,
             width: double.infinity,
             decoration: const BoxDecoration(gradient: kBackgroundGradient),
-            padding: kPaddingAll,
+            padding: kPaddingAll.add(const EdgeInsets.only(bottom: kPadding)),
             child: content));
   }
 }

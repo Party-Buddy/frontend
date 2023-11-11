@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/view_config.dart';
 
 class BorderWrapper extends StatelessWidget {

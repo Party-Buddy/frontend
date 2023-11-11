@@ -5,11 +5,42 @@ import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/async/future.dart';
 import 'package:party_games_app/core/resources/data_state.dart';
 import 'package:party_games_app/core/widgets/future_builder_wrapper.dart';
+import 'package:party_games_app/core/widgets/option_switcher.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 import 'package:party_games_app/features/tasks/domain/usecases/get_local_tasks.dart';
 import 'package:party_games_app/features/tasks/domain/usecases/get_published_tasks.dart';
 import 'package:party_games_app/features/tasks/presentation/widgets/task_header.dart';
+
+class TaskList extends StatefulWidget {
+  const TaskList({super.key, required this.onTapOnTask});
+
+  final void Function(Task) onTapOnTask;
+
+  @override
+  State<StatefulWidget> createState() => _TaskListState();
+}
+
+class _TaskListState extends State<TaskList> {
+  Source source = Source.owned;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      OptionSwitcher<Source>(
+        options: Source.values,
+        onTap: (t) => setState(() => source = t),
+        initialOption: source,
+        stringMapper: (t) => t == Source.owned ? "Ваши" : "Публичные",
+      ),
+      const SizedBox(
+        height: kPadding,
+      ),
+      buildTaskList(onTapOnTask: widget.onTapOnTask, source: source)
+    ]);
+  }
+}
+
 
 final GetLocalTasksUseCase _getLocalTasksUseCase =
     GetIt.instance<GetLocalTasksUseCase>();
