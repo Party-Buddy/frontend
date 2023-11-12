@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/utils.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/base_screen.dart';
@@ -9,6 +10,8 @@ import 'package:party_games_app/core/widgets/single_input_label.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 import 'package:party_games_app/features/tasks/presentation/widgets/task_header.dart';
 import 'package:party_games_app/features/tasks/presentation/widgets/task_list.dart';
+
+import 'package:flutter_reorderable_list/flutter_reorderable_list.dart';
 
 class GameCreateScreen extends StatefulWidget {
   const GameCreateScreen({super.key});
@@ -54,58 +57,67 @@ class _GameCreateScreenState extends State<GameCreateScreen> {
       newIdx--;
     }
 
-    Task t = selectedTasks.removeAt(oldIdx);
-    selectedTasks.insert(newIdx, t);
+    setState(() {
+      Task t = selectedTasks.removeAt(oldIdx);
+      selectedTasks.insert(newIdx, t);
+    });
   }
 
   Widget buildTaskList() {
     return Container(
       padding: kPaddingAll.add(const EdgeInsets.only(bottom: kPadding)),
+      alignment: Alignment.center,
       decoration: BoxDecoration(
           color: kAppBarColor.withOpacity(.5), borderRadius: kBorderRadius),
-      child: Column(
-        children: [
-          Column(
-            children: selectedTasks
-                .map((task) => Padding(
-                      padding:
-                          const EdgeInsets.symmetric(vertical: kPadding / 2),
-                      child: Row(
-                        children: [
-                          TaskHeader(task: task, onTap: () {}),
-                          const SizedBox(width: kPadding,),
-                          CustomIconButton(onPressed: () => setState(() {
-                            selectedTasks.remove(task);
-                          }), iconData: Icons.close)
-                        ],
-                      ),
-                    ))
-                .toList(),
+      child: SizedBox(
+        height: 80 + selectedTasks.length * 115,
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            canvasColor: Colors.transparent,
+            shadowColor: Colors.transparent,
           ),
-          // SizedBox(
-          //   height: 400,
-          //   child: ReorderableListView(onReorder: onReorder, children: [
-          //     for (Task task in selectedTasks)
-          //         ListTile(key: ValueKey(task.id), title: TaskHeader(task: task, onTap: () {},), )
-          //   ]),
-          // ),
-          const SizedBox(
-            height: kPadding,
-          ),
-          CustomButton(
-              text: "Добавить задание",
-              onPressed: () => showWidget(context,
-                  content: TaskList(
-                      onTapOnTask: (t) {
-                        if (selectedTasks.contains(t)) {
-                          showMessage(context, "Задание '${t.name}' уже добавлено.");
-                          return;
-                        }
-                        setState(() {
+          child: ReorderableListView(
+              onReorder: onReorder,
+              buildDefaultDragHandles: false,
+              footer: Container(
+                padding: kPaddingAll,
+                child: CustomButton(
+                    text: "Добавить задание",
+                    onPressed: () =>
+                        showWidget(context, content: TaskList(onTapOnTask: (t) {
+                          if (selectedTasks.contains(t)) {
+                            showMessage(
+                                context, "Задание '${t.name}' уже добавлено.");
+                            return;
+                          }
+                          setState(() {
                             selectedTasks.add(t);
                           });
-                      })))
-        ],
+                        }))),
+              ),
+              children: [
+                for (Task task in selectedTasks)
+                  ListTile(
+                    key: ValueKey(task.id),
+                    contentPadding: const EdgeInsets.all(0),
+                    iconColor: Colors.transparent,
+                    title: ReorderableDelayedDragStartListener(
+                        index: selectedTasks.indexOf(task),
+                        child: TaskHeader(
+                          enableShadow: false,
+                          task: task,
+                          onTap: () {
+                            print(task.name);
+                          },
+                        )),
+                    trailing: CustomIconButton(
+                        onPressed: () => setState(() {
+                              selectedTasks.remove(task);
+                            }),
+                        iconData: Icons.close),
+                  ),
+              ]),
+        ),
       ),
     );
   }

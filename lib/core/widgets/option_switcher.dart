@@ -32,7 +32,7 @@ class _OptionSwitcherState<T> extends State<OptionSwitcher<T>> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: widget.options
-          .map((o) => SelectableBorderWrapper(
+          .map((o) => InkwellBorderWrapper(
               padding: 5,
               fillColor: current == o ? darken(kPrimaryColor, 0.3) : darken(kAppBarColor, 0.05),
               child: Container(

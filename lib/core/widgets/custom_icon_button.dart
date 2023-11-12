@@ -11,7 +11,7 @@ class CustomIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SelectableBorderWrapper(
+    return InkwellBorderWrapper(
         onPressed: onPressed,
         child: Icon(
           iconData,

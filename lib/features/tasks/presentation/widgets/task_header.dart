@@ -5,15 +5,21 @@ import 'package:party_games_app/core/widgets/inkwell_border_wrapper.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 
 class TaskHeader extends StatelessWidget {
-  const TaskHeader({super.key, required this.task, required this.onTap});
+  const TaskHeader(
+      {super.key,
+      required this.task,
+      required this.onTap,
+      this.enableShadow = true});
 
   final Task task;
   final VoidCallback onTap;
+  final bool enableShadow;
 
   @override
   Widget build(BuildContext context) {
-    return SelectableBorderWrapper(
+    return InkwellBorderWrapper(
         onPressed: onTap,
+        enableShadow: enableShadow,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,

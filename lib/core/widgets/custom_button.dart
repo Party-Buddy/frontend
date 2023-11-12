@@ -19,7 +19,7 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SelectableBorderWrapper(
+    return InkwellBorderWrapper(
       onPressed: onPressed,
       padding: padding,
       child: Container(

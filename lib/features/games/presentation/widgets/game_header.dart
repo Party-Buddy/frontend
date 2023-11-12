@@ -13,7 +13,7 @@ class GameHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SelectableBorderWrapper(
+    return InkwellBorderWrapper(
         onPressed: onTap,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
