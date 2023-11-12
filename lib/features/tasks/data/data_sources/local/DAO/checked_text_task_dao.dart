@@ -51,12 +51,12 @@ class CheckedTextTaskDao extends DatabaseAccessor<AppDatabase> with _$CheckedTex
     }
 
   Future updateTask(CheckedTextTaskModel task) async {
-    update(baseTasks).replace(task.baseToInsertable());
+    update(baseTasks).replace(task.baseToUpdatable());
     update(checkedTextTasks).replace(task.toInsertable());
     }
   
   Future deleteTask(CheckedTextTaskModel task) async {
-    delete(baseTasks).delete(task.baseToInsertable());
+    delete(baseTasks).delete(task.baseToRemovable());
     }
 
 }
