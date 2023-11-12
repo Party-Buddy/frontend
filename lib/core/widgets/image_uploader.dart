@@ -72,9 +72,7 @@ class _ImageUploaderState extends State<ImageUploader> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      child: InkwellBorderWrapper(
+    return InkwellBorderWrapper(
         onPressed: () async => getImage(context),
         child: image != null
             ? ClipRRect(
@@ -102,7 +100,6 @@ class _ImageUploaderState extends State<ImageUploader> {
                   Text("(Опционально)", style: defaultTextStyle(fontSize: 17, color: darken(kFontColor)))
                 ]),
               ),
-      ),
     );
   }
 }
