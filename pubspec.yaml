@@ -47,6 +47,9 @@ dependencies:
   moor: ^4.6.1+1
   shared_preferences: ^2.2.2
   qr_flutter: ^4.1.0
+  image_picker: ^1.0.4 # needs to be configured for IOS and Anroid to have permissions for Galley/Camera.
+  crop_image: ^1.0.11 # needs to be configured for Android
+  path:
 
 dev_dependencies:
   build_runner: 2.4.6

@@ -9,6 +9,7 @@ class CustomButton extends StatelessWidget {
       required this.onPressed,
       this.width = 200,
       this.fontSize = 20,
+      this.bottomText,
       this.padding = kPadding});
 
   final String text;
@@ -16,6 +17,7 @@ class CustomButton extends StatelessWidget {
   final double width;
   final double padding;
   final double fontSize;
+  final String? bottomText;
 
   @override
   Widget build(BuildContext context) {

@@ -55,9 +55,9 @@ InputDecoration inputDecoration({String? labelText, Color? fillColor}) {
 
 Border border() => Border.all(color: kBorderColor, width: 1);
 
-TextStyle defaultTextStyle({double fontSize = 18}) {
+TextStyle defaultTextStyle({double fontSize = 18, Color color = kFontColor}) {
   return TextStyle(
-      fontFamily: kFontFamily, fontSize: fontSize, color: kFontColor);
+      fontFamily: kFontFamily, fontSize: fontSize, color: color);
 }
 
 BoxShadow highlightShadow() => const BoxShadow(

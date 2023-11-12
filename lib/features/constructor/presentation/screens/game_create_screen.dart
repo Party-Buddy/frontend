@@ -1,17 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/utils.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/base_screen.dart';
 import 'package:party_games_app/core/widgets/custom_button.dart';
 import 'package:party_games_app/core/widgets/custom_icon_button.dart';
+import 'package:party_games_app/core/widgets/image_uploader.dart';
 import 'package:party_games_app/core/widgets/multiline_input_label.dart';
 import 'package:party_games_app/core/widgets/single_input_label.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 import 'package:party_games_app/features/tasks/presentation/widgets/task_header.dart';
 import 'package:party_games_app/features/tasks/presentation/widgets/task_list.dart';
-
-import 'package:flutter_reorderable_list/flutter_reorderable_list.dart';
 
 class GameCreateScreen extends StatefulWidget {
   const GameCreateScreen({super.key});
@@ -24,6 +24,7 @@ class GameCreateScreen extends StatefulWidget {
 
 class _GameCreateScreenState extends State<GameCreateScreen> {
   List<Task> selectedTasks = [];
+  File? image;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +32,14 @@ class _GameCreateScreenState extends State<GameCreateScreen> {
         appBarTitle: "Создать игру",
         content: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(
                 height: kPadding,
+              ),
+              ImageUploader(onUpdate: (image) => this.image = image),
+              const SizedBox(
+                height: kPadding * 2,
               ),
               SingleLineInputLabel(
                   labelText: "Название игры",
@@ -46,7 +52,7 @@ class _GameCreateScreenState extends State<GameCreateScreen> {
               const SizedBox(
                 height: kPadding * 2,
               ),
-              buildTaskList()
+              buildTaskList(context)
             ],
           ),
         ));
@@ -63,14 +69,14 @@ class _GameCreateScreenState extends State<GameCreateScreen> {
     });
   }
 
-  Widget buildTaskList() {
+  Widget buildTaskList(BuildContext context) {
     return Container(
       padding: kPaddingAll.add(const EdgeInsets.only(bottom: kPadding)),
       alignment: Alignment.center,
       decoration: BoxDecoration(
           color: kAppBarColor.withOpacity(.5), borderRadius: kBorderRadius),
       child: SizedBox(
-        height: 80 + selectedTasks.length * 115,
+        height: 70 + selectedTasks.length * 115,
         child: Theme(
           data: Theme.of(context).copyWith(
             canvasColor: Colors.transparent,
@@ -83,6 +89,7 @@ class _GameCreateScreenState extends State<GameCreateScreen> {
                 padding: kPaddingAll,
                 child: CustomButton(
                     text: "Добавить задание",
+                    fontSize: 17,
                     onPressed: () =>
                         showWidget(context, content: TaskList(onTapOnTask: (t) {
                           if (selectedTasks.contains(t)) {
