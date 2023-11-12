@@ -62,13 +62,13 @@ class GameRepositoryImpl implements GameRepository {
   }
 
   @override
-  Future<List<Game>> getAllGamesSortedByName(bool ascending) async {
+  Future<List<Game>> getLocalGamesSortedByName(bool ascending) async {
     var allGames = await _database.gameDao.getAllGamesSortedByName(ascending);
     return _gamesWithBindings(allGames);
   }
 
   @override
-  Future<List<Game>> getAllGamesSortedByUpdateDate(bool ascending) async {
+  Future<List<Game>> getLocalGamesSortedByUpdateDate(bool ascending) async {
     var allGames =
         await _database.gameDao.getAllGamesSortedByUpdateDate(ascending);
     return _gamesWithBindings(allGames);

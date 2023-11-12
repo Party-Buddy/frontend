@@ -13,9 +13,9 @@ abstract class GameRepository {
 
   Future<List<Game>> getLocalGames();
 
-  Future<List<Game>> getAllGamesSortedByName(bool ascending);
+  Future<List<Game>> getLocalGamesSortedByName(bool ascending);
 
-  Future<List<Game>> getAllGamesSortedByUpdateDate(bool ascending);
+  Future<List<Game>> getLocalGamesSortedByUpdateDate(bool ascending);
 
   Future<Game> saveGame(Game game);
 
