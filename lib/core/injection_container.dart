@@ -14,6 +14,7 @@ import 'package:party_games_app/features/tasks/data/repository/task_repository_i
 import 'package:party_games_app/features/tasks/domain/repository/task_repository.dart';
 import 'package:party_games_app/features/tasks/domain/usecases/delete_task.dart';
 import 'package:party_games_app/features/tasks/domain/usecases/get_local_tasks.dart';
+import 'package:party_games_app/features/tasks/domain/usecases/get_local_tasks_sorted.dart';
 import 'package:party_games_app/features/tasks/domain/usecases/get_published_tasks.dart';
 import 'package:party_games_app/features/tasks/domain/usecases/save_task.dart';
 import 'package:party_games_app/features/tasks/domain/usecases/update_task.dart';
@@ -61,6 +62,7 @@ Future<void> initializeDependenices() async {
   //   tasks
   sl.registerSingleton(GetPublishedTasksUseCase(sl()));
   sl.registerSingleton(GetLocalTasksUseCase(sl()));
+  sl.registerSingleton(GetLocalTasksSortedUseCase(sl()));
   sl.registerSingleton(SaveTaskUseCase(sl()));
   sl.registerSingleton(UpdateTaskUseCase(sl()));
   sl.registerSingleton(DeleteTaskUseCase(sl()));
