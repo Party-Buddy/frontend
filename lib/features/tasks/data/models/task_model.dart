@@ -61,6 +61,19 @@ abstract class TaskModel {
 
   Insertable<LocalBaseTask> baseToInsertable() {
     return BaseTasksCompanion(
+        id: const Value.absent(),
+        name: name != null ? Value(name!) : const Value.absent(),
+        description:
+            description != null ? Value(description!) : const Value.absent(),
+        imageUri: imageUri != null ? Value(imageUri!) : const Value.absent(),
+        duration: duration != null ? Value(duration!) : const Value.absent(),
+        type: duration != null ? Value(type!.toString()) : const Value.absent(),
+        createdAt: Value(DateTime.now()),
+        updatedAt: Value(DateTime.now()));
+  }
+
+  Insertable<LocalBaseTask> baseToUpdatable() {
+    return BaseTasksCompanion(
         id: id != null ? Value(id!) : const Value.absent(),
         name: name != null ? Value(name!) : const Value.absent(),
         description:
@@ -70,5 +83,10 @@ abstract class TaskModel {
         type: duration != null ? Value(type!.toString()) : const Value.absent(),
         createdAt: Value(DateTime.now()),
         updatedAt: Value(DateTime.now()));
+  }
+
+  Insertable<LocalBaseTask> baseToRemovable() {
+    return BaseTasksCompanion(
+        id: id != null ? Value(id!) : const Value.absent());
   }
 }

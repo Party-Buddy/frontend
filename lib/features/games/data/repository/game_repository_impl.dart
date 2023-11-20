@@ -24,10 +24,8 @@ class GameRepositoryImpl implements GameRepository {
 
   // Database
 
-  @override
-  Future<List<Game>> getLocalGames() async {
-    var allGames = await _database.gameDao.getAllGames();
-    return Future.wait(allGames.map((game) async {
+  Future<List<Game>> _gamesWithBindings(List<LocalGame> games) {
+    return Future.wait(games.map((game) async {
       return GameModel.fromTables(
           game,
           await _database.taskBindingDao
@@ -58,7 +56,26 @@ class GameRepositoryImpl implements GameRepository {
   }
 
   @override
-  Future<Game> saveGame(Game game) {
+  Future<List<Game>> getLocalGames() async {
+    var allGames = await _database.gameDao.getAllGames();
+    return _gamesWithBindings(allGames);
+  }
+
+  @override
+  Future<List<Game>> getLocalGamesSortedByName(bool ascending) async {
+    var allGames = await _database.gameDao.getAllGamesSortedByName(ascending);
+    return _gamesWithBindings(allGames);
+  }
+
+  @override
+  Future<List<Game>> getLocalGamesSortedByUpdateDate(bool ascending) async {
+    var allGames =
+        await _database.gameDao.getAllGamesSortedByUpdateDate(ascending);
+    return _gamesWithBindings(allGames);
+  }
+
+  @override
+  Future<Game> saveGame(Game game) async {
     return _database.gameDao
         .insertGame(GameModel.fromEntity(game))
         .then((gameId) {
@@ -76,7 +93,13 @@ class GameRepositoryImpl implements GameRepository {
 
   @override
   Future<Game> updateGame(Game game) async {
-    await _database.gameDao.updateGame(GameModel.fromEntity(game));
-    return game;
+    return _database.gameDao
+        .updateGame(GameModel.fromEntity(game))
+        .then((gameId) {
+      Game gameWithId = game.copyWith(id: gameId);
+      _database.taskBindingDao
+          .bindAllTasksToGame(GameModel.fromEntity(gameWithId));
+      return gameWithId;
+    });
   }
 }

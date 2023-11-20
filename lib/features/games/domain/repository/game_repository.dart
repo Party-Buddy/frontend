@@ -13,6 +13,10 @@ abstract class GameRepository {
 
   Future<List<Game>> getLocalGames();
 
+  Future<List<Game>> getLocalGamesSortedByName(bool ascending);
+
+  Future<List<Game>> getLocalGamesSortedByUpdateDate(bool ascending);
+
   Future<Game> saveGame(Game game);
 
   Future<void> deleteGame(Game game);

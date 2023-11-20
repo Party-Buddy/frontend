@@ -9,9 +9,8 @@ class TasksGenerator {
           name: "Разминка",
           imageUri: 'https://s.turbifycdn.com/aah/mathmedia/what-is-the-difference-between-arithmetic-and-mathematics-44.jpg',
           description: '2+2',
-          duration: 10, 
-          answer: '4'
-      ),
+          duration: 10,
+          answer: '4'),
       const CheckedTextTask(
           id: 1,
           name: "Заминка",
@@ -19,7 +18,7 @@ class TasksGenerator {
           description: '1+8280723',
           duration: 15,
           answer: '8280724'
-      ),
+      )
     ];
   }
 }
