@@ -10,19 +10,21 @@ class BaseScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: kBackgorundColor,
-        appBar: appBarTitle == null
-            ? null
-            : AppBar(
-                leading: backButton(context),
-                title: Text(appBarTitle!),
-              ),
-        body: Container(
-            height: double.infinity,
-            width: double.infinity,
-            decoration: const BoxDecoration(gradient: kBackgroundGradient),
-            padding: kPaddingAll.add(const EdgeInsets.only(bottom: kPadding)),
-            child: content));
+    return Container(
+      decoration: const BoxDecoration(gradient: kBackgroundGradient),
+      child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: appBarTitle == null
+              ? null
+              : AppBar(
+                  leading: backButton(context),
+                  title: Text(appBarTitle!)
+                ),
+          body: Container(
+              height: double.infinity,
+              width: double.infinity,
+              padding: kPaddingAll.add(const EdgeInsets.only(bottom: kPadding)),
+              child: content)),
+    );
   }
 }
