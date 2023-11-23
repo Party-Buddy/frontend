@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:party_games_app/config/consts.dart';
 import 'package:party_games_app/config/utils.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/base_screen.dart';
