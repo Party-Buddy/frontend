@@ -1,8 +1,5 @@
 import '../../../tasks/domain/entities/task.dart';
 
-const minPlayersCount = 2;
-const maxPlayersCount = 12;
-
 enum Source { owned, public }
 
 class Game {
