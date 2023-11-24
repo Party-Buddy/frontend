@@ -8,6 +8,8 @@ class PollTasks extends Table{
   
   IntColumn get baseTaskId => integer().references(BaseTasks, #id, onDelete: KeyAction.cascade)();
   TextColumn get pollAnswerType => text()();
+  IntColumn get pollFixedDuration => integer()();
+  IntColumn get pollDynamicDuration => integer()();
 
   @override
   Set<Column> get primaryKey => {baseTaskId};

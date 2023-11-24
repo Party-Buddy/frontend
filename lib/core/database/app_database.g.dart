@@ -1149,7 +1149,13 @@ class $TaskBindingsTable extends TaskBindings
 class LocalPollTask extends DataClass implements Insertable<LocalPollTask> {
   final int baseTaskId;
   final String pollAnswerType;
-  LocalPollTask({required this.baseTaskId, required this.pollAnswerType});
+  final int pollFixedDuration;
+  final int pollDynamicDuration;
+  LocalPollTask(
+      {required this.baseTaskId,
+      required this.pollAnswerType,
+      required this.pollFixedDuration,
+      required this.pollDynamicDuration});
   factory LocalPollTask.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
@@ -1159,6 +1165,10 @@ class LocalPollTask extends DataClass implements Insertable<LocalPollTask> {
           .mapFromDatabaseResponse(data['${effectivePrefix}base_task_id'])!,
       pollAnswerType: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}poll_answer_type'])!,
+      pollFixedDuration: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}poll_fixed_duration'])!,
+      pollDynamicDuration: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}poll_dynamic_duration'])!,
     );
   }
   @override
@@ -1166,6 +1176,8 @@ class LocalPollTask extends DataClass implements Insertable<LocalPollTask> {
     final map = <String, Expression>{};
     map['base_task_id'] = Variable<int>(baseTaskId);
     map['poll_answer_type'] = Variable<String>(pollAnswerType);
+    map['poll_fixed_duration'] = Variable<int>(pollFixedDuration);
+    map['poll_dynamic_duration'] = Variable<int>(pollDynamicDuration);
     return map;
   }
 
@@ -1173,6 +1185,8 @@ class LocalPollTask extends DataClass implements Insertable<LocalPollTask> {
     return PollTasksCompanion(
       baseTaskId: Value(baseTaskId),
       pollAnswerType: Value(pollAnswerType),
+      pollFixedDuration: Value(pollFixedDuration),
+      pollDynamicDuration: Value(pollDynamicDuration),
     );
   }
 
@@ -1182,6 +1196,9 @@ class LocalPollTask extends DataClass implements Insertable<LocalPollTask> {
     return LocalPollTask(
       baseTaskId: serializer.fromJson<int>(json['baseTaskId']),
       pollAnswerType: serializer.fromJson<String>(json['pollAnswerType']),
+      pollFixedDuration: serializer.fromJson<int>(json['pollFixedDuration']),
+      pollDynamicDuration:
+          serializer.fromJson<int>(json['pollDynamicDuration']),
     );
   }
   @override
@@ -1190,59 +1207,90 @@ class LocalPollTask extends DataClass implements Insertable<LocalPollTask> {
     return <String, dynamic>{
       'baseTaskId': serializer.toJson<int>(baseTaskId),
       'pollAnswerType': serializer.toJson<String>(pollAnswerType),
+      'pollFixedDuration': serializer.toJson<int>(pollFixedDuration),
+      'pollDynamicDuration': serializer.toJson<int>(pollDynamicDuration),
     };
   }
 
-  LocalPollTask copyWith({int? baseTaskId, String? pollAnswerType}) =>
+  LocalPollTask copyWith(
+          {int? baseTaskId,
+          String? pollAnswerType,
+          int? pollFixedDuration,
+          int? pollDynamicDuration}) =>
       LocalPollTask(
         baseTaskId: baseTaskId ?? this.baseTaskId,
         pollAnswerType: pollAnswerType ?? this.pollAnswerType,
+        pollFixedDuration: pollFixedDuration ?? this.pollFixedDuration,
+        pollDynamicDuration: pollDynamicDuration ?? this.pollDynamicDuration,
       );
   @override
   String toString() {
     return (StringBuffer('LocalPollTask(')
           ..write('baseTaskId: $baseTaskId, ')
-          ..write('pollAnswerType: $pollAnswerType')
+          ..write('pollAnswerType: $pollAnswerType, ')
+          ..write('pollFixedDuration: $pollFixedDuration, ')
+          ..write('pollDynamicDuration: $pollDynamicDuration')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(baseTaskId, pollAnswerType);
+  int get hashCode => Object.hash(
+      baseTaskId, pollAnswerType, pollFixedDuration, pollDynamicDuration);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is LocalPollTask &&
           other.baseTaskId == this.baseTaskId &&
-          other.pollAnswerType == this.pollAnswerType);
+          other.pollAnswerType == this.pollAnswerType &&
+          other.pollFixedDuration == this.pollFixedDuration &&
+          other.pollDynamicDuration == this.pollDynamicDuration);
 }
 
 class PollTasksCompanion extends UpdateCompanion<LocalPollTask> {
   final Value<int> baseTaskId;
   final Value<String> pollAnswerType;
+  final Value<int> pollFixedDuration;
+  final Value<int> pollDynamicDuration;
   const PollTasksCompanion({
     this.baseTaskId = const Value.absent(),
     this.pollAnswerType = const Value.absent(),
+    this.pollFixedDuration = const Value.absent(),
+    this.pollDynamicDuration = const Value.absent(),
   });
   PollTasksCompanion.insert({
     this.baseTaskId = const Value.absent(),
     required String pollAnswerType,
-  }) : pollAnswerType = Value(pollAnswerType);
+    required int pollFixedDuration,
+    required int pollDynamicDuration,
+  })  : pollAnswerType = Value(pollAnswerType),
+        pollFixedDuration = Value(pollFixedDuration),
+        pollDynamicDuration = Value(pollDynamicDuration);
   static Insertable<LocalPollTask> custom({
     Expression<int>? baseTaskId,
     Expression<String>? pollAnswerType,
+    Expression<int>? pollFixedDuration,
+    Expression<int>? pollDynamicDuration,
   }) {
     return RawValuesInsertable({
       if (baseTaskId != null) 'base_task_id': baseTaskId,
       if (pollAnswerType != null) 'poll_answer_type': pollAnswerType,
+      if (pollFixedDuration != null) 'poll_fixed_duration': pollFixedDuration,
+      if (pollDynamicDuration != null)
+        'poll_dynamic_duration': pollDynamicDuration,
     });
   }
 
   PollTasksCompanion copyWith(
-      {Value<int>? baseTaskId, Value<String>? pollAnswerType}) {
+      {Value<int>? baseTaskId,
+      Value<String>? pollAnswerType,
+      Value<int>? pollFixedDuration,
+      Value<int>? pollDynamicDuration}) {
     return PollTasksCompanion(
       baseTaskId: baseTaskId ?? this.baseTaskId,
       pollAnswerType: pollAnswerType ?? this.pollAnswerType,
+      pollFixedDuration: pollFixedDuration ?? this.pollFixedDuration,
+      pollDynamicDuration: pollDynamicDuration ?? this.pollDynamicDuration,
     );
   }
 
@@ -1255,6 +1303,12 @@ class PollTasksCompanion extends UpdateCompanion<LocalPollTask> {
     if (pollAnswerType.present) {
       map['poll_answer_type'] = Variable<String>(pollAnswerType.value);
     }
+    if (pollFixedDuration.present) {
+      map['poll_fixed_duration'] = Variable<int>(pollFixedDuration.value);
+    }
+    if (pollDynamicDuration.present) {
+      map['poll_dynamic_duration'] = Variable<int>(pollDynamicDuration.value);
+    }
     return map;
   }
 
@@ -1262,7 +1316,9 @@ class PollTasksCompanion extends UpdateCompanion<LocalPollTask> {
   String toString() {
     return (StringBuffer('PollTasksCompanion(')
           ..write('baseTaskId: $baseTaskId, ')
-          ..write('pollAnswerType: $pollAnswerType')
+          ..write('pollAnswerType: $pollAnswerType, ')
+          ..write('pollFixedDuration: $pollFixedDuration, ')
+          ..write('pollDynamicDuration: $pollDynamicDuration')
           ..write(')'))
         .toString();
   }
@@ -1287,8 +1343,21 @@ class $PollTasksTable extends PollTasks
   late final GeneratedColumn<String?> pollAnswerType = GeneratedColumn<String?>(
       'poll_answer_type', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _pollFixedDurationMeta =
+      const VerificationMeta('pollFixedDuration');
   @override
-  List<GeneratedColumn> get $columns => [baseTaskId, pollAnswerType];
+  late final GeneratedColumn<int?> pollFixedDuration = GeneratedColumn<int?>(
+      'poll_fixed_duration', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _pollDynamicDurationMeta =
+      const VerificationMeta('pollDynamicDuration');
+  @override
+  late final GeneratedColumn<int?> pollDynamicDuration = GeneratedColumn<int?>(
+      'poll_dynamic_duration', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [baseTaskId, pollAnswerType, pollFixedDuration, pollDynamicDuration];
   @override
   String get aliasedName => _alias ?? 'poll_tasks';
   @override
@@ -1311,6 +1380,22 @@ class $PollTasksTable extends PollTasks
               data['poll_answer_type']!, _pollAnswerTypeMeta));
     } else if (isInserting) {
       context.missing(_pollAnswerTypeMeta);
+    }
+    if (data.containsKey('poll_fixed_duration')) {
+      context.handle(
+          _pollFixedDurationMeta,
+          pollFixedDuration.isAcceptableOrUnknown(
+              data['poll_fixed_duration']!, _pollFixedDurationMeta));
+    } else if (isInserting) {
+      context.missing(_pollFixedDurationMeta);
+    }
+    if (data.containsKey('poll_dynamic_duration')) {
+      context.handle(
+          _pollDynamicDurationMeta,
+          pollDynamicDuration.isAcceptableOrUnknown(
+              data['poll_dynamic_duration']!, _pollDynamicDurationMeta));
+    } else if (isInserting) {
+      context.missing(_pollDynamicDurationMeta);
     }
     return context;
   }

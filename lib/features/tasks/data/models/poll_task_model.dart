@@ -6,6 +6,8 @@ import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 
 class PollTaskModel extends TaskModel {
   final PollTaskAnswerType? pollAnswerType;
+  final int? pollFixedDuration;
+  final int? pollDynamicDuration;
 
   const PollTaskModel(
       {super.id,
@@ -15,7 +17,9 @@ class PollTaskModel extends TaskModel {
       super.duration,
       super.createdAt,
       super.updatedAt,
-      this.pollAnswerType})
+      this.pollAnswerType,
+      this.pollFixedDuration,
+      this.pollDynamicDuration})
       : super(type: TaskType.poll);
 
   // JSON
@@ -31,6 +35,7 @@ class PollTaskModel extends TaskModel {
         createdAt: map['createdAt'],
         pollAnswerType: PollTaskAnswerType.values.firstWhere(
             (element) => element.toString() == map['pollAnswerType']));
+        // TODO poll duration
   }
 
   @override
@@ -38,7 +43,9 @@ class PollTaskModel extends TaskModel {
     var json = baseToJson();
     json.addAll({
       'type': pollAnswerType == PollTaskAnswerType.image ? 'photo' : 'text',
-      'poll-duration': {'kind': 'dynamic', 'secs': 5},
+      'poll-duration': pollFixedDuration != 0
+          ? {'kind': 'fixed', 'secs': pollFixedDuration ?? 0}
+          : {'kind': 'dynamic', 'secs': pollDynamicDuration ?? 0},
     });
     return json;
   }
@@ -55,7 +62,9 @@ class PollTaskModel extends TaskModel {
         duration: duration ?? 0,
         createdAt: createdAt,
         updatedAt: updatedAt,
-        pollAnswerType: pollAnswerType ?? PollTaskAnswerType.text);
+        pollAnswerType: pollAnswerType ?? PollTaskAnswerType.text,
+        pollFixedDuration: pollFixedDuration ?? 0,
+        pollDynamicDuration: pollDynamicDuration ?? 0);
   }
 
   factory PollTaskModel.fromEntity(PollTask task) {
@@ -67,7 +76,9 @@ class PollTaskModel extends TaskModel {
         duration: task.duration,
         createdAt: task.createdAt,
         updatedAt: task.updatedAt,
-        pollAnswerType: task.pollAnswerType);
+        pollAnswerType: task.pollAnswerType,
+        pollFixedDuration: task.pollFixedDuration,
+        pollDynamicDuration: task.pollDynamicDuration);
   }
 
   // Storage
@@ -83,7 +94,9 @@ class PollTaskModel extends TaskModel {
         createdAt: baseTask.createdAt,
         updatedAt: baseTask.updatedAt,
         pollAnswerType: PollTaskAnswerType.values.firstWhere(
-            (element) => element.toString() == pollTask.pollAnswerType));
+            (element) => element.toString() == pollTask.pollAnswerType),
+        pollFixedDuration: pollTask.pollFixedDuration,
+        pollDynamicDuration: pollTask.pollDynamicDuration);
   }
 
   Insertable<LocalPollTask> toInsertable({int? baseId}) {
@@ -93,6 +106,11 @@ class PollTaskModel extends TaskModel {
             : (id != null ? Value(id!) : const Value.absent()),
         pollAnswerType: pollAnswerType != null
             ? Value(pollAnswerType!.toString())
+            : const Value.absent(),
+        pollFixedDuration:
+            pollFixedDuration != null ? const Value(0) : const Value.absent(),
+        pollDynamicDuration: pollDynamicDuration != null
+            ? const Value(0)
             : const Value.absent());
   }
 }
