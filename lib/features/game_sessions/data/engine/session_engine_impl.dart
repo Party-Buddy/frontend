@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'package:party_games_app/config/server/paths.dart';
 import 'package:party_games_app/core/resources/data_state.dart';
 import 'package:party_games_app/core/utils/sync_counter.dart';
+import 'package:party_games_app/features/game_sessions/data/models/current_task_model.dart';
 import 'package:party_games_app/features/game_sessions/data/models/game_player_model.dart';
 import 'package:party_games_app/features/game_sessions/data/models/game_session_model.dart';
 import 'package:party_games_app/features/game_sessions/domain/engine/session_engine.dart';
+import 'package:party_games_app/features/game_sessions/domain/entities/current_task.dart';
 import 'package:party_games_app/features/games/data/models/game_model.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -20,15 +22,12 @@ class SessionEngineImpl implements SessionEngine {
   Function(String)? _onGameInterrupted;
   Function(String)? _onJoinFailure;
   Function(String)? _onOpError;
+  Function(CurrentTask)? _onTaskStart;
   GameSessionModel gameSession = GameSessionModel();
   SyncCounter messageIdGenerator = SyncCounter();
 
   void _sendGameStatus() {
     _onGameStatus?.call(gameSession.toEntity());
-  }
-
-  void _sendGameStart() {
-    _onGameStart?.call();
   }
 
   void _sendJoinFailure(String msg) {
@@ -65,7 +64,11 @@ class SessionEngineImpl implements SessionEngine {
   }
 
   void _onGameStartMessage(Map<String, dynamic> data) {
-    _sendGameStart();
+     _onGameStart?.call();
+  }
+
+  void _onTaskStartMessage(Map<String, dynamic> data) {
+    _onTaskStart?.call(CurrentTaskModel.fromJson(data).toEntity());
   }
 
   void _onJoinFailureMessage(Map<String, dynamic> data) {
@@ -81,14 +84,16 @@ class SessionEngineImpl implements SessionEngine {
       final Map<String, dynamic> data = jsonDecode(message);
       final String kind = data['kind'];
 
-      if (kind == 'gameStatus') {
+      if (kind == 'game-status') {
         _onGameStatusMessage(data);
       } else if (kind == 'joined') {
         _onJoinedMessage(data);
       } else if (kind == 'waiting') {
         _onWaitingMessage(data);
-      } else if (kind == 'gameStart') {
+      } else if (kind == 'game-start') {
         _onGameStartMessage(data);
+      } else if (kind == 'task-start') {
+        _onTaskStartMessage(data);
       } else if (kind == 'session-expired' ||
           kind == 'nickname-used' ||
           kind == 'lobby-full') {
@@ -182,5 +187,10 @@ class SessionEngineImpl implements SessionEngine {
   @override
   void onOpError(Function(String) callback) {
     _onOpError = callback;
+  }
+
+  @override
+  void onTaskStart(Function(CurrentTask) callback) {
+    _onTaskStart = callback;
   }
 }

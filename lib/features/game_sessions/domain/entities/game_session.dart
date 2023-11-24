@@ -1,4 +1,5 @@
 import 'package:party_games_app/features/game_sessions/domain/entities/game_player.dart';
+import 'package:party_games_app/features/game_sessions/domain/entities/task_info.dart';
 
 class GameSession {
   final String sessionId;
@@ -9,6 +10,7 @@ class GameSession {
   final int? ownerId;
   final int? currentPlayerId;
   final List<GamePlayer> players;
+  final List<TaskInfo> tasks;
 
   GameSession(
       {required this.sessionId,
@@ -18,5 +20,6 @@ class GameSession {
       required this.maxPlayersCount,
       this.ownerId,
       this.currentPlayerId,
-      required this.players});
+      required this.players,
+      required this.tasks});
 }

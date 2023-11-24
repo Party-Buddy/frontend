@@ -1,7 +1,7 @@
 import 'package:party_games_app/features/game_sessions/data/models/game_player_model.dart';
+import 'package:party_games_app/features/game_sessions/data/models/task_info_model.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/game_session.dart';
 import 'package:party_games_app/config/consts.dart' as consts;
-import 'package:party_games_app/features/players/data/models/player_model.dart';
 
 class GameSessionModel {
   final String? sessionId;
@@ -12,6 +12,7 @@ class GameSessionModel {
   final int? ownerId;
   final int? currentPlayerId;
   final List<GamePlayerModel>? players;
+  final List<TaskInfoModel>? tasks;
 
   GameSessionModel(
       {this.sessionId,
@@ -21,7 +22,8 @@ class GameSessionModel {
       this.maxPlayersCount,
       this.ownerId,
       this.currentPlayerId,
-      this.players});
+      this.players,
+      this.tasks});
 
   GameSession toEntity() {
     return GameSession(
@@ -32,7 +34,8 @@ class GameSessionModel {
         maxPlayersCount: maxPlayersCount ?? consts.maxPlayersCount,
         ownerId: ownerId,
         currentPlayerId: currentPlayerId,
-        players: players?.map((player) => player.toEntity()).toList() ?? []);
+        players: players?.map((player) => player.toEntity()).toList() ?? [],
+        tasks: tasks?.map((task) => task.toEntity()).toList() ?? []);
   }
 
   factory GameSessionModel.fromEntity(GameSession gameSession) {
@@ -51,15 +54,15 @@ class GameSessionModel {
 
   factory GameSessionModel.fromJson(Map<String, dynamic> map) {
     return GameSessionModel(
-        sessionId: map['sessionId'],
-        name: map['name'],
-        description: map['description'],
-        imageUri: map['imageUri'],
+        sessionId: map['session-id'],
+        name: map['game']['name'],
+        description: map['game']['description'],
+        imageUri: map['game']['image-uri'],
         maxPlayersCount: consts.maxPlayersCount,
         ownerId: null,
         currentPlayerId: map['player-id'],
-        players: map['players']
-                ?.map((player) => PlayerModel.fromJson(player))
+        tasks: (map['game']['tasks'] as List?)
+                ?.map((task) => TaskInfoModel.fromJson(task))
                 .toList() ??
             []);
   }
