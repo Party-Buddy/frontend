@@ -52,7 +52,7 @@ class GamesGenerator {
           name:"Skins",
           description: "Draw a fork skin",
           duration: 150,
-          pollAnswerType: PollTaskAnswerType.image),],
+          pollAnswerType: PollTaskAnswerType.image, pollDynamicDuration: 0, pollFixedDuration: 10),],
         updatedAt: DateTime.now())
       ];
   }
