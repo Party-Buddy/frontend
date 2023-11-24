@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:party_games_app/config/server/paths.dart';
 import 'package:party_games_app/core/resources/data_state.dart';
+import 'package:party_games_app/core/utils/sync_counter.dart';
 import 'package:party_games_app/features/game_sessions/data/models/game_player_model.dart';
 import 'package:party_games_app/features/game_sessions/data/models/game_session_model.dart';
 import 'package:party_games_app/features/game_sessions/domain/engine/session_engine.dart';
@@ -16,7 +17,11 @@ class SessionEngineImpl implements SessionEngine {
   WebSocketChannel? _channel;
   Function(GameSession)? _onGameStatus;
   Function()? _onGameStart;
+  Function(String)? _onGameInterrupted;
+  Function(String)? _onJoinFailure;
+  Function(String)? _onOpError;
   GameSessionModel gameSession = GameSessionModel();
+  SyncCounter messageIdGenerator = SyncCounter();
 
   void _sendGameStatus() {
     _onGameStatus?.call(gameSession.toEntity());
@@ -24,6 +29,10 @@ class SessionEngineImpl implements SessionEngine {
 
   void _sendGameStart() {
     _onGameStart?.call();
+  }
+
+  void _sendJoinFailure(String msg) {
+    _onJoinFailure?.call(msg);
   }
 
   void _onJoinedMessage(Map<String, dynamic> data) {
@@ -59,6 +68,14 @@ class SessionEngineImpl implements SessionEngine {
     _sendGameStart();
   }
 
+  void _onJoinFailureMessage(Map<String, dynamic> data) {
+    _sendJoinFailure(data['message'] ?? data['kind']);
+  }
+
+  void _onOpErrorMessage(Map<String, dynamic> data) {
+    _onOpError?.call(data['message'] ?? data['kind']);
+  }
+
   void _listen() {
     _channel?.stream.listen((message) {
       final Map<String, dynamic> data = jsonDecode(message);
@@ -72,26 +89,39 @@ class SessionEngineImpl implements SessionEngine {
         _onWaitingMessage(data);
       } else if (kind == 'gameStart') {
         _onGameStartMessage(data);
+      } else if (kind == 'session-expired' ||
+          kind == 'nickname-used' ||
+          kind == 'lobby-full') {
+        _onJoinFailureMessage(data);
+      } else if (kind == 'op-only') {
+        _onOpErrorMessage(data);
       }
+    }, onDone: () {
+      _onGameInterrupted?.call('connection closed');
     });
   }
 
   @override
-  Future<DataState<void>> startSession(Game game, Username username) async {
+  Future<DataState<String>> startSession(Game game, Username username) async {
     var response = await http.post(Uri.https(serverDomain, sessionPath),
-        body: GameModel.fromEntity(game));
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(GameModel.fromEntity(game).toJson()));
     if (response.statusCode == 200) {
-      var jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
       String sessionId = jsonResponse['session-id'];
       // TODO img-requests: [] ImageRequestResponse field
-      return joinSession(sessionId, username);
+      joinSession(sessionId, username);
+      return DataSuccess(sessionId);
     } else {
       return DataFailed('Start game session code: ${response.statusCode}.');
     }
   }
 
   @override
-  Future<DataState<void>> joinSession(String sessionId, Username username) async {
+  Future<DataState<void>> joinSession(
+      String sessionId, Username username) async {
     gameSession = GameSessionModel();
     _channel = IOWebSocketChannel.connect(
         'ws://$serverDomain$sessionPath?${joinSessionParams[0]}=$sessionId');
@@ -100,26 +130,30 @@ class SessionEngineImpl implements SessionEngine {
     return const DataSuccess(null);
   }
 
-  void _sendMesage(String kind, Map<String,dynamic> body) {
-    body.addAll({'kind': kind});
+  void _sendMesage(String kind, Map<String, dynamic> body) async {
+    body.addAll({
+      'kind': kind,
+      'time': DateTime.now().millisecondsSinceEpoch,
+      'msg-id': await messageIdGenerator.newId
+    });
     _channel?.sink.add(jsonEncode(body));
   }
 
   @override
   void leaveSession() {
-   _sendMesage('leave', {});
+    _sendMesage('leave', {});
     _channel?.sink.close();
     gameSession = GameSessionModel();
   }
 
   @override
   void kickPlayer(int playerId) {
-   _sendMesage('kick', {});
+    _sendMesage('kick', {'player-id': playerId});
   }
 
   @override
   void setReady(bool ready) {
-   _sendMesage('ready', {});
+    _sendMesage('ready', {'ready': ready});
   }
 
   // callbacks
@@ -133,5 +167,20 @@ class SessionEngineImpl implements SessionEngine {
   @override
   void onGameStart(Function() callback) {
     _onGameStart = callback;
+  }
+
+  @override
+  void onGameInterrupted(Function(String) callback) {
+    _onGameInterrupted = callback;
+  }
+
+  @override
+  void onJoinFailure(Function(String) callback) {
+    _onJoinFailure = callback;
+  }
+
+  @override
+  void onOpError(Function(String) callback) {
+    _onOpError = callback;
   }
 }

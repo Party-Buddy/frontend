@@ -32,6 +32,17 @@ class ChoiceTaskModel extends TaskModel {
         options: map['options']);
   }
 
+  @override
+  Map<String, dynamic> toJson() {
+    var json = baseToJson();
+    json.addAll({
+      'type': 'choice',
+      'options': options?.map((option) => option.alternative).toList(),
+      'answer-idx': options?.firstWhere((option) => option.correct)
+    });
+    return json;
+  }
+
   // Domain
 
   @override

@@ -33,6 +33,16 @@ class PollTaskModel extends TaskModel {
             (element) => element.toString() == map['pollAnswerType']));
   }
 
+  @override
+  Map<String, dynamic> toJson() {
+    var json = baseToJson();
+    json.addAll({
+      'type': pollAnswerType == PollTaskAnswerType.image ? 'photo' : 'text',
+      'poll-duration': {'kind': 'dynamic', 'secs': 5},
+    });
+    return json;
+  }
+
   // Domain
 
   @override

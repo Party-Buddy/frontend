@@ -32,6 +32,16 @@ class CheckedTextTaskModel extends TaskModel {
         answer: map['answer']);
   }
 
+  @override
+  Map<String, dynamic> toJson() {
+    var json = baseToJson();
+    json.addAll({
+      'type': 'checked-text',
+      'answer': answer,
+    });
+    return json;
+  }
+
   // Domain
 
   @override

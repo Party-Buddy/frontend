@@ -57,6 +57,17 @@ abstract class TaskModel {
     }
   }
 
+  Map<String, dynamic> baseToJson(){
+    var json = {
+      'name': name ?? '',
+      'description': description ?? '',
+      'duration': {'kind': 'fixed', 'secs': duration ?? 0}
+    };
+    return json;
+  }
+
+  Map<String, dynamic> toJson();
+
   // Storage
 
   Insertable<LocalBaseTask> baseToInsertable() {
