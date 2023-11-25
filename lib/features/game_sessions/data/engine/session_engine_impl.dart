@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:party_games_app/config/server/paths.dart';
 import 'package:party_games_app/core/resources/data_state.dart';
 import 'package:party_games_app/core/utils/sync_counter.dart';
@@ -25,6 +27,7 @@ class SessionEngineImpl implements SessionEngine {
   Function(CurrentTask)? _onTaskStart;
   GameSessionModel gameSession = GameSessionModel();
   SyncCounter messageIdGenerator = SyncCounter();
+  Completer<DataState<String>> joinCompleter = Completer<DataState<String>>();
 
   void _sendGameStatus() {
     _onGameStatus?.call(gameSession.toEntity());
@@ -35,6 +38,7 @@ class SessionEngineImpl implements SessionEngine {
   }
 
   void _onJoinedMessage(Map<String, dynamic> data) {
+    joinCompleter.complete(DataSuccess(data['session-id'] ?? ''));
     gameSession = GameSessionModel.fromJson(data);
     _sendGameStatus();
   }
@@ -72,6 +76,7 @@ class SessionEngineImpl implements SessionEngine {
   }
 
   void _onJoinFailureMessage(Map<String, dynamic> data) {
+    joinCompleter.complete(DataFailed(data['message'] ?? data['kind']));
     _sendJoinFailure(data['message'] ?? data['kind']);
   }
 
@@ -108,33 +113,46 @@ class SessionEngineImpl implements SessionEngine {
 
   @override
   Future<DataState<String>> startSession(Game game, Username username) async {
-    var response =
-        await http.post(Uri.http('$serverDomain:$serverHttpPort', sessionPath),
-            headers: <String, String>{
-              'Content-Type': 'application/json; charset=UTF-8',
-            },
-            body: jsonEncode(GameModel.fromEntity(game).toJson()));
-    if (response.statusCode == 200) {
-      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-      String sessionId = jsonResponse['session-id'];
-      // TODO img-requests: [] ImageRequestResponse field
-      joinSession(sessionId, username);
-      return DataSuccess(sessionId);
-    } else {
-      return DataFailed('Start game session code: ${response.statusCode}.');
+    try {
+      var response = await http
+          .post(Uri.http('$serverDomain:$serverHttpPort', sessionPath),
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+              },
+              body: jsonEncode(GameModel.fromEntity(game).toJson()))
+          .timeout(const Duration(seconds: 5));
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+        String sessionId = jsonResponse['session-id'];
+        // TODO img-requests: [] ImageRequestResponse field
+        return joinSession(sessionId, username);
+      } else {
+        return DataFailed('Start game session code: ${response.statusCode}.');
+      }
+    } catch (e) {
+      return const DataFailed('cannot connect to server');
     }
   }
 
   @override
-  Future<DataState<void>> joinSession(
+  Future<DataState<String>> joinSession(
       String sessionId, Username username) async {
     gameSession = GameSessionModel();
-    _channel = IOWebSocketChannel.connect(
-        'ws://$serverDomain:$serverWsPort$sessionPath?${joinSessionParams[0]}=$sessionId',
-        protocols: ['websocket']);
-    _listen();
-    _sendMesage('join', {'nickname': username.username});
-    return const DataSuccess(null);
+    try {
+      await WebSocket.connect(
+          'ws://$serverDomain:$serverWsPort$sessionPath?${joinSessionParams[0]}=$sessionId',
+          protocols: ['websocket']).then((ws) {
+        _channel = IOWebSocketChannel(ws);
+      }).timeout(const Duration(seconds: 5));
+      _listen();
+      joinCompleter = Completer<DataState<String>>();
+      _sendMesage('join', {'nickname': username.username});
+    } catch (e) {
+      return const DataFailed('cannot connect to server');
+    }
+    DataState<String> sid = await joinCompleter.future;
+    return sid;
   }
 
   void _sendMesage(String kind, Map<String, dynamic> body) async {
