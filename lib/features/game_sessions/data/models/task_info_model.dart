@@ -60,11 +60,11 @@ class TaskInfoModel {
                 ? PollTaskAnswerType.text
                 : PollTaskAnswerType.image)
             : null,
-        pollFixedDuration: map['poll-duration']['kind'] == "fixed"
-            ? map['poll-duration']['secs']
+        pollFixedDuration: map['poll-duration']?['kind'] == "fixed"
+            ? (map['poll-duration']?['secs'] ?? 0)
             : 0,
-        pollDynamicDuration: map['poll-duration']['kind'] == "dynamic"
-            ? map['poll-duration']['secs']
+        pollDynamicDuration: map['poll-duration']?['kind'] == "dynamic"
+            ? (map['poll-duration']?['secs'] ?? 0)
             : 0);
   }
 }

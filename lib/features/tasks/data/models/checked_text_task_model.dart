@@ -25,7 +25,7 @@ class CheckedTextTaskModel extends TaskModel {
         id: map['id'],
         name: map['name'],
         description: map['description'],
-        imageUri: map['imageId'] ?? "",
+        imageUri: map['imageId'],
         duration: map['duration'],
         updatedAt: map['updatedAt'],
         createdAt: map['createdAt'],
@@ -35,7 +35,7 @@ class CheckedTextTaskModel extends TaskModel {
   @override
   Map<String, dynamic> toJson() {
     var json = baseToJson();
-    json.addAll({
+    json.addAll(<String, dynamic>{
       'type': 'checked-text',
       'answer': answer,
     });

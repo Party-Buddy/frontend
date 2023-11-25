@@ -55,13 +55,13 @@ class GameSessionModel {
   factory GameSessionModel.fromJson(Map<String, dynamic> map) {
     return GameSessionModel(
         sessionId: map['session-id'],
-        name: map['game']['name'],
-        description: map['game']['description'],
-        imageUri: map['game']['image-uri'],
+        name: map['game']?['name'],
+        description: map['game']?['description'],
+        imageUri: map['game']?['image-uri'],
         maxPlayersCount: consts.maxPlayersCount,
         ownerId: null,
         currentPlayerId: map['player-id'],
-        tasks: (map['game']['tasks'] as List?)
+        tasks: (map['game']?['tasks'] as List?)
                 ?.map((task) => TaskInfoModel.fromJson(task))
                 .toList() ??
             []);

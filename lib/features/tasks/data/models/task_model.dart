@@ -58,10 +58,10 @@ abstract class TaskModel {
   }
 
   Map<String, dynamic> baseToJson(){
-    var json = {
+    var json = <String, dynamic>{
       'name': name ?? '',
       'description': description ?? '',
-      'duration': {'kind': 'fixed', 'secs': duration ?? 0}
+      'duration': <String, dynamic>{'kind': 'fixed', 'secs': duration ?? 0}
     };
     return json;
   }

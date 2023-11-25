@@ -64,7 +64,7 @@ class SessionEngineImpl implements SessionEngine {
   }
 
   void _onGameStartMessage(Map<String, dynamic> data) {
-     _onGameStart?.call();
+    _onGameStart?.call();
   }
 
   void _onTaskStartMessage(Map<String, dynamic> data) {
@@ -108,11 +108,12 @@ class SessionEngineImpl implements SessionEngine {
 
   @override
   Future<DataState<String>> startSession(Game game, Username username) async {
-    var response = await http.post(Uri.https(serverDomain, sessionPath),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(GameModel.fromEntity(game).toJson()));
+    var response =
+        await http.post(Uri.http('$serverDomain:$serverHttpPort', sessionPath),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode(GameModel.fromEntity(game).toJson()));
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = jsonDecode(response.body);
       String sessionId = jsonResponse['session-id'];
@@ -129,7 +130,8 @@ class SessionEngineImpl implements SessionEngine {
       String sessionId, Username username) async {
     gameSession = GameSessionModel();
     _channel = IOWebSocketChannel.connect(
-        'ws://$serverDomain$sessionPath?${joinSessionParams[0]}=$sessionId');
+        'ws://$serverDomain:$serverWsPort$sessionPath?${joinSessionParams[0]}=$sessionId',
+        protocols: ['websocket']);
     _listen();
     _sendMesage('join', {'nickname': username.username});
     return const DataSuccess(null);

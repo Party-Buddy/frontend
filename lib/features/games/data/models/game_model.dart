@@ -92,14 +92,16 @@ class GameModel {
   }
 
   Map<String, dynamic> toJson() {
-    var json = {
+    var json = <String, dynamic>{
       'game-type': 'public',
       'name': name ?? '',
       'description': description ?? '',
       'img-request': 0,
-      'tasks': tasks
-          ?.mapIndexed((i, task) => task.toJson().addAll({'img-request': i+1}))
-          .toList()
+      'tasks': tasks?.mapIndexed((i, task) {
+        var taskJson = task.toJson();
+        taskJson.addAll(<String, dynamic>{'img-request': i + 1});
+        return taskJson;
+      }).toList()
     };
     return json;
   }
