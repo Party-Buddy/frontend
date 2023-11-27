@@ -6,7 +6,7 @@ import 'package:party_games_app/features/username/domain/entities/username.dart'
 
 abstract class SessionEngine {
   Future<DataState<String>> startSession(Game game, Username username);
-  Future<DataState<void>> joinSession(String sessionId, Username username);
+  Future<DataState<String>> joinSession(String sessionId, Username username);
 
   void leaveSession();
   void kickPlayer(int playerId);
