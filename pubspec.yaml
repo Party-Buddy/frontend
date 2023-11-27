@@ -54,6 +54,7 @@ dependencies:
   collection: ^1.17.2
   synchronized: ^3.1.0
   path:
+  linear_timer: ^2.0.0
 
 dev_dependencies:
   build_runner: 2.4.6

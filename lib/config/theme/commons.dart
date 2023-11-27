@@ -5,8 +5,8 @@ ThemeData theme() {
   return ThemeData(
       fontFamily: 'Muli',
       appBarTheme: appBarTheme(),
-      textSelectionTheme:
-          TextSelectionThemeData(selectionColor: kPrimaryColor.withOpacity(.5)));
+      textSelectionTheme: TextSelectionThemeData(
+          selectionColor: kPrimaryColor.withOpacity(.5)));
 }
 
 AppBarTheme appBarTheme() {
@@ -30,36 +30,34 @@ DecorationImage standardDecorationImage({BoxFit fit = BoxFit.cover}) =>
 IconButton backButton(BuildContext context) {
   return IconButton(
       onPressed: () => Navigator.pop(context),
-      icon: const Icon(Icons.arrow_back_ios_new, size: 20, color: kPrimaryColor));
+      icon:
+          const Icon(Icons.arrow_back_ios_new, size: 20, color: kPrimaryColor));
 }
 
 InputDecoration inputDecoration({String? labelText, Color? fillColor}) {
   return InputDecoration(
       labelText: labelText,
       filled: true,
-      fillColor: fillColor?? kAppBarColor,
+      fillColor: fillColor ?? kAppBarColor,
       labelStyle: const TextStyle(color: kFontColor, fontFamily: kFontFamily),
       enabledBorder: OutlineInputBorder(
           borderRadius: kBorderRadius,
-          borderSide: BorderSide(color: kAppBarColor)
-      ),
+          borderSide: BorderSide(color: kAppBarColor)),
       border: OutlineInputBorder(
           borderRadius: kBorderRadius,
-          borderSide: BorderSide(color: kAppBarColor)
-      ),
+          borderSide: BorderSide(color: kAppBarColor)),
       focusedBorder: const OutlineInputBorder(
           borderRadius: kBorderRadius,
-          borderSide: BorderSide(color: kPrimaryColor)
-      ));
+          borderSide: BorderSide(color: kPrimaryColor)));
 }
 
 Border border() => Border.all(color: kBorderColor, width: 1);
 
 TextStyle defaultTextStyle({double fontSize = 18, Color color = kFontColor}) {
-  return TextStyle(
-      fontFamily: kFontFamily, fontSize: fontSize, color: color);
+  return TextStyle(fontFamily: kFontFamily, fontSize: fontSize, color: color);
 }
 
-BoxShadow highlightShadow() => const BoxShadow(
-                        color: Color.fromARGB(255, 255, 89, 227),
-                        blurRadius: 15);
+BoxShadow highlightShadow(
+        {Color color = const Color.fromARGB(255, 255, 89, 227),
+        double blurRadius = 15.0}) =>
+    BoxShadow(color: color, blurRadius: blurRadius);

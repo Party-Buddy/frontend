@@ -13,10 +13,14 @@ import "package:path/path.dart";
 
 class ImageUploader extends StatefulWidget {
   const ImageUploader(
-      {super.key, required this.onUpdate, this.imageSize = 200});
+      {super.key,
+      required this.onUpdate,
+      this.imageSize = 200,
+      this.isOptional = true});
 
   final void Function(File) onUpdate;
   final double imageSize;
+  final bool isOptional;
 
   @override
   State<ImageUploader> createState() => _ImageUploaderState();
@@ -73,33 +77,37 @@ class _ImageUploaderState extends State<ImageUploader> {
   @override
   Widget build(BuildContext context) {
     return InkwellBorderWrapper(
-        onPressed: () async => getImage(context),
-        child: image != null
-            ? ClipRRect(
-                borderRadius: kBorderRadius,
-                child: Image.memory(
-                  image!.readAsBytesSync(),
-                  fit: BoxFit.fitHeight,
-                  width: widget.imageSize,
-                  height: widget.imageSize,
-                ),
-              )
-            : Container(
-                decoration: BoxDecoration(
-                    borderRadius: kBorderRadius, color: lighten(kAppBarColor)),
+      onPressed: () async => getImage(context),
+      child: image != null
+          ? ClipRRect(
+              borderRadius: kBorderRadius,
+              child: Image.memory(
+                image!.readAsBytesSync(),
+                fit: BoxFit.fitHeight,
                 width: widget.imageSize,
                 height: widget.imageSize,
-                alignment: Alignment.center,
-                child: Column(
+              ),
+            )
+          : Container(
+              decoration: BoxDecoration(
+                  borderRadius: kBorderRadius, color: lighten(kAppBarColor)),
+              width: widget.imageSize,
+              height: widget.imageSize,
+              alignment: Alignment.center,
+              child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                  Text(
-                    "Загрузить изображение",
-                    style: defaultTextStyle(fontSize: 17),
-                  ),
-                  Text("(Опционально)", style: defaultTextStyle(fontSize: 17, color: darken(kFontColor)))
-                ]),
-              ),
+                    Text(
+                      "Загрузить изображение",
+                      style: defaultTextStyle(fontSize: 17),
+                    ),
+                    Visibility(
+                        visible: widget.isOptional,
+                        child: Text("(Опционально)",
+                            style: defaultTextStyle(
+                                fontSize: 17, color: darken(kFontColor))))
+                  ]),
+            ),
     );
   }
 }
