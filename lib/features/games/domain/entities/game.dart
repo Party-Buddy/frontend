@@ -10,6 +10,7 @@ class Game {
   final List<Task> tasks;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final Source source;
 
   const Game(
       {this.id,
@@ -18,7 +19,8 @@ class Game {
       this.imageUri,
       required this.tasks,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      required this.source});
 
   Game copyWith(
       {int? id,
@@ -27,7 +29,8 @@ class Game {
       String? imageUri,
       List<Task>? tasks,
       DateTime? createdAt,
-      DateTime? updatedAt}) {
+      DateTime? updatedAt,
+      Source? source}) {
     return Game(
         id: id ?? this.id,
         name: name ?? this.name,
@@ -35,6 +38,7 @@ class Game {
         imageUri: imageUri ?? this.imageUri,
         tasks: tasks ?? this.tasks,
         createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt);
+        updatedAt: updatedAt ?? this.updatedAt,
+        source: source ?? this.source);
   }
 }
