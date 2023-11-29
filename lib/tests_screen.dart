@@ -3,6 +3,7 @@ import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/base_screen.dart';
 import 'package:party_games_app/core/widgets/custom_button.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/task_screen.dart';
+import 'package:party_games_app/features/game_sessions/presentation/screens/waiting_room_screen.dart';
 import 'package:party_games_app/features/tasks/domain/entities/choice_task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/poll_task.dart';
 
@@ -36,7 +37,8 @@ class TestsScreen extends StatelessWidget {
       name: "Нарисуйте Луну",
       description:
           "Задача состоит в том, чтобы нарисовать Луну. Не путать с сыром.",
-      imageUri: "https://c02.purpledshub.com/uploads/sites/41/2023/08/How-do-I-see-the-super-blue-moon.jpg",
+      imageUri:
+          "https://c02.purpledshub.com/uploads/sites/41/2023/08/How-do-I-see-the-super-blue-moon.jpg",
       duration: 30,
       pollAnswerType: PollTaskAnswerType.image,
       pollFixedDuration: 3,
@@ -48,6 +50,15 @@ class TestsScreen extends StatelessWidget {
         appBarTitle: "Тест экранов",
         content: Column(
           children: [
+            CustomButton(
+                text: "Комната ожидания",
+                onPressed: () => Navigator.pushNamed(
+                    context, WaitingRoomScreen.routeName,
+                    arguments: const WaitingRoomScreenArguments(
+                        players: playersMock, gameSession: gameSessionMock))),
+            const SizedBox(
+              height: kPadding,
+            ),
             CustomButton(
                 text: "Задание с выборами ответа",
                 onPressed: () => pushScreen(

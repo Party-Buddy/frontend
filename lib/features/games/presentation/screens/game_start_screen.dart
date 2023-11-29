@@ -47,6 +47,7 @@ class _GameStartScreenState extends State<GameStartScreen> {
       source: Source.public);
 
   final SessionEngine _sessionEngine = GetIt.instance<SessionEngine>();
+  String username = "";
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +68,7 @@ class _GameStartScreenState extends State<GameStartScreen> {
                         labelText: "Ваш никнейм",
                         onSubmitted: (s) {
                           if (validateNickname(s)) {
+                            username = s;
                             return SubmitResult.success;
                           }
                           showMessage(context, nicknameRequirements);
@@ -117,7 +119,7 @@ class _GameStartScreenState extends State<GameStartScreen> {
                   text: "Продолжить",
                   onPressed: () => _sessionEngine
                           .startSession(game,
-                              Username(username: 'как сюда никнейм вставить)'))
+                              Username(username: username))
                           .then((sid) {
                         if (sid is DataSuccess<String>) {
                           // TODO check success
@@ -128,7 +130,7 @@ class _GameStartScreenState extends State<GameStartScreen> {
                                   gameSession: gameSessionMock));
                         }
                         else {
-                          showMessage(context, 'не пускают');
+                          showMessage(context, 'Error: ${sid.error}');
                         }
                       })),
               const SizedBox(

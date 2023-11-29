@@ -32,11 +32,14 @@ class TaskScreen extends StatelessWidget {
           children: [
             Column(
               children: [
-                BorderWrapper(
-                  border: Border.all(width: 1, color: kPrimaryColor),
-                  child: Text(
-                    task.name,
-                    style: defaultTextStyle(fontSize: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: kPadding),
+                  child: BorderWrapper(
+                    border: Border.all(width: 1, color: kPrimaryColor),
+                    child: Text(
+                      task.name,
+                      style: defaultTextStyle(fontSize: 20),
+                    ),
                   ),
                 ),
                 Container(
