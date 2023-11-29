@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:party_games_app/core/database/app_database.dart';
 import 'package:party_games_app/features/game_sessions/data/engine/session_engine_impl.dart';
+import 'package:party_games_app/features/game_sessions/data/engine/session_engine_test.dart';
 import 'package:party_games_app/features/game_sessions/domain/engine/session_engine.dart';
 import 'package:party_games_app/features/games/data/data_sources/testing/games_generator.dart';
 import 'package:party_games_app/features/games/data/repository/game_repository_impl.dart';
@@ -41,7 +42,7 @@ Future<void> initializeDependenices() async {
   sl.registerSingleton<SharedPreferences>(sharedPreferences);
 
   // engine
-  final SessionEngine engine = SessionEngineImpl();
+  final SessionEngine engine = SessionEngineTestImpl();
   sl.registerSingleton<SessionEngine>(engine);
 
   // repositories

@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:collection/collection.dart';
+import 'package:logger/logger.dart';
+import 'package:party_games_app/config/consts.dart';
 import 'package:party_games_app/config/server/paths.dart';
 import 'package:party_games_app/core/resources/data_state.dart';
 import 'package:party_games_app/core/utils/sync_counter.dart';
@@ -18,8 +20,7 @@ import 'package:party_games_app/features/game_sessions/domain/entities/game_sess
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/username/domain/entities/username.dart';
 
-class SessionEngineImpl implements SessionEngine {
-  WebSocketChannel? _channel;
+class SessionEngineTestImpl implements SessionEngine {
   Function(GameSession)? _onGameStatus;
   Function(int?)? _onGameStart;
   Function(String)? _onGameInterrupted;
@@ -28,6 +29,9 @@ class SessionEngineImpl implements SessionEngine {
   Function(CurrentTask)? _onTaskStart;
   GameSessionModel gameSession = GameSessionModel();
   SyncCounter messageIdGenerator = SyncCounter();
+  String nickname = 'Your nickname';
+  int maxPlayers = maxPlayersCount;
+  var logger = Logger();
   Completer<DataState<String>> joinCompleter = Completer<DataState<String>>();
 
   void _sendGameStatus() {
@@ -94,70 +98,122 @@ class SessionEngineImpl implements SessionEngine {
     _onOpError?.call(data['message'] ?? data['kind']);
   }
 
-  void _listen() {
-    _channel?.stream.listen((message) {
-      final Map<String, dynamic> data = jsonDecode(message);
-      final String kind = data['kind'];
+  Future<void> _delayedFunction(int delay, Map<String, dynamic> data) async {
+    await Future.delayed(Duration(seconds: delay));
+    await _handleMessage(data);
+  }
 
-      if (kind == 'game-status') {
-        _onGameStatusMessage(data);
-      } else if (kind == 'joined') {
-        _onJoinedMessage(data);
-      } else if (kind == 'waiting') {
-        _onWaitingMessage(data);
-      } else if (kind == 'game-start') {
-        _onGameStartMessage(data);
-      } else if (kind == 'task-start') {
-        _onTaskStartMessage(data);
-      } else if (kind == 'session-expired' ||
-          kind == 'nickname-used' ||
-          kind == 'lobby-full') {
-        _onJoinFailureMessage(data);
-      } else if (kind == 'op-only') {
-        _onOpErrorMessage(data);
+  Future<void> _handleMessage(Map<String, dynamic> data) async {
+    final String kind = data['kind'];
+
+    if (kind == 'game-status') {
+      _onGameStatusMessage(data);
+    } else if (kind == 'joined') {
+      _onJoinedMessage(data);
+    } else if (kind == 'waiting') {
+      _onWaitingMessage(data);
+    } else if (kind == 'game-start') {
+      _onGameStartMessage(data);
+    } else if (kind == 'task-start') {
+      _onTaskStartMessage(data);
+    } else if (kind == 'session-expired' ||
+        kind == 'nickname-used' ||
+        kind == 'lobby-full') {
+      _onJoinFailureMessage(data);
+    } else if (kind == 'op-only') {
+      _onOpErrorMessage(data);
+    }
+  }
+
+  void _listen() async {
+    await _delayedFunction(5, {
+      'kind': 'joined',
+      'msg-id': 1,
+      'time': 1000,
+      'player-id': 1,
+      'session-id': 'hfalkshdfjakhgjklaeufbkluba',
+      'max-players': maxPlayers,
+      'game': {
+        'name': 'game name',
+        'description': 'some text',
+        'tasks': [
+          {
+            'name': 'task1 name',
+            'description': 'hello',
+            'duration': 100,
+            'type': 'photo',
+            'poll-duration': {'kind': 'fixed', 'secs': 10}
+          },
+          {
+            'name': 'task2 name',
+            'description': 'hello2',
+            'duration': 90,
+            'type': 'checked-text'
+          }
+        ]
       }
-    }, onDone: () {
-      _onGameInterrupted?.call('connection closed');
+    });
+
+    await _delayedFunction(5, {
+      'kind': 'game-status',
+      'msg-id': 2,
+      'time': 6000,
+      'players': [
+        {'player-id': 1, 'nickname': nickname},
+        {'player-id': 2, 'nickname': 'player 2'}
+      ]
+    });
+
+    await _delayedFunction(5, {
+      'kind': 'waiting',
+      'msg-id': 3,
+      'time': 9000,
+      'ready': [1]
+    });
+
+    await _delayedFunction(5, {
+      'kind': 'game-status',
+      'msg-id': 4,
+      'time': 10000,
+      'players': [
+        {'player-id': 1, 'nickname': nickname},
+        {'player-id': 2, 'nickname': 'player 2'},
+        {'player-id': 3, 'nickname': 'player 3'}
+      ]
+    });
+
+    await _delayedFunction(5, {
+      'kind': 'waiting',
+      'msg-id': 5,
+      'time': 12000,
+      'ready': [1, 2, 3]
+    });
+
+    await _delayedFunction(5, {
+      'kind': 'game-start',
+      'deadline': DateTime.now().millisecondsSinceEpoch + 12000,
+      'msg-id': 3,
+      'time': 12000
     });
   }
 
   @override
-  Future<DataState<String>> startSession(
-      Game game, Username username, int maxPlayersCount) async {
-    try {
-      var response = await http
-          .post(Uri.http('$serverDomain:$serverHttpPort', sessionPath),
-              headers: <String, String>{
-                'Content-Type': 'application/json; charset=UTF-8',
-              },
-              body: jsonEncode(GameModel.fromEntity(game).toJson()))
-          .timeout(const Duration(seconds: 5));
+  Future<DataState<String>> startSession(Game game, Username username, int maxPlayersCount) async {
+    String sessionId = 'ASSDIK';
+    maxPlayers = maxPlayersCount;
+    return joinSession(sessionId, username);
 
-      if (response.statusCode == 200) {
-        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-        String sessionId = jsonResponse['invite-code'];
-        // TODO img-requests: [] ImageRequestResponse field
-        return joinSession(sessionId, username);
-      } else {
-        return DataFailed('Start game session code: ${response.statusCode}.');
-      }
-    } catch (e) {
-      return const DataFailed('cannot connect to server');
-    }
+    return const DataFailed('cannot connect to server');
   }
 
   @override
   Future<DataState<String>> joinSession(
       String sessionId, Username username) async {
     gameSession = GameSessionModel();
+    nickname = username.username;
     try {
-      await WebSocket.connect(
-          'ws://$serverDomain:$serverWsPort$sessionPath?${joinSessionParams[0]}=$sessionId',
-          protocols: ['websocket']).then((ws) {
-        _channel = IOWebSocketChannel(ws);
-      }).timeout(const Duration(seconds: 5));
-      _listen();
       joinCompleter = Completer<DataState<String>>();
+      _listen();
       _sendMesage('join', {'nickname': username.username});
     } catch (e) {
       return const DataFailed('cannot connect to server');
@@ -172,13 +228,13 @@ class SessionEngineImpl implements SessionEngine {
       'time': DateTime.now().millisecondsSinceEpoch,
       'msg-id': await messageIdGenerator.newId
     });
-    _channel?.sink.add(jsonEncode(body));
+
+    logger.d(jsonEncode(body));
   }
 
   @override
   void leaveSession() {
     _sendMesage('leave', {});
-    _channel?.sink.close();
     gameSession = GameSessionModel();
   }
 
