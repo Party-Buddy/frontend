@@ -11,8 +11,8 @@ class GamePlayerModel {
   GamePlayer toEntity() {
     return GamePlayer(
         id: id ?? 0,
-        name: name ?? "",
-        photoUrl: photoUrl ?? "",
+        name: name,
+        photoUrl: photoUrl,
         ready: ready ?? false);
   }
 
