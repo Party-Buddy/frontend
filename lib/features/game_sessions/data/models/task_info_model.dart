@@ -52,6 +52,7 @@ class TaskInfoModel {
         name: map['name'],
         description: map['description'],
         duration: map['duration'],
+        photoUrl: map['img-uri'],
         type: map['type'] == 'checked-text'
             ? TaskType.checkedText
             : (map['type'] == 'choice' ? TaskType.choice : TaskType.poll),

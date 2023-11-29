@@ -12,6 +12,7 @@ class GameModel {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final List<TaskModel>? tasks;
+  final Source? source;
 
   GameModel(
       {this.id,
@@ -20,7 +21,8 @@ class GameModel {
       this.imageUri,
       this.createdAt,
       this.updatedAt,
-      this.tasks});
+      this.tasks,
+      this.source});
 
   // Domain
 
@@ -32,7 +34,8 @@ class GameModel {
         imageUri: imageUri,
         tasks: tasks?.map((task) => task.toEntity()).toList() ?? [],
         createdAt: createdAt,
-        updatedAt: updatedAt);
+        updatedAt: updatedAt,
+        source: source ?? Source.owned);
   }
 
   factory GameModel.fromEntity(Game game) {
@@ -93,7 +96,7 @@ class GameModel {
 
   Map<String, dynamic> toJson() {
     var json = <String, dynamic>{
-      'game-type': 'public',
+      'game-type': 'private',
       'name': name ?? '',
       'description': description ?? '',
       'img-request': 0,

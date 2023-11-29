@@ -124,7 +124,7 @@ class SessionEngineImpl implements SessionEngine {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-        String sessionId = jsonResponse['session-id'];
+        String sessionId = jsonResponse['invite-code'];
         // TODO img-requests: [] ImageRequestResponse field
         return joinSession(sessionId, username);
       } else {

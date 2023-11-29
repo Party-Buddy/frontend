@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:party_games_app/config/consts.dart';
 import 'package:party_games_app/config/utils.dart';
 import 'package:party_games_app/config/view_config.dart';
+import 'package:party_games_app/core/resources/data_state.dart';
 import 'package:party_games_app/core/widgets/base_screen.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
 import 'package:party_games_app/core/widgets/labeled_slider.dart';
+import 'package:party_games_app/features/game_sessions/domain/engine/session_engine.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/waiting_room_screen.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/games/presentation/widgets/game_list.dart';
@@ -15,6 +18,7 @@ import 'package:party_games_app/core/widgets/custom_button.dart';
 import 'package:party_games_app/features/games/presentation/widgets/game_header.dart';
 import 'package:party_games_app/core/widgets/single_input_label.dart';
 import 'package:party_games_app/config/theme/commons.dart';
+import 'package:party_games_app/features/username/domain/entities/username.dart';
 
 class GameStartScreen extends StatefulWidget {
   const GameStartScreen({super.key});
@@ -39,7 +43,10 @@ class _GameStartScreenState extends State<GameStartScreen> {
             duration: 10,
             answer: "1"),
       ],
-      updatedAt: DateTime.now());
+      updatedAt: DateTime.now(),
+      source: Source.public);
+
+  final SessionEngine _sessionEngine = GetIt.instance<SessionEngine>();
 
   @override
   Widget build(BuildContext context) {
@@ -84,8 +91,7 @@ class _GameStartScreenState extends State<GameStartScreen> {
               ),
               GameHeader(
                 game: game,
-                onTap: () => showWidget(
-                    context,
+                onTap: () => showWidget(context,
                     content: GameList(
                         onTapOnGame: (selectedGame) => setState(() {
                               Navigator.pop(context);
@@ -109,10 +115,22 @@ class _GameStartScreenState extends State<GameStartScreen> {
             children: [
               CustomButton(
                   text: "Продолжить",
-                  onPressed: () => Navigator.pushNamed(
-                      context, WaitingRoomScreen.routeName,
-                      arguments: const WaitingRoomScreenArguments(
-                          players: playersMock, gameSession: gameSessionMock))),
+                  onPressed: () => _sessionEngine
+                          .startSession(game,
+                              Username(username: 'как сюда никнейм вставить)'))
+                          .then((sid) {
+                        if (sid is DataSuccess<String>) {
+                          // TODO check success
+                          Navigator.pushNamed(
+                              context, WaitingRoomScreen.routeName,
+                              arguments: const WaitingRoomScreenArguments(
+                                  players: playersMock,
+                                  gameSession: gameSessionMock));
+                        }
+                        else {
+                          showMessage(context, 'не пускают');
+                        }
+                      })),
               const SizedBox(
                 height: kPadding,
               ),
