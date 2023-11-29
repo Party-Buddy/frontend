@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:party_games_app/config/view_config.dart';
 
 class CustomCheckBox extends StatefulWidget {
-  const CustomCheckBox({super.key});
+  const CustomCheckBox({super.key, required this.enabledNotifier});
+
+  final ValueNotifier<bool> enabledNotifier;
   
   @override
   State<CustomCheckBox> createState() => _CheckBoxState();
@@ -34,6 +36,7 @@ class _CheckBoxState extends State<CustomCheckBox> {
         onChanged: (bool? value) {
           setState(() {
             isChecked = value!;
+            widget.enabledNotifier.value = isChecked;
           });
         },
       ),

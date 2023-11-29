@@ -3,6 +3,8 @@ import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
 import 'package:party_games_app/core/widgets/inkwell_border_wrapper.dart';
+import 'package:party_games_app/core/widgets/switch_border_wrapper.dart';
+import 'package:party_games_app/features/game_sessions/presentation/widgets/ready_confirmation_label.dart';
 import 'package:party_games_app/features/tasks/domain/entities/choice_task.dart';
 
 class ChoiceTaskWidget extends StatefulWidget {
@@ -24,7 +26,11 @@ class _ChoiceTaskWidgetState extends State<ChoiceTaskWidget> {
         Wrap(
             children: widget.choiceTask.options
                 .map((op) => buildOptionWidget(op))
-                .toList())
+                .toList()),
+        Visibility(
+          visible: selectedOption != null,
+            child:
+                ReadyConfirmationLabel(enabledNotifier: ValueNotifier(false)))
       ],
     );
   }
@@ -36,11 +42,21 @@ class _ChoiceTaskWidgetState extends State<ChoiceTaskWidget> {
     );
     return Padding(
       padding: const EdgeInsets.all(kPadding / 2),
-      child: option == selectedOption
-          ? BorderWrapper(shadow: true, child: child)
-          : InkwellBorderWrapper(
-              onPressed: () => setState(() => selectedOption = option),
-              child: child),
+      child: SwitchBorderWrapper(
+          key: Key("${selectedOption==option}"),
+          onChanged: (enabled) {
+            if (enabled) {
+              setState(() {
+                selectedOption = option;
+              });
+            } else {
+              setState(() {
+                selectedOption = null;
+              });
+            }
+          },
+          initialEnabled: selectedOption == option,
+          child: child),
     );
   }
 }

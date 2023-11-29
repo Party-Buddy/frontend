@@ -139,7 +139,7 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                       const SizedBox(
                         width: kPadding * 1.5,
                       ),
-                      const CustomCheckBox()
+                      CustomCheckBox(enabledNotifier: ValueNotifier(false),) //TODO: replace with appropriate notifier
                     ],
                   ),
                 ],

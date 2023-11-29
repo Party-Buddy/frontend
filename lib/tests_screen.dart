@@ -36,6 +36,7 @@ class TestsScreen extends StatelessWidget {
       name: "Нарисуйте Луну",
       description:
           "Задача состоит в том, чтобы нарисовать Луну. Не путать с сыром.",
+      imageUri: "https://c02.purpledshub.com/uploads/sites/41/2023/08/How-do-I-see-the-super-blue-moon.jpg",
       duration: 30,
       pollAnswerType: PollTaskAnswerType.image,
       pollFixedDuration: 3,
