@@ -125,12 +125,19 @@ class SessionEngineImpl implements SessionEngine {
   Future<DataState<String>> startSession(
       Game game, Username username, int maxPlayersCount) async {
     try {
+      var bodyJson = GameModel.fromEntity(game.copyWith(source: Source.public, id: '11112222-3333-4444-5555-131072262144')).toJson();
+      bodyJson.addAll(<String, dynamic>{
+        'player-count': maxPlayersCount,
+        'require-ready': false
+      });
       var response = await http
           .post(Uri.http('$serverDomain:$serverHttpPort', sessionPath),
               headers: <String, String>{
-                'Content-Type': 'application/json; charset=UTF-8',
+                'Authorization': 'Bearer c0de900d-1234-1234-1234-addc0ffee700',
+                'Content-type': 'application/json',
+                'Host': 'localhost'
               },
-              body: jsonEncode(GameModel.fromEntity(game).toJson()))
+              body: jsonEncode(bodyJson))
           .timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {

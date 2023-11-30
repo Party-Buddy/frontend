@@ -95,8 +95,7 @@ class GameModel {
   }
 
   Map<String, dynamic> toJson() {
-    var json = <String, dynamic>{
-      'game-type': 'private',
+    var game_json = <String, dynamic>{
       'name': name ?? '',
       'description': description ?? '',
       'img-request': 0,
@@ -106,6 +105,9 @@ class GameModel {
         return taskJson;
       }).toList()
     };
+    var json = (source == Source.public)
+        ? <String, dynamic>{'game-type': 'public', 'game-id': id}
+        : <String, dynamic>{'game-type': 'private', 'game': game_json};
     return json;
   }
 }
