@@ -14,6 +14,7 @@ class ReadyConfirmationLabel extends StatelessWidget {
       alignment: Alignment.center,
       padding: kPaddingAll,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             "Подтвердить готовность",

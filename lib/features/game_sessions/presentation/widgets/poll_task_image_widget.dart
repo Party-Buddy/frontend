@@ -31,7 +31,9 @@ class _PollTaskImageWidget extends State<PollTaskImageWidget> {
         Visibility(
             visible: uploadedImage != null,
             child:
-                ReadyConfirmationLabel(enabledNotifier: ValueNotifier(false)))
+                Container(
+                  alignment: Alignment.center,
+                  child: ReadyConfirmationLabel(enabledNotifier: ValueNotifier(false))))
       ],
     );
   }

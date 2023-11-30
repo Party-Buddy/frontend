@@ -181,9 +181,12 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
           const SizedBox(
             height: kPadding,
           ),
-          Center(
+          Container(
+            width: 230,
+            alignment: Alignment.center,
             child: Text(
               "Просканируйте для присоединения",
+              textAlign: TextAlign.center,
               style: defaultTextStyle(),
             ),
           )
