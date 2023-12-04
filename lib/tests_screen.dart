@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/base_screen.dart';
 import 'package:party_games_app/core/widgets/custom_button.dart';
+import 'package:party_games_app/features/game_sessions/data/engine/session_engine_test.dart';
+import 'package:party_games_app/features/game_sessions/domain/engine/session_engine.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/task_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/waiting_room_screen.dart';
 import 'package:party_games_app/features/tasks/domain/entities/choice_task.dart';
@@ -44,6 +46,8 @@ class TestsScreen extends StatelessWidget {
       pollFixedDuration: 3,
       pollDynamicDuration: 4);
 
+  static SessionEngine sessionEngine = SessionEngineTestImpl();
+
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
@@ -54,29 +58,39 @@ class TestsScreen extends StatelessWidget {
                 text: "Комната ожидания",
                 onPressed: () => Navigator.pushNamed(
                     context, WaitingRoomScreen.routeName,
-                    arguments: const WaitingRoomScreenArguments(
-                        players: playersMock, gameSession: gameSessionMock))),
+                    arguments: WaitingRoomScreenArguments(
+                        gameSession: ValueNotifier(gameSessionMock),
+                        sessionEngine: sessionEngine))),
             const SizedBox(
               height: kPadding,
             ),
             CustomButton(
                 text: "Задание с выборами ответа",
                 onPressed: () => pushScreen(
-                    context, const TaskScreen(task: choiceTaskExample))),
+                    context,
+                    TaskScreen(
+                        task: choiceTaskExample,
+                        sessionEngine: sessionEngine))),
             const SizedBox(
               height: kPadding,
             ),
             CustomButton(
                 text: "Задание с текстом",
                 onPressed: () => pushScreen(
-                    context, const TaskScreen(task: pollTaskTextExample))),
+                    context,
+                    TaskScreen(
+                        task: pollTaskTextExample,
+                        sessionEngine: sessionEngine))),
             const SizedBox(
               height: kPadding,
             ),
             CustomButton(
                 text: "Задание с картинкой",
                 onPressed: () => pushScreen(
-                    context, const TaskScreen(task: pollTaskImageExample))),
+                    context,
+                    TaskScreen(
+                        task: pollTaskImageExample,
+                        sessionEngine: sessionEngine))),
           ],
         ));
   }

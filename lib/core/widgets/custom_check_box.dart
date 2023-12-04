@@ -11,7 +11,6 @@ class CustomCheckBox extends StatefulWidget {
 }
 
 class _CheckBoxState extends State<CustomCheckBox> {
-  bool isChecked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +31,10 @@ class _CheckBoxState extends State<CustomCheckBox> {
       child: Checkbox(
         checkColor: kPrimaryColor,
         fillColor: MaterialStateProperty.resolveWith(getColor),
-        value: isChecked,
+        value: widget.enabledNotifier.value,
         onChanged: (bool? value) {
           setState(() {
-            isChecked = value!;
-            widget.enabledNotifier.value = isChecked;
+            widget.enabledNotifier.value = !widget.enabledNotifier.value;
           });
         },
       ),

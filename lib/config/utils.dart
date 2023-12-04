@@ -38,7 +38,7 @@ void showWidget(BuildContext context,
                 padding: EdgeInsets.all(padding),
                 decoration: BoxDecoration(
                   borderRadius: kBorderRadius,
-                  color: darken(kPrimaryDarkColor, .6),
+                  color: darken(kPrimaryDarkColor, .6).withOpacity(.8),
                 ),
                 child: content,
               )

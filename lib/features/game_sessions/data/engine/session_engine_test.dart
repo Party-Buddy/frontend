@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:party_games_app/config/consts.dart';
 import 'package:party_games_app/config/server/paths.dart';
@@ -126,12 +127,12 @@ class SessionEngineTestImpl implements SessionEngine {
   }
 
   void _listen() async {
-    await _delayedFunction(5, {
+    await _delayedFunction(2, {
       'kind': 'joined',
       'msg-id': 1,
       'time': 1000,
       'player-id': 1,
-      'session-id': 'hfalkshdfjakhgjklaeufbkluba',
+      'session-id': 'AB8HJ7',
       'max-players': maxPlayers,
       'game': {
         'name': 'game name',
@@ -154,7 +155,7 @@ class SessionEngineTestImpl implements SessionEngine {
       }
     });
 
-    await _delayedFunction(5, {
+    await _delayedFunction(0, {
       'kind': 'game-status',
       'msg-id': 2,
       'time': 6000,
@@ -164,14 +165,14 @@ class SessionEngineTestImpl implements SessionEngine {
       ]
     });
 
-    await _delayedFunction(5, {
+    await _delayedFunction(2, {
       'kind': 'waiting',
       'msg-id': 3,
       'time': 9000,
       'ready': [1]
     });
 
-    await _delayedFunction(5, {
+    await _delayedFunction(3, {
       'kind': 'game-status',
       'msg-id': 4,
       'time': 10000,
@@ -182,18 +183,26 @@ class SessionEngineTestImpl implements SessionEngine {
       ]
     });
 
-    await _delayedFunction(5, {
+    await _delayedFunction(1, {
       'kind': 'waiting',
       'msg-id': 5,
       'time': 12000,
       'ready': [1, 2, 3]
     });
 
-    await _delayedFunction(5, {
+    await _delayedFunction(0, {
       'kind': 'game-start',
       'deadline': DateTime.now().millisecondsSinceEpoch + 12000,
       'msg-id': 3,
       'time': 12000
+    });
+
+    await _delayedFunction(0, {
+      'kind': 'task-start',
+      'index': 0,
+      'deadline': DateTime.now().millisecondsSinceEpoch + 30000,
+      'msg-id': 6,
+      'time': 15000
     });
   }
 
@@ -245,6 +254,7 @@ class SessionEngineTestImpl implements SessionEngine {
 
   @override
   void setReady(bool ready) {
+    debugPrint('player set ready=$ready');
     _sendMesage('ready', {'ready': ready});
   }
 

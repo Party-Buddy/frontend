@@ -125,7 +125,7 @@ class SessionEngineImpl implements SessionEngine {
   Future<DataState<String>> startSession(
       Game game, Username username, int maxPlayersCount) async {
     try {
-      var bodyJson = GameModel.fromEntity(game.copyWith(source: Source.public, id: '11112222-3333-4444-5555-131072262144')).toJson();
+      var bodyJson = GameModel.fromEntity(game.copyWith(source: Source.public, id: 1111222)).toJson();
       bodyJson.addAll(<String, dynamic>{
         'player-count': maxPlayersCount,
         'require-ready': false

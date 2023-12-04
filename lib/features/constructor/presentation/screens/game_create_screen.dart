@@ -58,7 +58,7 @@ class _GameCreateScreenState extends State<GameCreateScreen> {
               ),
               SingleLineInputLabel(
                   labelText: "Название игры",
-                  onSubmitted: (s) {
+                  onSubmitted: (s) async {
                     setState(() {
                       name = s;
                     });

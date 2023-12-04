@@ -8,7 +8,7 @@ class SingleLineInputLabel extends StatefulWidget {
   const SingleLineInputLabel(
       {super.key, required this.onSubmitted, this.labelText});
 
-  final SubmitResult Function(String) onSubmitted;
+  final Future<SubmitResult> Function(String) onSubmitted;
   final String? labelText;
 
   @override
@@ -28,30 +28,32 @@ class _SingleLineInputLabelState extends State<SingleLineInputLabel> {
   }
 
   Color get shadowColor => switch (submitResult) {
-    SubmitResult.success => const Color.fromARGB(255, 64, 238, 70),
-    SubmitResult.error => Colors.red,
-    _ => Colors.transparent
-  };
+        SubmitResult.success => const Color.fromARGB(255, 64, 238, 70),
+        SubmitResult.error => Colors.red,
+        _ => Colors.transparent
+      };
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: kBorderRadius,
-        boxShadow: submitResult == SubmitResult.empty ? [] : [
-          BoxShadow(color: shadowColor, blurRadius: 10)
-        ]
-      ),
+          borderRadius: kBorderRadius,
+          boxShadow: submitResult == SubmitResult.empty
+              ? []
+              : [BoxShadow(color: shadowColor, blurRadius: 10)]),
       child: TextField(
         controller: controller,
-        onSubmitted: (s) => setState(() {
-          s = s.trim();
-          initialText = s;
-          submitResult = widget.onSubmitted(s);
-        }),
+        onSubmitted: (s) async {
+          var result = await widget.onSubmitted(s);
+          setState(() {
+            s = s.trim();
+            initialText = s;
+            submitResult = result;
+          });
+        },
         cursorColor: Colors.white,
         focusNode: focusNode,
-        onTapOutside: (e) {
+        onTapOutside: (e) async {
           focusNode.unfocus();
           String current = controller.text;
           if (current.isEmpty) {
@@ -61,18 +63,18 @@ class _SingleLineInputLabelState extends State<SingleLineInputLabel> {
             });
             return;
           }
-    
+
           if (current != initialText) {
             initialText = current;
+            var result = await widget.onSubmitted(current);
             setState(() {
-              submitResult = widget.onSubmitted(current);
+              submitResult = result;
             });
           }
         },
         style: const TextStyle(
             fontSize: 18, fontFamily: kFontFamily, color: Colors.white),
-        decoration: inputDecoration(
-            labelText: widget.labelText),
+        decoration: inputDecoration(labelText: widget.labelText),
       ),
     );
   }
