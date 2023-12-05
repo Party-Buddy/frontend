@@ -3,10 +3,11 @@ import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/view_config.dart';
 
 class BaseScreen extends StatelessWidget {
-  const BaseScreen({super.key, required this.content, this.appBarTitle});
+  const BaseScreen({super.key, required this.content, this.appBarTitle, this.showBackButton = true});
 
   final String? appBarTitle;
   final Widget content;
+  final bool showBackButton;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,8 @@ class BaseScreen extends StatelessWidget {
           appBar: appBarTitle == null
               ? null
               : AppBar(
-                  leading: backButton(context),
+                  automaticallyImplyLeading: showBackButton,
+                  leading: showBackButton ? backButton(context) : null,
                   title: Text(appBarTitle!)
                 ),
           body: Container(

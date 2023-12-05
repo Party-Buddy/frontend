@@ -204,7 +204,8 @@ class _GameStartScreenState extends State<GameStartScreen> {
           arguments: TaskScreenArguments(
               taskInfo: taskInfo,
               currentTask: currentTask,
-              sessionEngine: _sessionEngine));
+              sessionEngine: _sessionEngine,
+              tasksCount: gameSession.value.tasks.length));
     });
   }
 }

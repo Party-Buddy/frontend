@@ -21,10 +21,12 @@ class TaskScreenArguments {
   final TaskInfo taskInfo;
   final CurrentTask currentTask;
   final SessionEngine sessionEngine;
+  final int tasksCount;
 
   TaskScreenArguments(
       {required this.taskInfo,
       required this.currentTask,
+      required this.tasksCount,
       required this.sessionEngine});
 }
 
@@ -33,6 +35,7 @@ class TaskScreen extends StatelessWidget {
       {super.key,
       required this.taskInfo,
       required this.currentTask,
+      required this.tasksCount,
       required this.sessionEngine});
 
   static const routeName = "/Task";
@@ -40,49 +43,79 @@ class TaskScreen extends StatelessWidget {
   final TaskInfo taskInfo;
   final CurrentTask currentTask;
   final SessionEngine sessionEngine;
+  final int tasksCount;
 
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
         appBarTitle: "Задание",
+        showBackButton: false,
         content: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: kPadding),
-                  child: BorderWrapper(
-                    border: Border.all(width: 1, color: kPrimaryColor),
-                    child: Text(
-                      taskInfo.name,
-                      style: defaultTextStyle(fontSize: 20),
-                    ),
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(child: Container()),
+                      Expanded(
+                          flex: 3,
+                          child: Center(
+                            child: Wrap(
+                              children: [
+                                BorderWrapper(
+                                  border: Border.all(
+                                      width: 1, color: kPrimaryColor),
+                                  child: Text(
+                                    taskInfo.name,
+                                    style: defaultTextStyle(fontSize: 20),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
+                      Expanded(
+                        child: Center(
+                          child: Wrap(
+                            children: [
+                              BorderWrapper(
+                                  fillColor: kAppBarColor.withOpacity(.5),
+                                  child: Text(
+                                      "${currentTask.index + 1} / $tasksCount",
+                                      style: defaultTextStyle(
+                                          fontSize: 20,
+                                          color: lighten(kPrimaryColor, .15)))),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                ),
-                Container(
-                  padding: kPaddingAll,
-                  child: Text(
-                    taskInfo.description,
-                    style: defaultTextStyle(),
-                  ),
-                ),
-                const SizedBox(
-                  height: kPadding,
-                ),
-                if (taskInfo.photoUrl != null)
                   Container(
-                    padding: const EdgeInsets.only(bottom: kPadding),
-                    height: 200,
-                    width: 200,
-                    alignment: Alignment.center,
-                    child: ClipRRect(
-                      borderRadius: kBorderRadius,
-                      child: Image.network(taskInfo.photoUrl!),
+                    padding: kPaddingAll,
+                    child: Text(
+                      taskInfo.description,
+                      style: defaultTextStyle(),
                     ),
                   ),
-                buildTaskContent(),
-              ],
+                  const SizedBox(
+                    height: kPadding,
+                  ),
+                  if (taskInfo.photoUrl != null)
+                    Container(
+                      padding: const EdgeInsets.only(bottom: kPadding),
+                      height: 200,
+                      width: 200,
+                      alignment: Alignment.center,
+                      child: ClipRRect(
+                        borderRadius: kBorderRadius,
+                        child: Image.network(taskInfo.photoUrl!),
+                      ),
+                    ),
+                  buildTaskContent(),
+                ],
+              ),
             ),
             Column(
               children: [

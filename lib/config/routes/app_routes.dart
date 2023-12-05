@@ -48,6 +48,7 @@ class AppRoutes {
             taskInfo: args.taskInfo,
             currentTask: args.currentTask,
             sessionEngine: args.sessionEngine,
+            tasksCount: args.tasksCount,
           ));
         }
 

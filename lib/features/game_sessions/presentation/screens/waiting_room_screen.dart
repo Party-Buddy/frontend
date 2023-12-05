@@ -111,7 +111,11 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                     SingleChildScrollView(
                       child: Column(
                         children: gameSession.players
-                            .map((p) => PlayerHeader(player: p))
+                            .map((p) => PlayerHeader(
+                                  player: p,
+                                  highlight:
+                                      gameSession.currentPlayerId == p.id,
+                                ))
                             .toList(),
                       ),
                     ),
