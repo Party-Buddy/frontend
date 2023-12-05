@@ -180,7 +180,7 @@ class SessionEngineTestImpl implements SessionEngine {
 По четыре яйца,
 В каждом яйце
 По семи цыпленков.''',
-            'duration': 30,
+            'duration': 10,
             'type': 'checked-text'
           },
           {
@@ -188,7 +188,7 @@ class SessionEngineTestImpl implements SessionEngine {
             'description': 'Просто рисуем кота. На скорость.',
             'duration': 30,
             'type': 'photo',
-            'poll-duration': {'kind': 'fixed', 'secs': 10}
+            'poll-duration': {'kind': 'fixed', 'secs': 8}
           },
         ]
       }
@@ -247,24 +247,25 @@ class SessionEngineTestImpl implements SessionEngine {
 
     await _delayedMessage(10, {
       'kind': 'task-end',
-      'index': 0,
+      'task-idx': 0,
       'deadline': DateTime.now().millisecondsSinceEpoch + 5000,
       'msg-id': 8,
       'time': 17000,
       'scoreboard': [
         {'player-id': 0, 'task-points': 1, 'total-points': 1},
         {'player-id': 1, 'task-points': 0, 'total-points': 0},
-        {'player-id': 2, 'task-points': 1, 'total-points': 1}
+        {'player-id': 2, 'task-points': 1, 'total-points': 1},
+        {'player-id': 3, 'task-points': 0, 'total-points': 0}
       ],
       'answers': [
         {'value': 'the correct one', 'player-count': 2, 'correct': true},
-        {'value': 'wrong!', 'player-count': 1, 'correct': false}
+        {'value': 'wrong!', 'player-count': 2, 'correct': false}
       ]
     });
 
     await _delayedMessage(5, {
       'kind': 'task-start',
-      'index': 1,
+      'task-idx': 1,
       'deadline': DateTime.now().millisecondsSinceEpoch + 30000,
       'msg-id': 9,
       'time': 22000,
@@ -283,16 +284,17 @@ class SessionEngineTestImpl implements SessionEngine {
       ]
     });
 
-    await _delayedMessage(8, {
+    await _delayedMessage(5, {
       'kind': 'task-end',
-      'index': 1,
+      'task-idx': 1,
       'deadline': DateTime.now().millisecondsSinceEpoch + 5000,
       'msg-id': 11,
       'time': 24000,
       'scoreboard': [
         {'player-id': 0, 'task-points': 0, 'total-points': 1},
         {'player-id': 1, 'task-points': 0, 'total-points': 0},
-        {'player-id': 2, 'task-points': 1, 'total-points': 2}
+        {'player-id': 2, 'task-points': 1, 'total-points': 2},
+        {'player-id': 3, 'task-points': 0, 'total-points': 0}
       ],
       'answers': [
         {
@@ -303,7 +305,7 @@ class SessionEngineTestImpl implements SessionEngine {
         {
           'value':
               'https://sun9-8.userapi.com/impg/lSJGYXohgBrdZtSLEW0x6RFPgL9c7hkzLl8G4A/SiCq0z2kO5w.jpg?size=1440x1440&quality=95&sign=39ae4e4ecd33a495b4ea5a095667bebe&c_uniq_tag=xxP_8FQHcoaN5BhRFL9l-lLnVCz3fDWM6qMbn9parik&type=album',
-          'votes': 1
+          'votes': 0
         },
         {
           'value':
@@ -320,7 +322,8 @@ class SessionEngineTestImpl implements SessionEngine {
       'scoreboard': [
         {'player-id': 0, 'total-points': 1},
         {'player-id': 1, 'total-points': 0},
-        {'player-id': 2, 'total-points': 2}
+        {'player-id': 2, 'total-points': 2},
+        {'player-id': 3, 'total-points': 0}
       ]
     });
   }
