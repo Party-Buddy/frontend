@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:party_games_app/features/constructor/presentation/screens/constructor_screen.dart';
 import 'package:party_games_app/features/constructor/presentation/screens/game_create_screen.dart';
+import 'package:party_games_app/features/game_sessions/presentation/screens/game_results_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/task_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/waiting_room_screen.dart';
 import 'package:party_games_app/features/games/presentation/screens/game_start_screen.dart';
@@ -40,6 +41,14 @@ class AppRoutes {
           ));
         }
 
+      case GameResultsScreen.routeName:
+        {
+          final args = settings.arguments as GameResultsScreenArguments;
+
+          return _materialRoute(GameResultsScreen(
+            gameResults: args.gameResults,
+          ));
+        }
       case TaskScreen.routeName:
         {
           final args = settings.arguments as TaskScreenArguments;

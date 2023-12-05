@@ -12,6 +12,7 @@ import 'package:party_games_app/features/game_sessions/domain/engine/session_eng
 import 'package:party_games_app/features/game_sessions/domain/entities/game_player.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/game_session.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/task_info.dart';
+import 'package:party_games_app/features/game_sessions/presentation/screens/game_results_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/task_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/waiting_room_screen.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
@@ -186,10 +187,9 @@ class _GameStartScreenState extends State<GameStartScreen> {
         gameSession = ValueNotifier(newGameSessionState);
 
         Navigator.of(context).pop();
-        Navigator.pushNamed(
-        context, WaitingRoomScreen.routeName,
-        arguments: WaitingRoomScreenArguments(
-            gameSession: gameSession, sessionEngine: _sessionEngine));
+        Navigator.pushNamed(context, WaitingRoomScreen.routeName,
+            arguments: WaitingRoomScreenArguments(
+                gameSession: gameSession, sessionEngine: _sessionEngine));
         return;
       }
       gameSession.value = newGameSessionState;
@@ -206,6 +206,15 @@ class _GameStartScreenState extends State<GameStartScreen> {
               currentTask: currentTask,
               sessionEngine: _sessionEngine,
               tasksCount: gameSession.value.tasks.length));
+
+      // temporary code
+      if (currentTask.index == gameSession.value.tasks.length - 1) {
+        Future.delayed(
+            const Duration(seconds: 10),
+            () => Navigator.pushNamed(context, GameResultsScreen.routeName,
+                arguments:
+                    GameResultsScreenArguments(gameResults: gameResultsMock)));
+      }
     });
   }
 }
