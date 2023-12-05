@@ -160,7 +160,7 @@ class SessionEngineTestImpl implements SessionEngine {
       'time': 6000,
       'players': [
         {'player-id': 1, 'nickname': nickname},
-        {'player-id': 2, 'nickname': 'player 2'}
+        {'player-id': 2, 'nickname': 'Alex', 'image': 'https://gravatar.com/avatar/f79cc32d7f9cee4a094d1b1772c56d1c?s=400&d=robohash&r=x'}
       ]
     });
 
@@ -177,8 +177,9 @@ class SessionEngineTestImpl implements SessionEngine {
       'time': 10000,
       'players': [
         {'player-id': 1, 'nickname': nickname},
-        {'player-id': 2, 'nickname': 'player 2'},
-        {'player-id': 3, 'nickname': 'player 3'}
+        {'player-id': 2, 'nickname': 'Alex', 'image': 'https://gravatar.com/avatar/f79cc32d7f9cee4a094d1b1772c56d1c?s=400&d=robohash&r=x'},
+        {'player-id': 3, 'nickname': 'James', 'image': "https://robohash.org/f79cc32d7f9cee4a094d1b1772c56d1c?set=set4&bgset=&size=400x400"},
+        {'player-id': 4, 'nickname': 'Сладкая Дыня', 'image': "https://robohash.org/63704034a6c7a8ce2ed2b9007faededa?set=set4&bgset=&size=400x400"},
       ]
     });
 
@@ -186,7 +187,7 @@ class SessionEngineTestImpl implements SessionEngine {
       'kind': 'waiting',
       'msg-id': 5,
       'time': 12000,
-      'ready': [1, 2, 3]
+      'ready': [1, 2, 3, 4]
     });
 
     await _delayedMessage(0, {

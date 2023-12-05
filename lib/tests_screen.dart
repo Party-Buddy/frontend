@@ -4,6 +4,7 @@ import 'package:party_games_app/core/widgets/base_screen.dart';
 import 'package:party_games_app/core/widgets/custom_button.dart';
 import 'package:party_games_app/features/game_sessions/data/engine/session_engine_test.dart';
 import 'package:party_games_app/features/game_sessions/domain/engine/session_engine.dart';
+import 'package:party_games_app/features/game_sessions/presentation/screens/game_results_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/task_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/waiting_room_screen.dart';
 import 'package:party_games_app/features/tasks/domain/entities/choice_task.dart';
@@ -61,6 +62,13 @@ class TestsScreen extends StatelessWidget {
                     arguments: WaitingRoomScreenArguments(
                         gameSession: ValueNotifier(gameSessionMock),
                         sessionEngine: sessionEngine))),
+            const SizedBox(height: kPadding,),
+            CustomButton(
+                text: "Итоги игры",
+                onPressed: () => Navigator.pushNamed(
+                    context, GameResultsScreen.routeName,
+                    arguments: GameResultsScreenArguments(
+                        gameResults: gameResultsMock))),
             // const SizedBox(
             //   height: kPadding,
             // ),
