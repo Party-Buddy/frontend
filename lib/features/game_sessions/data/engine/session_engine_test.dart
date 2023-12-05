@@ -1,39 +1,52 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:party_games_app/config/consts.dart';
-import 'package:party_games_app/config/server/paths.dart';
 import 'package:party_games_app/core/resources/data_state.dart';
 import 'package:party_games_app/core/utils/sync_counter.dart';
 import 'package:party_games_app/features/game_sessions/data/models/current_task_model.dart';
 import 'package:party_games_app/features/game_sessions/data/models/game_player_model.dart';
+import 'package:party_games_app/features/game_sessions/data/models/game_results_model.dart';
 import 'package:party_games_app/features/game_sessions/data/models/game_session_model.dart';
+import 'package:party_games_app/features/game_sessions/data/models/poll_info_model.dart';
+import 'package:party_games_app/features/game_sessions/data/models/task_results_model.dart';
 import 'package:party_games_app/features/game_sessions/domain/engine/session_engine.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/current_task.dart';
+import 'package:party_games_app/features/game_sessions/domain/entities/game_results.dart';
+import 'package:party_games_app/features/game_sessions/domain/entities/poll_info.dart';
+import 'package:party_games_app/features/game_sessions/domain/entities/task_results.dart';
 import 'package:party_games_app/features/games/data/models/game_model.dart';
-import 'package:web_socket_channel/io.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:http/http.dart' as http;
 import 'package:party_games_app/features/game_sessions/domain/entities/game_session.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
-import 'package:party_games_app/features/username/domain/entities/username.dart';
+import 'package:party_games_app/features/user_data/domain/entities/username.dart';
+import 'package:party_games_app/features/user_data/domain/usecases/get_uid.dart';
 
 class SessionEngineTestImpl implements SessionEngine {
+  late final Future<String> uidGetter;
+  String? uid;
+
   Function(GameSession)? _onGameStatus;
   Function(int?)? _onGameStart;
   Function(String)? _onGameInterrupted;
   Function(String)? _onJoinFailure;
   Function(String)? _onOpError;
   Function(CurrentTask)? _onTaskStart;
+  Function(TaskResults)? _onTaskEnd;
+  Function(PollInfo)? _onPollStart;
+  Function(GameResults)? _onGameEnd;
   GameSessionModel gameSession = GameSessionModel();
   SyncCounter messageIdGenerator = SyncCounter();
   String nickname = 'Your nickname';
   int maxPlayers = maxPlayersCount;
   var logger = Logger();
-  Completer<DataState<String>> joinCompleter = Completer<DataState<String>>();
+  Completer<DataState<String>>? joinCompleter;
+
+  SessionEngineTestImpl() {
+    uidGetter = GetIt.instance<GetUIDUseCase>().call();
+  }
 
   void _sendGameStatus() {
     _onGameStatus?.call(gameSession.toEntity());
@@ -44,7 +57,7 @@ class SessionEngineTestImpl implements SessionEngine {
   }
 
   void _onJoinedMessage(Map<String, dynamic> data) {
-    joinCompleter.complete(DataSuccess(data['session-id'] ?? ''));
+    joinCompleter?.complete(DataSuccess(data['session-id'] ?? ''));
     gameSession = GameSessionModel.fromJson(data);
     _sendGameStatus();
   }
@@ -90,8 +103,23 @@ class SessionEngineTestImpl implements SessionEngine {
     _onTaskStart?.call(CurrentTaskModel.fromJson(data).toEntity());
   }
 
+  void _onTaskEndMessage(Map<String, dynamic> data) {
+    var tr = TaskResultsModel.fromJson(data).toEntity();
+    _onTaskEnd?.call(tr);
+  }
+
+  void _onGameEndMessage(Map<String, dynamic> data) {
+    var gr = GameResultsModel.fromJson(data).toEntity();
+    _onGameEnd?.call(gr);
+  }
+
+  void _onPollStartMessage(Map<String, dynamic> data) {
+    var pi = PollInfoModel.fromJson(data).toEntity();
+    _onPollStart?.call(pi);
+  }
+
   void _onJoinFailureMessage(Map<String, dynamic> data) {
-    joinCompleter.complete(DataFailed(data['message'] ?? data['kind']));
+    joinCompleter?.complete(DataFailed(data['message'] ?? data['kind']));
     _sendJoinFailure(data['message'] ?? data['kind']);
   }
 
@@ -117,6 +145,12 @@ class SessionEngineTestImpl implements SessionEngine {
       _onGameStartMessage(data);
     } else if (kind == 'task-start') {
       _onTaskStartMessage(data);
+    } else if (kind == 'poll-start') {
+      _onPollStartMessage(data);
+    } else if (kind == 'task-end') {
+      _onTaskEndMessage(data);
+    } else if (kind == 'game-end') {
+      _onGameEndMessage(data);
     } else if (kind == 'session-expired' ||
         kind == 'nickname-used' ||
         kind == 'lobby-full') {
@@ -139,23 +173,23 @@ class SessionEngineTestImpl implements SessionEngine {
         'description': 'some text',
         'tasks': [
           {
+            'name': 'task2 name',
+            'description': 'hello2',
+            'duration': 90,
+            'type': 'checked-text'
+          },
+          {
             'name': 'task1 name',
             'description': 'hello',
             'duration': 100,
             'type': 'photo',
             'poll-duration': {'kind': 'fixed', 'secs': 10}
-          },
-          {
-            'name': 'task2 name',
-            'description': 'hello2',
-            'duration': 90,
-            'type': 'checked-text'
           }
         ]
       }
     });
 
-    await _delayedFunction(0, {
+    await _delayedFunction(1, {
       'kind': 'game-status',
       'msg-id': 2,
       'time': 6000,
@@ -190,24 +224,105 @@ class SessionEngineTestImpl implements SessionEngine {
       'ready': [1, 2, 3]
     });
 
-    await _delayedFunction(0, {
+    await _delayedFunction(1, {
       'kind': 'game-start',
-      'deadline': DateTime.now().millisecondsSinceEpoch + 12000,
+      'deadline': DateTime.now().millisecondsSinceEpoch + 5000,
       'msg-id': 3,
       'time': 12000
     });
 
-    await _delayedFunction(0, {
+    await _delayedFunction(5, {
       'kind': 'task-start',
       'index': 0,
-      'deadline': DateTime.now().millisecondsSinceEpoch + 30000,
+      'deadline': DateTime.now().millisecondsSinceEpoch + 10000,
       'msg-id': 6,
       'time': 15000
+    });
+
+    await _delayedFunction(10, {
+      'kind': 'task-end',
+      'index': 0,
+      'deadline': DateTime.now().millisecondsSinceEpoch + 5000,
+      'msg-id': 7,
+      'time': 17000,
+      'scoreboard': [
+        {'player-id': 0, 'task-points': 1, 'total-points': 1},
+        {'player-id': 1, 'task-points': 0, 'total-points': 0},
+        {'player-id': 2, 'task-points': 1, 'total-points': 1}
+      ],
+      'answers': [
+        {'value': 'the correct one', 'player-count': 2, 'correct': true},
+        {'value': 'wrong!', 'player-count': 1, 'correct': false}
+      ]
+    });
+
+    await _delayedFunction(5, {
+      'kind': 'task-start',
+      'index': 1,
+      'deadline': DateTime.now().millisecondsSinceEpoch + 8000,
+      'msg-id': 8,
+      'time': 22000,
+    });
+
+    await _delayedFunction(5, {
+      'kind': 'poll-start',
+      'index': 1,
+      'deadline': DateTime.now().millisecondsSinceEpoch + 10000,
+      'msg-id': 9,
+      'time': 23000,
+      'options': [
+        'https://i.pinimg.com/736x/13/99/f4/1399f4bda826ac629f07277be6b2ba4e.jpg',
+        'https://sun9-8.userapi.com/impg/lSJGYXohgBrdZtSLEW0x6RFPgL9c7hkzLl8G4A/SiCq0z2kO5w.jpg?size=1440x1440&quality=95&sign=39ae4e4ecd33a495b4ea5a095667bebe&c_uniq_tag=xxP_8FQHcoaN5BhRFL9l-lLnVCz3fDWM6qMbn9parik&type=album',
+        'https://yt3.ggpht.com/ytc/AKedOLRIBpbC4usga9kP1bzA_LPp2wMeb6kmsLodIrMG=s900-c-k-c0x00ffffff-no-rj'
+      ]
+    });
+
+    await _delayedFunction(8, {
+      'kind': 'task-end',
+      'index': 1,
+      'deadline': DateTime.now().millisecondsSinceEpoch + 5000,
+      'msg-id': 10,
+      'time': 24000,
+      'scoreboard': [
+        {'player-id': 0, 'task-points': 0, 'total-points': 1},
+        {'player-id': 1, 'task-points': 0, 'total-points': 0},
+        {'player-id': 2, 'task-points': 1, 'total-points': 2}
+      ],
+      'answers': [
+        {
+          'value':
+              'https://i.pinimg.com/736x/13/99/f4/1399f4bda826ac629f07277be6b2ba4e.jpg',
+          'votes': 1
+        },
+        {
+          'value':
+              'https://sun9-8.userapi.com/impg/lSJGYXohgBrdZtSLEW0x6RFPgL9c7hkzLl8G4A/SiCq0z2kO5w.jpg?size=1440x1440&quality=95&sign=39ae4e4ecd33a495b4ea5a095667bebe&c_uniq_tag=xxP_8FQHcoaN5BhRFL9l-lLnVCz3fDWM6qMbn9parik&type=album',
+          'votes': 1
+        },
+        {
+          'value':
+              'https://yt3.ggpht.com/ytc/AKedOLRIBpbC4usga9kP1bzA_LPp2wMeb6kmsLodIrMG=s900-c-k-c0x00ffffff-no-rj',
+          'votes': 2
+        }
+      ]
+    });
+
+    await _delayedFunction(5, {
+      'kind': 'game-end',
+      'msg-id': 11,
+      'time': 25000,
+      'scoreboard': [
+        {'player-id': 0, 'total-points': 1},
+        {'player-id': 1, 'total-points': 0},
+        {'player-id': 2, 'total-points': 2}
+      ]
     });
   }
 
   @override
-  Future<DataState<String>> startSession(Game game, Username username, int maxPlayersCount) async {
+  Future<DataState<String>> startSession(
+      Game game, Username username, int maxPlayersCount) async {
+    uid = await uidGetter;
     String sessionId = 'ASSDIK';
     maxPlayers = maxPlayersCount;
     return joinSession(sessionId, username);
@@ -218,6 +333,8 @@ class SessionEngineTestImpl implements SessionEngine {
   @override
   Future<DataState<String>> joinSession(
       String sessionId, Username username) async {
+    uid = await uidGetter;
+    debugPrint('device uid is $uid');
     gameSession = GameSessionModel();
     nickname = username.username;
     try {
@@ -227,7 +344,8 @@ class SessionEngineTestImpl implements SessionEngine {
     } catch (e) {
       return const DataFailed('cannot connect to server');
     }
-    DataState<String> sid = await joinCompleter.future;
+    DataState<String> sid = await joinCompleter!.future;
+    joinCompleter = null;
     return sid;
   }
 
@@ -258,6 +376,24 @@ class SessionEngineTestImpl implements SessionEngine {
     _sendMesage('ready', {'ready': ready});
   }
 
+  @override
+  void sendAnswer(bool ready, int taskId) {
+    debugPrint(
+        'player send answer: (ready=$ready,taskId=$taskId, TODO answer)');
+    _sendMesage('task-answer', {
+      'ready': ready,
+      'task-idx': taskId,
+      'answer': {'type': 'text', 'value': 'answer'}
+    });
+  }
+
+  @override
+  void sendPollChoice(bool ready, int taskId, int choice) {
+    debugPrint(
+        'player send poll choice: (ready=$ready,taskId=$taskId, choice=$choice)');
+    _sendMesage('poll-choose',
+        {'task-idx': taskId, 'option-idx': ready ? choice : null});
+  }
   // callbacks
 
   @override
@@ -289,5 +425,20 @@ class SessionEngineTestImpl implements SessionEngine {
   @override
   void onTaskStart(Function(CurrentTask) callback) {
     _onTaskStart = callback;
+  }
+
+  @override
+  void onTaskEnd(Function(TaskResults) callback) {
+    _onTaskEnd = callback;
+  }
+
+  @override
+  void onGameEnd(Function(GameResults) callback) {
+    _onGameEnd = callback;
+  }
+
+  @override
+  void onPollStart(Function(PollInfo) callback) {
+    _onPollStart = callback;
   }
 }

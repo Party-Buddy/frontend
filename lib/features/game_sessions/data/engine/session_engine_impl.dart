@@ -7,28 +7,45 @@ import 'package:party_games_app/core/resources/data_state.dart';
 import 'package:party_games_app/core/utils/sync_counter.dart';
 import 'package:party_games_app/features/game_sessions/data/models/current_task_model.dart';
 import 'package:party_games_app/features/game_sessions/data/models/game_player_model.dart';
+import 'package:party_games_app/features/game_sessions/data/models/game_results_model.dart';
 import 'package:party_games_app/features/game_sessions/data/models/game_session_model.dart';
+import 'package:party_games_app/features/game_sessions/data/models/poll_info_model.dart';
+import 'package:party_games_app/features/game_sessions/data/models/task_results_model.dart';
 import 'package:party_games_app/features/game_sessions/domain/engine/session_engine.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/current_task.dart';
+import 'package:party_games_app/features/game_sessions/domain/entities/game_results.dart';
+import 'package:party_games_app/features/game_sessions/domain/entities/poll_info.dart';
+import 'package:party_games_app/features/game_sessions/domain/entities/task_results.dart';
 import 'package:party_games_app/features/games/data/models/game_model.dart';
+import 'package:party_games_app/features/user_data/domain/usecases/get_uid.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:http/http.dart' as http;
 import 'package:party_games_app/features/game_sessions/domain/entities/game_session.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
-import 'package:party_games_app/features/username/domain/entities/username.dart';
+import 'package:party_games_app/features/user_data/domain/entities/username.dart';
 
 class SessionEngineImpl implements SessionEngine {
   WebSocketChannel? _channel;
+  late final Future<String> uidGetter;
+  String? uid;
   Function(GameSession)? _onGameStatus;
   Function(int?)? _onGameStart;
   Function(String)? _onGameInterrupted;
   Function(String)? _onJoinFailure;
   Function(String)? _onOpError;
   Function(CurrentTask)? _onTaskStart;
+  Function(TaskResults)? _onTaskEnd;
+  Function(PollInfo)? _onPollStart;
+  Function(GameResults)? _onGameEnd;
+
   GameSessionModel gameSession = GameSessionModel();
   SyncCounter messageIdGenerator = SyncCounter();
-  Completer<DataState<String>> joinCompleter = Completer<DataState<String>>();
+  Completer<DataState<String>>? joinCompleter;
+
+  SessionEngineImpl(GetUIDUseCase getUIDUseCase) {
+    uidGetter = getUIDUseCase.call();
+  }
 
   void _sendGameStatus() {
     _onGameStatus?.call(gameSession.toEntity());
@@ -39,7 +56,7 @@ class SessionEngineImpl implements SessionEngine {
   }
 
   void _onJoinedMessage(Map<String, dynamic> data) {
-    joinCompleter.complete(DataSuccess(data['session-id'] ?? ''));
+    joinCompleter?.complete(DataSuccess(data['session-id'] ?? ''));
     gameSession = GameSessionModel.fromJson(data);
     _sendGameStatus();
   }
@@ -85,13 +102,30 @@ class SessionEngineImpl implements SessionEngine {
     _onTaskStart?.call(CurrentTaskModel.fromJson(data).toEntity());
   }
 
+  void _onTaskEndMessage(Map<String, dynamic> data) {
+    _onTaskEnd?.call(TaskResultsModel.fromJson(data).toEntity());
+  }
+
+  void _onGameEndMessage(Map<String, dynamic> data) {
+    _onGameEnd?.call(GameResultsModel.fromJson(data).toEntity());
+  }
+
+  void _onPollStartMessage(Map<String, dynamic> data) {
+    _onPollStart?.call(PollInfoModel.fromJson(data).toEntity());
+  }
+
   void _onJoinFailureMessage(Map<String, dynamic> data) {
-    joinCompleter.complete(DataFailed(data['message'] ?? data['kind']));
+    joinCompleter?.complete(DataFailed(data['message'] ?? data['kind']));
     _sendJoinFailure(data['message'] ?? data['kind']);
   }
 
   void _onOpErrorMessage(Map<String, dynamic> data) {
     _onOpError?.call(data['message'] ?? data['kind']);
+  }
+
+  void _onConnectionClosed() {
+    joinCompleter?.complete(const DataFailed('connection closed'));
+    _onGameInterrupted?.call('connection closed');
   }
 
   void _listen() {
@@ -109,6 +143,12 @@ class SessionEngineImpl implements SessionEngine {
         _onGameStartMessage(data);
       } else if (kind == 'task-start') {
         _onTaskStartMessage(data);
+      } else if (kind == 'poll-start') {
+        _onPollStartMessage(data);
+      } else if (kind == 'task-end') {
+        _onTaskEndMessage(data);
+      } else if (kind == 'game-end') {
+        _onGameEndMessage(data);
       } else if (kind == 'session-expired' ||
           kind == 'nickname-used' ||
           kind == 'lobby-full') {
@@ -117,25 +157,26 @@ class SessionEngineImpl implements SessionEngine {
         _onOpErrorMessage(data);
       }
     }, onDone: () {
-      _onGameInterrupted?.call('connection closed');
+      _onConnectionClosed();
     });
   }
 
   @override
   Future<DataState<String>> startSession(
       Game game, Username username, int maxPlayersCount) async {
+    uid = await uidGetter;
     try {
-      var bodyJson = GameModel.fromEntity(game.copyWith(source: Source.public, id: 1111222)).toJson();
-      bodyJson.addAll(<String, dynamic>{
+      var bodyJson = <String, dynamic>{
+        'game-type': 'public',
+        'game-id': '11112222-3333-4444-5555-131072262144',
         'player-count': maxPlayersCount,
         'require-ready': false
-      });
+      };
       var response = await http
           .post(Uri.http('$serverDomain:$serverHttpPort', sessionPath),
               headers: <String, String>{
-                'Authorization': 'Bearer c0de900d-1234-1234-1234-addc0ffee700',
-                'Content-type': 'application/json',
-                'Host': 'localhost'
+                'Authorization': 'Bearer $uid',
+                'Content-type': 'application/json'
               },
               body: jsonEncode(bodyJson))
           .timeout(const Duration(seconds: 5));
@@ -157,10 +198,16 @@ class SessionEngineImpl implements SessionEngine {
   Future<DataState<String>> joinSession(
       String sessionId, Username username) async {
     gameSession = GameSessionModel();
+    uid = await uidGetter;
     try {
       await WebSocket.connect(
-          'ws://$serverDomain:$serverWsPort$sessionPath?${joinSessionParams[0]}=$sessionId',
-          protocols: ['websocket']).then((ws) {
+          'ws://$serverDomain:$serverWsPort$sessionPath?${joinSessionParams[1]}=$sessionId',
+          headers: <String, String>{
+            'Authorization': 'Bearer $uid'
+          },
+          protocols: [
+            'websocket'
+          ]).then((ws) {
         _channel = IOWebSocketChannel(ws);
       }).timeout(const Duration(seconds: 5));
       _listen();
@@ -169,7 +216,8 @@ class SessionEngineImpl implements SessionEngine {
     } catch (e) {
       return const DataFailed('cannot connect to server');
     }
-    DataState<String> sid = await joinCompleter.future;
+    DataState<String> sid = await joinCompleter!.future;
+    joinCompleter = null;
     return sid;
   }
 
@@ -180,6 +228,8 @@ class SessionEngineImpl implements SessionEngine {
       'msg-id': await messageIdGenerator.newId
     });
     _channel?.sink.add(jsonEncode(body));
+    print(jsonEncode(body));
+    print('');
   }
 
   @override
@@ -199,6 +249,23 @@ class SessionEngineImpl implements SessionEngine {
     _sendMesage('ready', {'ready': ready});
   }
 
+  @override
+  void sendAnswer(
+    bool ready,
+    int taskId,
+  ) {
+    _sendMesage('task-answer', {
+      'ready': ready,
+      'task-idx': taskId,
+      'answer': {'type': 'text', 'value': 'answer'}
+    });
+  }
+
+  @override
+  void sendPollChoice(bool ready, int taskId, int choice) {
+    _sendMesage('poll-choose',
+        {'task-idx': taskId, 'option-idx': ready ? choice : null});
+  }
   // callbacks
 
   @override
@@ -230,5 +297,20 @@ class SessionEngineImpl implements SessionEngine {
   @override
   void onTaskStart(Function(CurrentTask) callback) {
     _onTaskStart = callback;
+  }
+
+  @override
+  void onTaskEnd(Function(TaskResults) callback) {
+    _onTaskEnd = callback;
+  }
+
+  @override
+  void onGameEnd(Function(GameResults) callback) {
+    _onGameEnd = callback;
+  }
+
+  @override
+  void onPollStart(Function(PollInfo) callback) {
+    _onPollStart = callback;
   }
 }

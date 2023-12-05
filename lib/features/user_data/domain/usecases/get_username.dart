@@ -1,9 +1,8 @@
 import 'package:party_games_app/core/usecase/usecase.dart';
-import 'package:party_games_app/features/username/domain/entities/username.dart';
-import 'package:party_games_app/features/username/domain/repository/username_repository.dart';
+import 'package:party_games_app/features/user_data/domain/entities/username.dart';
+import 'package:party_games_app/features/user_data/domain/repository/user_data_repository.dart';
 
-class GetUsernameUseCase implements UseCase<Username, void>{
-
+class GetUsernameUseCase implements UseCase<Username, void> {
   final UsernameRepository _usernameRepository;
 
   GetUsernameUseCase(this._usernameRepository);
@@ -12,5 +11,4 @@ class GetUsernameUseCase implements UseCase<Username, void>{
   Future<Username> call({void params}) {
     return _usernameRepository.getSavedOrDefaultUsername();
   }
-
 }

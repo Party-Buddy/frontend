@@ -21,12 +21,13 @@ import 'package:party_games_app/features/tasks/domain/usecases/get_local_tasks_s
 import 'package:party_games_app/features/tasks/domain/usecases/get_published_tasks.dart';
 import 'package:party_games_app/features/tasks/domain/usecases/save_task.dart';
 import 'package:party_games_app/features/tasks/domain/usecases/update_task.dart';
-import 'package:party_games_app/features/username/data/data_sources/local/local_username_datasource.dart';
-import 'package:party_games_app/features/username/data/repository/username_repository_impl.dart';
-import 'package:party_games_app/features/username/domain/repository/username_repository.dart';
-import 'package:party_games_app/features/username/domain/usecases/get_username.dart';
-import 'package:party_games_app/features/username/domain/usecases/save_username.dart';
-import 'package:party_games_app/features/username/domain/usecases/validate_username.dart';
+import 'package:party_games_app/features/user_data/data/data_sources/local/local_datasource.dart';
+import 'package:party_games_app/features/user_data/data/repository/user_data_repository_impl.dart';
+import 'package:party_games_app/features/user_data/domain/repository/user_data_repository.dart';
+import 'package:party_games_app/features/user_data/domain/usecases/get_uid.dart';
+import 'package:party_games_app/features/user_data/domain/usecases/get_username.dart';
+import 'package:party_games_app/features/user_data/domain/usecases/save_username.dart';
+import 'package:party_games_app/features/user_data/domain/usecases/validate_username.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final sl = GetIt.instance;
@@ -40,10 +41,6 @@ Future<void> initializeDependenices() async {
   final SharedPreferences sharedPreferences =
       await SharedPreferences.getInstance();
   sl.registerSingleton<SharedPreferences>(sharedPreferences);
-
-  // engine
-  final SessionEngine engine = SessionEngineTestImpl();
-  sl.registerSingleton<SessionEngine>(engine);
 
   // repositories
   //   games
@@ -74,8 +71,14 @@ Future<void> initializeDependenices() async {
   sl.registerSingleton(UpdateTaskUseCase(sl()));
   sl.registerSingleton(DeleteTaskUseCase(sl()));
 
-  //   username
+  //   user_data
   sl.registerSingleton(GetUsernameUseCase(sl()));
   sl.registerSingleton(SaveUsernameUseCase(sl()));
   sl.registerSingleton(ValidateUsernameUseCase());
+  sl.registerSingleton(GetUIDUseCase(sl()));
+  
+  // engine
+  final SessionEngine engine = SessionEngineTestImpl();
+  sl.registerSingleton<SessionEngine>(engine);
+
 }

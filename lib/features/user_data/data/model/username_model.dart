@@ -1,4 +1,4 @@
-import 'package:party_games_app/features/username/domain/entities/username.dart';
+import 'package:party_games_app/features/user_data/domain/entities/username.dart';
 
 class UsernameModel {
   String? username;

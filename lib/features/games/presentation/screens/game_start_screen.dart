@@ -21,9 +21,9 @@ import 'package:party_games_app/core/widgets/custom_button.dart';
 import 'package:party_games_app/features/games/presentation/widgets/game_header.dart';
 import 'package:party_games_app/core/widgets/single_input_label.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
-import 'package:party_games_app/features/username/domain/entities/username.dart';
-import 'package:party_games_app/features/username/domain/usecases/params/username_params.dart';
-import 'package:party_games_app/features/username/domain/usecases/validate_username.dart';
+import 'package:party_games_app/features/user_data/domain/entities/username.dart';
+import 'package:party_games_app/features/user_data/domain/usecases/params/username_params.dart';
+import 'package:party_games_app/features/user_data/domain/usecases/validate_username.dart';
 
 class GameStartScreen extends StatefulWidget {
   const GameStartScreen({super.key});
