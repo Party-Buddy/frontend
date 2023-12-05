@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/view_config.dart';
-import 'package:party_games_app/core/widgets/custom_check_box.dart';
 import 'package:party_games_app/core/widgets/multiline_input_label.dart';
+import 'package:party_games_app/features/game_sessions/domain/engine/session_engine.dart';
+import 'package:party_games_app/features/game_sessions/domain/entities/current_task.dart';
+import 'package:party_games_app/features/game_sessions/domain/entities/task_info.dart';
 import 'package:party_games_app/features/game_sessions/presentation/widgets/ready_confirmation_label.dart';
-import 'package:party_games_app/features/tasks/domain/entities/poll_task.dart';
 
 class PollTaskTextWidget extends StatefulWidget {
-  const PollTaskTextWidget({super.key, required this.pollTask});
+  const PollTaskTextWidget(
+      {super.key,
+      required this.taskInfo,
+      required this.currentTask,
+      required this.sessionEngine});
 
-  final PollTask pollTask;
+  final TaskInfo taskInfo;
+  final CurrentTask currentTask;
+  final SessionEngine sessionEngine;
 
   @override
   State<PollTaskTextWidget> createState() => _PollTaskTextWidgetState();

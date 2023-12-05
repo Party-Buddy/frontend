@@ -35,7 +35,9 @@ class AppRoutes {
           final args = settings.arguments as WaitingRoomScreenArguments;
 
           return _materialRoute(WaitingRoomScreen(
-              gameSession: args.gameSession, sessionEngine: args.sessionEngine,));
+            gameSession: args.gameSession,
+            sessionEngine: args.sessionEngine,
+          ));
         }
 
       case TaskScreen.routeName:
@@ -43,9 +45,12 @@ class AppRoutes {
           final args = settings.arguments as TaskScreenArguments;
 
           return _materialRoute(TaskScreen(
-              task: args.task, sessionEngine: args.sessionEngine,));
+            taskInfo: args.taskInfo,
+            currentTask: args.currentTask,
+            sessionEngine: args.sessionEngine,
+          ));
         }
-  
+
       default:
         return _materialRoute(const MainMenuScreen());
     }

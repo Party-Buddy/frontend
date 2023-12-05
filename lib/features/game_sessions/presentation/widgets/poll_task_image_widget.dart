@@ -2,14 +2,22 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:party_games_app/core/widgets/image_uploader.dart';
+import 'package:party_games_app/features/game_sessions/domain/engine/session_engine.dart';
+import 'package:party_games_app/features/game_sessions/domain/entities/current_task.dart';
+import 'package:party_games_app/features/game_sessions/domain/entities/task_info.dart';
 import 'package:party_games_app/features/game_sessions/presentation/widgets/ready_confirmation_label.dart';
-import 'package:party_games_app/features/tasks/domain/entities/poll_task.dart';
 
 class PollTaskImageWidget extends StatefulWidget {
-  const PollTaskImageWidget({super.key, required this.pollTask});
+  const PollTaskImageWidget(
+      {super.key,
+      required this.taskInfo,
+      required this.currentTask,
+      required this.sessionEngine});
 
-  final PollTask pollTask;
-
+  final TaskInfo taskInfo;
+  final CurrentTask currentTask;
+  final SessionEngine sessionEngine;
+  
   @override
   State<PollTaskImageWidget> createState() => _PollTaskImageWidget();
 }
