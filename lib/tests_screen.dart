@@ -61,36 +61,36 @@ class TestsScreen extends StatelessWidget {
                     arguments: WaitingRoomScreenArguments(
                         gameSession: ValueNotifier(gameSessionMock),
                         sessionEngine: sessionEngine))),
-            const SizedBox(
-              height: kPadding,
-            ),
-            CustomButton(
-                text: "Задание с выборами ответа",
-                onPressed: () => pushScreen(
-                    context,
-                    TaskScreen(
-                        task: choiceTaskExample,
-                        sessionEngine: sessionEngine))),
-            const SizedBox(
-              height: kPadding,
-            ),
-            CustomButton(
-                text: "Задание с текстом",
-                onPressed: () => pushScreen(
-                    context,
-                    TaskScreen(
-                        task: pollTaskTextExample,
-                        sessionEngine: sessionEngine))),
-            const SizedBox(
-              height: kPadding,
-            ),
-            CustomButton(
-                text: "Задание с картинкой",
-                onPressed: () => pushScreen(
-                    context,
-                    TaskScreen(
-                        task: pollTaskImageExample,
-                        sessionEngine: sessionEngine))),
+            // const SizedBox(
+            //   height: kPadding,
+            // ),
+            // CustomButton(
+            //     text: "Задание с выборами ответа",
+            //     onPressed: () => pushScreen(
+            //         context,
+            //         TaskScreen(
+            //             task: choiceTaskExample,
+            //             sessionEngine: sessionEngine))),
+            // const SizedBox(
+            //   height: kPadding,
+            // ),
+            // CustomButton(
+            //     text: "Задание с текстом",
+            //     onPressed: () => pushScreen(
+            //         context,
+            //         TaskScreen(
+            //             task: pollTaskTextExample,
+            //             sessionEngine: sessionEngine))),
+            // const SizedBox(
+            //   height: kPadding,
+            // ),
+            // CustomButton(
+            //     text: "Задание с картинкой",
+            //     onPressed: () => pushScreen(
+            //         context,
+            //         TaskScreen(
+            //             task: pollTaskImageExample,
+            //             sessionEngine: sessionEngine))),
           ],
         ));
   }

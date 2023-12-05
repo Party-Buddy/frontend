@@ -169,35 +169,43 @@ class _GameStartScreenState extends State<GameStartScreen> {
 
     debugPrint(sessionId.data);
 
-    await Future.microtask(() => Navigator.of(context).pop());
-
     if (sessionId.error != null) {
       await Future.microtask(
           () => showMessage(context, "Не получилось создать игру"));
       return;
     }
 
-    final gameSession = ValueNotifier(GameSession(
-        sessionId: sessionId.data!,
-        description: game.description ?? "",
-        name: game.name,
-        imageUri: game.imageUri,
-        maxPlayersCount: selectedMaxPlayersCount,
-        players: [GamePlayer(id: 0, ready: false, name: username)],
-        tasks: []));
+    bool sessionReceived = false;
+
+    late ValueNotifier<GameSession> gameSession;
     _sessionEngine.onGameStart((time) {});
+
     _sessionEngine.onGameStatus((newGameSessionState) {
+      if (!sessionReceived) {
+        sessionReceived = true;
+        gameSession = ValueNotifier(newGameSessionState);
+
+        Navigator.of(context).pop();
+        Navigator.pushNamed(
+        context, WaitingRoomScreen.routeName,
+        arguments: WaitingRoomScreenArguments(
+            gameSession: gameSession, sessionEngine: _sessionEngine));
+        return;
+      }
       gameSession.value = newGameSessionState;
       debugPrint('game status updated');
     });
-    _sessionEngine.onTaskStart((taskInfo) {
-      Task task = game.tasks[taskInfo.index];
 
-      Navigator.pushNamed(context, TaskScreen.routeName, arguments: TaskScreenArguments(task: task, sessionEngine: _sessionEngine));
+    _sessionEngine.onTaskStart((currentTask) {
+      debugPrint(currentTask.index.toString());
+      TaskInfo taskInfo = gameSession.value.tasks[currentTask.index];
+
+      Navigator.pushNamed(context, TaskScreen.routeName,
+          arguments: TaskScreenArguments(
+              taskInfo: taskInfo,
+              currentTask: currentTask,
+              sessionEngine: _sessionEngine,
+              tasksCount: gameSession.value.tasks.length));
     });
-
-    await Future.microtask(() => Navigator.pushNamed(
-        context, WaitingRoomScreen.routeName,
-        arguments: WaitingRoomScreenArguments(gameSession: gameSession, sessionEngine: _sessionEngine)));
   }
 }

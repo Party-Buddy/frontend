@@ -7,74 +7,115 @@ import 'package:party_games_app/core/widgets/base_screen.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
 import 'package:party_games_app/core/widgets/custom_button.dart';
 import 'package:party_games_app/features/game_sessions/domain/engine/session_engine.dart';
+import 'package:party_games_app/features/game_sessions/domain/entities/current_task.dart';
+import 'package:party_games_app/features/game_sessions/domain/entities/task_info.dart';
 import 'package:party_games_app/features/game_sessions/presentation/widgets/checked_text_task_widget.dart';
 import 'package:party_games_app/features/game_sessions/presentation/widgets/choice_task_widget.dart';
 import 'package:party_games_app/features/game_sessions/presentation/widgets/poll_task_image_widget.dart';
 import 'package:party_games_app/features/game_sessions/presentation/widgets/poll_task_text_widget.dart';
 import 'package:party_games_app/features/games/presentation/screens/main_menu_screen.dart';
-import 'package:party_games_app/features/tasks/domain/entities/checked_text_task.dart';
-import 'package:party_games_app/features/tasks/domain/entities/choice_task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/poll_task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 
 class TaskScreenArguments {
-  final Task task;
+  final TaskInfo taskInfo;
+  final CurrentTask currentTask;
   final SessionEngine sessionEngine;
+  final int tasksCount;
 
-  TaskScreenArguments({required this.task, required this.sessionEngine});
+  TaskScreenArguments(
+      {required this.taskInfo,
+      required this.currentTask,
+      required this.tasksCount,
+      required this.sessionEngine});
 }
 
 class TaskScreen extends StatelessWidget {
   const TaskScreen(
-      {super.key, required this.task, required this.sessionEngine});
+      {super.key,
+      required this.taskInfo,
+      required this.currentTask,
+      required this.tasksCount,
+      required this.sessionEngine});
 
   static const routeName = "/Task";
 
-  final Task task;
+  final TaskInfo taskInfo;
+  final CurrentTask currentTask;
   final SessionEngine sessionEngine;
+  final int tasksCount;
 
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
         appBarTitle: "Задание",
+        showBackButton: false,
         content: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: kPadding),
-                  child: BorderWrapper(
-                    border: Border.all(width: 1, color: kPrimaryColor),
-                    child: Text(
-                      task.name,
-                      style: defaultTextStyle(fontSize: 20),
-                    ),
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(child: Container()),
+                      Expanded(
+                          flex: 3,
+                          child: Center(
+                            child: Wrap(
+                              children: [
+                                BorderWrapper(
+                                  border: Border.all(
+                                      width: 1, color: kPrimaryColor),
+                                  child: Text(
+                                    taskInfo.name,
+                                    style: defaultTextStyle(fontSize: 20),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
+                      Expanded(
+                        child: Center(
+                          child: Wrap(
+                            children: [
+                              BorderWrapper(
+                                  fillColor: kAppBarColor.withOpacity(.5),
+                                  child: Text(
+                                      "${currentTask.index + 1} / $tasksCount",
+                                      style: defaultTextStyle(
+                                          fontSize: 20,
+                                          color: lighten(kPrimaryColor, .15)))),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                ),
-                Container(
-                  padding: kPaddingAll,
-                  child: Text(
-                    task.description,
-                    style: defaultTextStyle(),
-                  ),
-                ),
-                const SizedBox(
-                  height: kPadding,
-                ),
-                if (task.imageUri != null)
                   Container(
-                    padding: const EdgeInsets.only(bottom: kPadding),
-                    height: 200,
-                    width: 200,
-                    alignment: Alignment.center,
-                    child: ClipRRect(
-                      borderRadius: kBorderRadius,
-                      child: Image.network(task.imageUri!),
+                    padding: kPaddingAll,
+                    child: Text(
+                      taskInfo.description,
+                      style: defaultTextStyle(),
                     ),
                   ),
-                buildTaskContent(),
-              ],
+                  const SizedBox(
+                    height: kPadding,
+                  ),
+                  if (taskInfo.photoUrl != null)
+                    Container(
+                      padding: const EdgeInsets.only(bottom: kPadding),
+                      height: 200,
+                      width: 200,
+                      alignment: Alignment.center,
+                      child: ClipRRect(
+                        borderRadius: kBorderRadius,
+                        child: Image.network(taskInfo.photoUrl!),
+                      ),
+                    ),
+                  buildTaskContent(),
+                ],
+              ),
             ),
             Column(
               children: [
@@ -88,7 +129,7 @@ class TaskScreen extends StatelessWidget {
                   height: kPadding * 2,
                 ),
                 LinearTimer(
-                  duration: Duration(seconds: task.duration),
+                  duration: Duration(seconds: taskInfo.duration),
                   color: kPrimaryColor,
                   backgroundColor: kAppBarColor,
                 ),
@@ -99,23 +140,32 @@ class TaskScreen extends StatelessWidget {
   }
 
   Widget buildTaskContent() {
-    switch (task.type) {
+    switch (taskInfo.type) {
       case TaskType.choice:
-        return ChoiceTaskWidget(choiceTask: task as ChoiceTask);
+        return ChoiceTaskWidget(
+            taskInfo: taskInfo,
+            currentTask: currentTask,
+            sessionEngine: sessionEngine);
       case TaskType.poll:
         {
-          PollTask pollTask = task as PollTask;
-          switch (pollTask.pollAnswerType) {
+          switch (taskInfo.pollAnswerType!) {
             case PollTaskAnswerType.text:
-              return PollTaskTextWidget(pollTask: pollTask);
+              return PollTaskTextWidget(
+                  taskInfo: taskInfo,
+                  currentTask: currentTask,
+                  sessionEngine: sessionEngine);
             case PollTaskAnswerType.image:
-              return PollTaskImageWidget(pollTask: pollTask);
+              return PollTaskImageWidget(
+                  taskInfo: taskInfo,
+                  currentTask: currentTask,
+                  sessionEngine: sessionEngine);
           }
         }
       case TaskType.checkedText:
         return CheckedTextTaskWidget(
-          checkedTask: task as CheckedTextTask,
-        );
+            taskInfo: taskInfo,
+            currentTask: currentTask,
+            sessionEngine: sessionEngine);
     }
   }
 }

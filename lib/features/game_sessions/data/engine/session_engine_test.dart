@@ -127,7 +127,7 @@ class SessionEngineTestImpl implements SessionEngine {
     _onOpError?.call(data['message'] ?? data['kind']);
   }
 
-  Future<void> _delayedFunction(int delay, Map<String, dynamic> data) async {
+  Future<void> _delayedMessage(int delay, Map<String, dynamic> data) async {
     await Future.delayed(Duration(seconds: delay));
     await _handleMessage(data);
   }
@@ -161,7 +161,7 @@ class SessionEngineTestImpl implements SessionEngine {
   }
 
   void _listen() async {
-    await _delayedFunction(2, {
+    await _delayedMessage(2, {
       'kind': 'joined',
       'msg-id': 1,
       'time': 1000,
@@ -173,23 +173,28 @@ class SessionEngineTestImpl implements SessionEngine {
         'description': 'some text',
         'tasks': [
           {
-            'name': 'task2 name',
-            'description': 'hello2',
-            'duration': 90,
+            'name': 'Решите загадку',
+            'description': '''Стоит дуб,
+В нем двенадцать гнезд,
+В каждом гнезде
+По четыре яйца,
+В каждом яйце
+По семи цыпленков.''',
+            'duration': 30,
             'type': 'checked-text'
           },
           {
-            'name': 'task1 name',
-            'description': 'hello',
-            'duration': 100,
+            'name': 'Нарисуйте котика',
+            'description': 'Просто рисуем кота. На скорость.',
+            'duration': 30,
             'type': 'photo',
             'poll-duration': {'kind': 'fixed', 'secs': 10}
-          }
+          },
         ]
       }
     });
 
-    await _delayedFunction(1, {
+    await _delayedMessage(1, {
       'kind': 'game-status',
       'msg-id': 2,
       'time': 6000,
@@ -199,14 +204,14 @@ class SessionEngineTestImpl implements SessionEngine {
       ]
     });
 
-    await _delayedFunction(2, {
+    await _delayedMessage(1, {
       'kind': 'waiting',
       'msg-id': 3,
       'time': 9000,
       'ready': [1]
     });
 
-    await _delayedFunction(3, {
+    await _delayedMessage(2, {
       'kind': 'game-status',
       'msg-id': 4,
       'time': 10000,
@@ -217,33 +222,33 @@ class SessionEngineTestImpl implements SessionEngine {
       ]
     });
 
-    await _delayedFunction(1, {
+    await _delayedMessage(1, {
       'kind': 'waiting',
       'msg-id': 5,
       'time': 12000,
       'ready': [1, 2, 3]
     });
 
-    await _delayedFunction(1, {
+    await _delayedMessage(1, {
       'kind': 'game-start',
       'deadline': DateTime.now().millisecondsSinceEpoch + 5000,
-      'msg-id': 3,
+      'msg-id': 6,
       'time': 12000
     });
 
-    await _delayedFunction(5, {
+    await _delayedMessage(5, {
       'kind': 'task-start',
-      'index': 0,
+      'task-idx': 0,
       'deadline': DateTime.now().millisecondsSinceEpoch + 10000,
-      'msg-id': 6,
+      'msg-id': 7,
       'time': 15000
     });
 
-    await _delayedFunction(10, {
+    await _delayedMessage(10, {
       'kind': 'task-end',
       'index': 0,
       'deadline': DateTime.now().millisecondsSinceEpoch + 5000,
-      'msg-id': 7,
+      'msg-id': 8,
       'time': 17000,
       'scoreboard': [
         {'player-id': 0, 'task-points': 1, 'total-points': 1},
@@ -256,19 +261,19 @@ class SessionEngineTestImpl implements SessionEngine {
       ]
     });
 
-    await _delayedFunction(5, {
+    await _delayedMessage(5, {
       'kind': 'task-start',
       'index': 1,
-      'deadline': DateTime.now().millisecondsSinceEpoch + 8000,
-      'msg-id': 8,
+      'deadline': DateTime.now().millisecondsSinceEpoch + 30000,
+      'msg-id': 9,
       'time': 22000,
     });
 
-    await _delayedFunction(5, {
+    await _delayedMessage(30, {
       'kind': 'poll-start',
       'index': 1,
-      'deadline': DateTime.now().millisecondsSinceEpoch + 10000,
-      'msg-id': 9,
+      'deadline': DateTime.now().millisecondsSinceEpoch + 5000,
+      'msg-id': 10,
       'time': 23000,
       'options': [
         'https://i.pinimg.com/736x/13/99/f4/1399f4bda826ac629f07277be6b2ba4e.jpg',
@@ -277,11 +282,11 @@ class SessionEngineTestImpl implements SessionEngine {
       ]
     });
 
-    await _delayedFunction(8, {
+    await _delayedMessage(8, {
       'kind': 'task-end',
       'index': 1,
       'deadline': DateTime.now().millisecondsSinceEpoch + 5000,
-      'msg-id': 10,
+      'msg-id': 11,
       'time': 24000,
       'scoreboard': [
         {'player-id': 0, 'task-points': 0, 'total-points': 1},
@@ -307,9 +312,9 @@ class SessionEngineTestImpl implements SessionEngine {
       ]
     });
 
-    await _delayedFunction(5, {
+    await _delayedMessage(5, {
       'kind': 'game-end',
-      'msg-id': 11,
+      'msg-id': 12,
       'time': 25000,
       'scoreboard': [
         {'player-id': 0, 'total-points': 1},

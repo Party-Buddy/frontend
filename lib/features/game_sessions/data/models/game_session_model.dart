@@ -75,6 +75,7 @@ class GameSessionModel {
       int? maxPlayersCount,
       int? ownerId,
       int? currentPlayerId,
+      List<TaskInfoModel>? tasks,
       List<GamePlayerModel>? players}) {
     return GameSessionModel(
       sessionId: sessionId ?? this.sessionId,
@@ -84,6 +85,7 @@ class GameSessionModel {
       maxPlayersCount: maxPlayersCount ?? this.maxPlayersCount,
       ownerId: ownerId ?? this.ownerId,
       currentPlayerId: currentPlayerId ?? this.currentPlayerId,
+      tasks: tasks ?? this.tasks,
       players: players ?? this.players,
     );
   }
