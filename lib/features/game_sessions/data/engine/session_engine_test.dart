@@ -180,13 +180,13 @@ class SessionEngineTestImpl implements SessionEngine {
 По четыре яйца,
 В каждом яйце
 По семи цыпленков.''',
-            'duration': 10,
+            'duration': {'kind': 'fixed', 'secs': 10},
             'type': 'checked-text'
           },
           {
             'name': 'Нарисуйте котика',
             'description': 'Просто рисуем кота. На скорость.',
-            'duration': 30,
+            'duration': {'kind': 'fixed', 'secs': 30},
             'type': 'photo',
             'poll-duration': {'kind': 'fixed', 'secs': 8}
           },

@@ -88,7 +88,8 @@ Future<void> initializeDependenices() async {
   sl.registerSingleton(GetUIDUseCase(sl()));
   
   // engine
-  final SessionEngine engine = SessionEngineImpl(sl(),sl());
+  //final SessionEngine engine = SessionEngineImpl(sl(),sl());
+  final SessionEngine engine = SessionEngineTestImpl();
   sl.registerSingleton<SessionEngine>(engine);
 
 }
