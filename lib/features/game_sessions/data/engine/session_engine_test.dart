@@ -349,8 +349,8 @@ class SessionEngineTestImpl implements SessionEngine {
   }
 
   @override
-  Future<DataState<String>> startSession(
-      Game game, Username username, int maxPlayersCount) async {
+  Future<DataState<String>> startSession(Game game, Username username,
+      {int maxPlayersCount = 20, bool requireReady = false}) async {
     uid = await uidGetter;
     String sessionId = 'ASSDIK';
     maxPlayers = maxPlayersCount;

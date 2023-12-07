@@ -7,9 +7,11 @@ import 'package:party_games_app/features/game_sessions/data/repository/session_d
 import 'package:party_games_app/features/game_sessions/domain/engine/session_engine.dart';
 import 'package:party_games_app/features/game_sessions/domain/repository/session_data_repository.dart';
 import 'package:party_games_app/features/game_sessions/domain/usecases/get_sid.dart';
+import 'package:party_games_app/features/games/data/data_sources/remote/rest_database.dart';
 import 'package:party_games_app/features/games/data/data_sources/testing/games_generator.dart';
 import 'package:party_games_app/features/games/data/repository/game_repository_impl.dart';
 import 'package:party_games_app/features/games/domain/repository/game_repository.dart';
+import 'package:party_games_app/features/games/domain/repository/remote_games_source.dart';
 import 'package:party_games_app/features/games/domain/usecases/delete_game.dart';
 import 'package:party_games_app/features/games/domain/usecases/get_local_games.dart';
 import 'package:party_games_app/features/games/domain/usecases/get_local_games_sorted.dart';
@@ -47,18 +49,20 @@ Future<void> initializeDependenices() async {
   sl.registerSingleton<SharedPreferences>(sharedPreferences);
 
   // repositories
+  //   userdata
+  sl.registerSingleton(LocalUsernameDatasource(sl()));
+  sl.registerSingleton<UsernameRepository>(UsernameRepositoryImpl(sl()));
+  sl.registerSingleton(GetUIDUseCase(sl()));
+  //   session
+  sl.registerSingleton(LocalSessionDatasource(sl()));
+  sl.registerSingleton<SessionRepository>(SessionRepositoryImpl(sl()));
   //   games
-  sl.registerSingleton<GamesGenerator>(GamesGenerator());
+  //sl.registerSingleton<RemoteGamesDataSource>(RestDatabase(sl()));
+  sl.registerSingleton<RemoteGamesDataSource>(GamesGenerator());
   sl.registerSingleton<GameRepository>(GameRepositoryImpl(sl(), sl()));
   //   tasks
   sl.registerSingleton<TasksGenerator>(TasksGenerator());
   sl.registerSingleton<TaskRepository>(TaskRepositoryImpl(sl(), sl()));
-  //   userdata
-  sl.registerSingleton(LocalUsernameDatasource(sl()));
-  sl.registerSingleton<UsernameRepository>(UsernameRepositoryImpl(sl()));
-  //   session
-  sl.registerSingleton(LocalSessionDatasource(sl()));
-  sl.registerSingleton<SessionRepository>(SessionRepositoryImpl(sl()));
 
   // usecases
 
@@ -85,7 +89,6 @@ Future<void> initializeDependenices() async {
   sl.registerSingleton(GetUsernameUseCase(sl()));
   sl.registerSingleton(SaveUsernameUseCase(sl()));
   sl.registerSingleton(ValidateUsernameUseCase());
-  sl.registerSingleton(GetUIDUseCase(sl()));
   
   // engine
   //final SessionEngine engine = SessionEngineImpl(sl(),sl());

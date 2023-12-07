@@ -31,10 +31,10 @@ class GameDao extends DatabaseAccessor<AppDatabase> with _$GameDaoMixin {
     .get();
   }
 
-  Future<int> insertGame(GameModel game) => into(localGames).insert(game.toInsertable());
+  Future<int> insertGame(OwnedGameModel game) => into(localGames).insert(game.toInsertable());
 
-  Future updateGame(GameModel game) => update(localGames).replace(game.toInsertable());
+  Future updateGame(OwnedGameModel game) => update(localGames).replace(game.toInsertable());
 
-  Future deleteGame(GameModel game) => delete(localGames).delete(game.toInsertable());
+  Future deleteGame(OwnedGameModel game) => delete(localGames).delete(game.toInsertable());
 
 }

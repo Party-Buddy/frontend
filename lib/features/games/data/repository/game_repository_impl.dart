@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:party_games_app/core/database/app_database.dart';
 import 'package:party_games_app/core/resources/data_state.dart';
-import 'package:party_games_app/features/games/data/data_sources/testing/games_generator.dart';
 import 'package:party_games_app/features/games/data/models/game_model.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/games/domain/repository/game_repository.dart';
+import 'package:party_games_app/features/games/domain/repository/remote_games_source.dart';
 import 'package:party_games_app/features/tasks/data/models/choice_task_model.dart';
 import 'package:party_games_app/features/tasks/domain/entities/choice_task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
@@ -11,22 +12,22 @@ import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 class GameRepositoryImpl implements GameRepository {
   final AppDatabase _database;
 
-  final GamesGenerator _gamesGenerator;
+  final RemoteGamesDataSource _remoteGamesDataSource;
 
-  GameRepositoryImpl(this._gamesGenerator, this._database);
+  GameRepositoryImpl(this._remoteGamesDataSource, this._database);
 
   // API
 
   @override
-  Future<DataState<List<Game>>> getPublishedGames() async {
-    return DataSuccess(_gamesGenerator.generateGames2());
+  Future<DataState<List<Game>>> getPublishedGames() {
+    return _remoteGamesDataSource.getGames();
   }
 
   // Database
 
   Future<List<Game>> _gamesWithBindings(List<LocalGame> games) {
     return Future.wait(games.map((game) async {
-      return GameModel.fromTables(
+      return OwnedGameModel.fromTables(
           game,
           await _database.taskBindingDao
               .getAllTasks(game.id)
@@ -76,30 +77,46 @@ class GameRepositoryImpl implements GameRepository {
 
   @override
   Future<Game> saveGame(Game game) async {
-    return _database.gameDao
-        .insertGame(GameModel.fromEntity(game))
-        .then((gameId) {
-      Game gameWithId = game.copyWith(id: gameId);
-      _database.taskBindingDao
-          .bindAllTasksToGame(GameModel.fromEntity(gameWithId));
-      return gameWithId;
-    });
+    if (game is OwnedGame) {
+      return _database.gameDao
+          .insertGame(OwnedGameModel.fromEntity(game))
+          .then((gameId) {
+        OwnedGame gameWithId = game.copyWith(id: gameId);
+        _database.taskBindingDao
+            .bindAllTasksToGame(OwnedGameModel.fromEntity(gameWithId));
+        return gameWithId;
+      });
+    } else {
+      debugPrint('cannot save public games right now');
+      return game;
+    }
   }
 
   @override
   Future<void> deleteGame(Game game) async {
-    await _database.gameDao.deleteGame(GameModel.fromEntity(game));
+    if (game is OwnedGame) {
+      await _database.gameDao.deleteGame(OwnedGameModel.fromEntity(game));
+    }
+    {
+      debugPrint('cannot delete public games right now');
+    }
   }
 
   @override
   Future<Game> updateGame(Game game) async {
-    return _database.gameDao
-        .updateGame(GameModel.fromEntity(game))
-        .then((gameId) {
-      Game gameWithId = game.copyWith(id: gameId);
-      _database.taskBindingDao
-          .bindAllTasksToGame(GameModel.fromEntity(gameWithId));
-      return gameWithId;
-    });
+    if (game is OwnedGame) {
+      return _database.gameDao
+          .updateGame(OwnedGameModel.fromEntity(game))
+          .then((gameId) {
+        OwnedGame gameWithId = game.copyWith(id: gameId);
+        _database.taskBindingDao
+            .bindAllTasksToGame(OwnedGameModel.fromEntity(gameWithId));
+        return gameWithId;
+      });
+    }
+    else{
+      debugPrint('cannot update public games right now');
+      return game;
+    }
   }
 }

@@ -8,7 +8,7 @@ import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/user_data/domain/entities/username.dart';
 
 abstract class SessionEngine {
-  Future<DataState<String>> startSession(Game game, Username username, int maxPlayersCount);
+  Future<DataState<String>> startSession(Game game, Username username, {int maxPlayersCount = 20, bool requireReady = false});
   Future<DataState<String>> joinSession(String inviteCode, Username username);
   Future<DataState<String>> reconnectSession(String sessionId);
 

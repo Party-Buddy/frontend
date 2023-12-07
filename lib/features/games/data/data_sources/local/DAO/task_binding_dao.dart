@@ -41,7 +41,7 @@ class TaskBindingDao extends DatabaseAccessor<AppDatabase>
             })));
   }
 
-  Future bindAllTasksToGame(GameModel game) async {
+  Future bindAllTasksToGame(OwnedGameModel game) async {
     (delete(taskBindings)..where((binding) => binding.gameId.equals(game.id)))
         .go()
         .then((_) {

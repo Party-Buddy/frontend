@@ -4,42 +4,79 @@ import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/tasks/data/models/task_model.dart';
 import 'package:collection/collection.dart';
 
-class GameModel {
-  final int? id;
+abstract class GameModel {
   final String? name;
   final String? description;
   final String? imageUri;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final List<TaskModel>? tasks;
-  final Source? source;
 
   GameModel(
-      {this.id,
-      this.name,
+      {this.name,
       this.description,
       this.imageUri,
       this.createdAt,
       this.updatedAt,
-      this.tasks,
-      this.source});
+      this.tasks});
 
   // Domain
 
+  Game toEntity();
+
+  factory GameModel.fromEntity(Game game) {
+    if (game is OwnedGame) {
+      return OwnedGameModel.fromEntity(game);
+    } else if (game is PublishedGame) {
+      return PublishedGameModel.fromEntity(game);
+    } else {
+      throw Error();
+    }
+  }
+
+  Map<String, dynamic> toJson();
+}
+
+class OwnedGameModel extends GameModel {
+  int? id;
+  OwnedGameModel(
+      {this.id,
+      super.name,
+      super.description,
+      super.imageUri,
+      super.createdAt,
+      super.updatedAt,
+      super.tasks});
+
+  @override
+  Map<String, dynamic> toJson() {
+    var gameJson = <String, dynamic>{
+      'name': name ?? '',
+      'description': description ?? '',
+      'img-request': 0,
+      'tasks': tasks?.mapIndexed((i, task) {
+        var taskJson = task.toJson();
+        taskJson.addAll(<String, dynamic>{'img-request': i + 1});
+        return taskJson;
+      }).toList()
+    };
+    return <String, dynamic>{'game-type': 'private', 'game': gameJson};
+  }
+
+  @override
   Game toEntity() {
-    return Game(
-        id: id,
+    return OwnedGame(
+        id: id ?? 0,
         name: name ?? "",
         description: description,
         imageUri: imageUri,
         tasks: tasks?.map((task) => task.toEntity()).toList() ?? [],
         createdAt: createdAt,
-        updatedAt: updatedAt,
-        source: source ?? Source.owned);
+        updatedAt: updatedAt);
   }
 
-  factory GameModel.fromEntity(Game game) {
-    return GameModel(
+  factory OwnedGameModel.fromEntity(OwnedGame game) {
+    return OwnedGameModel(
         id: game.id,
         name: game.name,
         description: game.description,
@@ -53,7 +90,6 @@ class GameModel {
 
   Insertable<LocalGame> toInsertable() {
     return LocalGamesCompanion(
-        id: id != null ? Value(id!) : const Value.absent(),
         name: name != null ? Value(name!) : const Value.absent(),
         description:
             description != null ? Value(description!) : const Value.absent(),
@@ -70,8 +106,8 @@ class GameModel {
         gameOrder: taskOrder != null ? Value(taskOrder) : const Value.absent());
   }
 
-  factory GameModel.fromTables(LocalGame game, List<TaskModel> tasks) {
-    return GameModel(
+  factory OwnedGameModel.fromTables(LocalGame game, List<TaskModel> tasks) {
+    return OwnedGameModel(
         id: game.id,
         name: game.name,
         description: game.description,
@@ -80,34 +116,54 @@ class GameModel {
         updatedAt: game.updatedAt,
         tasks: tasks);
   }
+}
 
-  // JSON
+class PublishedGameModel extends GameModel {
+  String? id;
+  PublishedGameModel(
+      {this.id,
+      super.name,
+      super.description,
+      super.imageUri,
+      super.createdAt,
+      super.updatedAt,
+      super.tasks});
 
-  factory GameModel.fromJson(Map<String, dynamic> map) {
-    return GameModel(
+  @override
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{'game-type': 'public', 'game-id': id ?? ''};
+  }
+
+  factory PublishedGameModel.fromJson(Map<String, dynamic> map) {
+    return PublishedGameModel(
         id: map['id'],
         name: map['name'],
         description: map['description'],
-        imageUri: map['imageUri'],
+        imageUri: map['img-uri'],
         tasks: map['tasks'] ?? [],
-        createdAt: map['createdAt'],
-        updatedAt: map['updatedAt']);
+        updatedAt: map['date-changed']);
   }
 
-  Map<String, dynamic> toJson() {
-    var game_json = <String, dynamic>{
-      'name': name ?? '',
-      'description': description ?? '',
-      'img-request': 0,
-      'tasks': tasks?.mapIndexed((i, task) {
-        var taskJson = task.toJson();
-        taskJson.addAll(<String, dynamic>{'img-request': i + 1});
-        return taskJson;
-      }).toList()
-    };
-    var json = (source == Source.public)
-        ? <String, dynamic>{'game-type': 'public', 'game-id': id}
-        : <String, dynamic>{'game-type': 'private', 'game': game_json};
-    return json;
+  @override
+  Game toEntity() {
+    return PublishedGame(
+        id: id ?? "",
+        name: name ?? "",
+        description: description,
+        imageUri: imageUri,
+        tasks: tasks?.map((task) => task.toEntity()).toList() ?? [],
+        createdAt: createdAt,
+        updatedAt: updatedAt);
+  }
+
+  factory PublishedGameModel.fromEntity(PublishedGame game) {
+    return PublishedGameModel(
+        id: game.id,
+        name: game.name,
+        description: game.description,
+        imageUri: game.imageUri,
+        createdAt: game.createdAt,
+        updatedAt: game.updatedAt,
+        tasks: game.tasks.map((task) => TaskModel.fromEntity(task)).toList());
   }
 }

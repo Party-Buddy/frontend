@@ -181,15 +181,14 @@ class SessionEngineImpl implements SessionEngine {
 
   @override
   Future<DataState<String>> startSession(
-      Game game, Username username, int maxPlayersCount) async {
+      Game game, Username username, {int maxPlayersCount = 20, bool requireReady = false} ) async {
     uid = await uidGetter;
     try {
       var bodyJson = <String, dynamic>{
-        'game-type': 'public',
-        'game-id': '11112222-3333-4444-5555-131072262144',
         'player-count': maxPlayersCount,
-        'require-ready': false
+        'require-ready': requireReady
       };
+      bodyJson.addAll(GameModel.fromEntity(game).toJson());
       var response = await http
           .post(Uri.http('$serverDomain:$serverHttpPort', sessionPath),
               headers: <String, String>{

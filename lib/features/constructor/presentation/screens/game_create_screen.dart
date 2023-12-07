@@ -89,7 +89,7 @@ class _GameCreateScreenState extends State<GameCreateScreen> {
                     tasks = await Future.wait(tasks.map((task) async {
                       return _saveTaskUseCase.call(params: TaskParams(task: task.copyWith(id:null)));
                     }));
-                    Game game = Game(name: name, description: description, tasks: tasks, imageUri: 'https://w.forfun.com/fetch/44/442b75da8b5a006a23fc61f0ca31f76f.jpeg', source: Source.owned);
+                    Game game = OwnedGame(name: name, description: description, tasks: tasks, imageUri: 'https://w.forfun.com/fetch/44/442b75da8b5a006a23fc61f0ca31f76f.jpeg');
                     await _saveGameUseCase.call(params: GameParams(game: game));
                     await Future.microtask(() => showMessage(context, "Игра была создана!"));
                   }),
