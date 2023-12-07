@@ -23,6 +23,13 @@ class InkwellBorderWrapper extends StatefulWidget {
 
 class _InkwellBorderWrapperState extends State<InkwellBorderWrapper> {
   bool _hovered = false;
+  bool _disposed = false;
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +37,17 @@ class _InkwellBorderWrapperState extends State<InkwellBorderWrapper> {
         onHover: (hovered) => setState(() {
               _hovered = hovered;
             }),
-        onTap: widget.onPressed,
+        onTap: () async {
+          setState(() {
+            _hovered = true;
+          });
+          await Future.delayed(kAnimationDuration);
+          widget.onPressed();
+          _hovered = false;
+          if (!_disposed) {
+            setState(() {});
+          }
+        },
         borderRadius: kBorderRadius,
         child: AnimatedContainer(
           duration: kAnimationDuration,

@@ -1,73 +1,100 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:linear_timer/linear_timer.dart';
 import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/base_screen.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
 import 'package:party_games_app/core/widgets/custom_button.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/game_player.dart';
+import 'package:party_games_app/features/game_sessions/domain/entities/game_results.dart';
 import 'package:party_games_app/features/games/presentation/screens/main_menu_screen.dart';
 import 'package:party_games_app/features/games/presentation/widgets/player_header.dart';
 
-class GameResults {
-  final String gameName;
-  final List<GamePlayer> players;
-  final Map<int, int> scoreByPlayerId;
-  final int winnerScoreThreshold;
+List<GamePlayer> playersMock = [
+  const GamePlayer(
+    id: 3,
+    ready: false,
+    name: "aiwannafly",
+  ),
+  const GamePlayer(
+      id: 2,
+      ready: false,
+      name: "Alex",
+      photoUrl:
+          "https://gravatar.com/avatar/f79cc32d7f9cee4a094d1b1772c56d1c?s=400&d=robohash&r=x"),
+  const GamePlayer(
+      id: 1,
+      ready: false,
+      name: "James",
+      photoUrl:
+          "https://robohash.org/f79cc32d7f9cee4a094d1b1772c56d1c?set=set4&bgset=&size=400x400"),
+  const GamePlayer(
+      id: 0,
+      ready: true,
+      name: "Сладкая Дыня",
+      photoUrl:
+          "https://robohash.org/63704034a6c7a8ce2ed2b9007faededa?set=set4&bgset=&size=400x400"),
+];
 
-  GameResults(
-      {required this.gameName,
-      required this.players,
-      required this.scoreByPlayerId,
-      required this.winnerScoreThreshold});
-}
-
-final gameResultsMock = GameResults(
-    gameName: "Minecraft Quiz",
-    players: [
-      const GamePlayer(
-        id: 3,
-        ready: false,
-        name: "aiwannafly",
-      ),
-      const GamePlayer(
-          id: 2,
-          ready: false,
-          name: "Alex",
-          photoUrl:
-              "https://gravatar.com/avatar/f79cc32d7f9cee4a094d1b1772c56d1c?s=400&d=robohash&r=x"),
-      const GamePlayer(
-          id: 1,
-          ready: false,
-          name: "James",
-          photoUrl:
-              "https://robohash.org/f79cc32d7f9cee4a094d1b1772c56d1c?set=set4&bgset=&size=400x400"),
-      const GamePlayer(
-          id: 0,
-          ready: true,
-          name: "Сладкая Дыня",
-          photoUrl:
-              "https://robohash.org/63704034a6c7a8ce2ed2b9007faededa?set=set4&bgset=&size=400x400"),
-    ],
-    scoreByPlayerId: {0: 2, 1: 4, 2: 7, 3: 11},
-    winnerScoreThreshold: 4);
+GameResults gameResultsMock() => GameResults(
+        index: 5,
+        deadline: DateTime.now()
+            .add(const Duration(seconds: 20))
+            .millisecondsSinceEpoch,
+        scoreboard: [
+          PlayerFinalResult(playerId: 0, totalScore: 4),
+          PlayerFinalResult(playerId: 1, totalScore: 3),
+          PlayerFinalResult(playerId: 2, totalScore: 8),
+          PlayerFinalResult(playerId: 3, totalScore: 12),
+        ]);
 
 class GameResultsScreenArguments {
-  const GameResultsScreenArguments({required this.gameResults});
+  const GameResultsScreenArguments(
+      {required this.gameName,
+      required this.gameResults,
+      required this.players});
 
+  final String gameName;
   final GameResults gameResults;
+  final List<GamePlayer> players;
 }
 
 class GameResultsScreen extends StatelessWidget {
-  const GameResultsScreen({super.key, required this.gameResults});
+  GameResultsScreen(
+      {super.key,
+      required this.gameName,
+      required this.gameResults,
+      required this.players}) {
+    for (PlayerFinalResult result in gameResults.scoreboard) {
+      scoreByPlayerId[result.playerId] = result.totalScore;
+    }
+    // reverse sort by score
+    players.sort((p1, p2) =>
+        -scoreByPlayerId[p1.id]!.compareTo(scoreByPlayerId[p2.id]!));
+
+    winnerScoreThreshold = gameResults.scoreboard
+        .map((result) => result.totalScore)
+        .sorted((a, b) => a.compareTo(b))
+        .reversed
+        .take(_winnersCount)
+        .min;
+  }
 
   static const routeName = "/GameResults";
+  static const _winnersCount = 3;
 
+  final String gameName;
   final GameResults gameResults;
+  final List<GamePlayer> players;
+  final Map<int, int> scoreByPlayerId = {};
+  late final int winnerScoreThreshold;
 
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
         appBarTitle: "Итоги игры",
+        showBackButton: false,
         content: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -77,9 +104,9 @@ class GameResultsScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     BorderWrapper(
-                        border: Border.all(color: kPrimaryColor),
+                        borderColor: kPrimaryColor,
                         child: Text(
-                          gameResults.gameName,
+                          gameName,
                           style: defaultTextStyle(fontSize: 20),
                         )),
                     Padding(
@@ -97,21 +124,39 @@ class GameResultsScreen extends StatelessWidget {
                 Wrap(
                   spacing: kPadding,
                   runSpacing: kPadding,
-                  children: gameResults.players
+                  children: players
                       .map((p) => PlayerHeader(
                             player: p,
-                            points: gameResults.scoreByPlayerId[p.id],
-                            isWinner: gameResults.scoreByPlayerId[p.id]! >=
-                                gameResults.winnerScoreThreshold,
+                            points: scoreByPlayerId[p.id],
+                            isWinner:
+                                scoreByPlayerId[p.id]! >= winnerScoreThreshold,
                           ))
                       .toList(),
                 )
               ],
             ),
-            CustomButton(
-                text: "Выйти",
-                onPressed: () =>
-                    Navigator.of(context).pushNamed(MainMenuScreen.routeName))
+            Column(
+              children: [
+                CustomButton(
+                    text: "Выйти",
+                    onPressed: () => Navigator.of(context)
+                        .pushNamed(MainMenuScreen.routeName)),
+                const SizedBox(
+                  height: kPadding * 2,
+                ),
+                LinearTimer(
+                  onTimerEnd: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, MainMenuScreen.routeName);
+                  },
+                  duration:
+                      DateTime.fromMillisecondsSinceEpoch(gameResults.deadline)
+                          .difference(DateTime.now()),
+                  color: kPrimaryColor,
+                  backgroundColor: kAppBarColor,
+                ),
+              ],
+            )
           ],
         ));
   }

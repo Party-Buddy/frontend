@@ -98,7 +98,7 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                       children: [
                         Text(
                           "Подключилось ${gameSession.players.length}/${gameSession.maxPlayersCount} игроков",
-                          style: defaultTextStyle(fontSize: 20),
+                          style: defaultTextStyle(fontSize: 18),
                         ),
                         const CircularProgressIndicator(
                           color: kPrimaryColor,
@@ -126,7 +126,7 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                       children: [
                         Text(
                           "Код сессии:",
-                          style: defaultTextStyle(fontSize: 20),
+                          style: defaultTextStyle(fontSize: 18),
                         ),
                         const SizedBox(
                           width: kPadding,
@@ -160,7 +160,7 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                       children: [
                         Text(
                           "Готовность:",
-                          style: defaultTextStyle(fontSize: 20),
+                          style: defaultTextStyle(fontSize: 18),
                         ),
                         const SizedBox(
                           width: kPadding * 1.5,

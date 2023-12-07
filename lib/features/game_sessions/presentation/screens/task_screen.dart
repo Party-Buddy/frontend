@@ -56,41 +56,10 @@ class TaskScreen extends StatelessWidget {
             SingleChildScrollView(
               child: Column(
                 children: [
-                  Row(
-                    children: [
-                      Expanded(child: Container()),
-                      Expanded(
-                          flex: 3,
-                          child: Center(
-                            child: Wrap(
-                              children: [
-                                BorderWrapper(
-                                  border: Border.all(
-                                      width: 1, color: kPrimaryColor),
-                                  child: Text(
-                                    taskInfo.name,
-                                    style: defaultTextStyle(fontSize: 20),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )),
-                      Expanded(
-                        child: Center(
-                          child: Wrap(
-                            children: [
-                              BorderWrapper(
-                                  fillColor: kAppBarColor.withOpacity(.5),
-                                  child: Text(
-                                      "${currentTask.index + 1} / $tasksCount",
-                                      style: defaultTextStyle(
-                                          fontSize: 20,
-                                          color: lighten(kPrimaryColor, .15)))),
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
+                  buildTaskHeader(
+                    taskInfo: taskInfo,
+                    index: currentTask.index,
+                    total: tasksCount
                   ),
                   Container(
                     padding: kPaddingAll,
@@ -137,6 +106,43 @@ class TaskScreen extends StatelessWidget {
             )
           ],
         ));
+  }
+
+  static Row buildTaskHeader(
+      {required TaskInfo taskInfo, required int index, required int total}) {
+    return Row(
+      children: [
+        Expanded(child: Container()),
+        Expanded(
+            flex: 3,
+            child: Center(
+              child: Wrap(
+                children: [
+                  BorderWrapper(
+                    borderColor: kPrimaryColor,
+                    child: Text(
+                      taskInfo.name,
+                      style: defaultTextStyle(fontSize: 20),
+                    ),
+                  ),
+                ],
+              ),
+            )),
+        Expanded(
+          child: Center(
+            child: Wrap(
+              children: [
+                BorderWrapper(
+                    fillColor: kAppBarColor.withOpacity(.5),
+                    child: Text("${index + 1}/$total",
+                        style: defaultTextStyle(
+                            fontSize: 16, color: lighten(kPrimaryColor, .15)))),
+              ],
+            ),
+          ),
+        )
+      ],
+    );
   }
 
   Widget buildTaskContent() {

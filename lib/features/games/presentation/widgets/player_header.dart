@@ -64,9 +64,6 @@ class PlayerHeader extends StatelessWidget {
                       height: 40,
                     )
                   : Container(),
-              const SizedBox(
-                width: kPadding,
-              ),
               points != null
                   ? Container(
                       width: 30,

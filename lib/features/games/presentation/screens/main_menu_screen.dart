@@ -40,27 +40,30 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                 'https://lottie.host/f273e7ef-deaa-4928-bb62-d745829aa6d1/BtzodHU8c2.json'),
           ),
           Expanded(
-            child: Column(children: [
-              CustomButton(
-                  text: "Начать игру",
-                  onPressed: () => Navigator.pushNamed(context, GameStartScreen.routeName)),
-              const SizedBox(
-                height: kPadding,
-              ),
-              CustomButton(
-                  text: "Присоединиться",
-                  onPressed: () => Navigator.pushNamed(context, GameJoinScreen.routeName)),
-              const SizedBox(
-                height: kPadding,
-              ),
-              CustomButton(
-                  text: "Конструктор",
-                  onPressed: () => Navigator.pushNamed(context, ConstructorScreen.routeName)),
-              const SizedBox(
-                height: kPadding,
-              ),
-              CustomButton(text: "Тест экранов", onPressed: () => Navigator.pushNamed(context, TestsScreen.routeName))
-            ]),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(kPadding * 2),
+              child: Column(children: [
+                CustomButton(
+                    text: "Начать игру",
+                    onPressed: () => Navigator.pushNamed(context, GameStartScreen.routeName)),
+                const SizedBox(
+                  height: kPadding,
+                ),
+                CustomButton(
+                    text: "Присоединиться",
+                    onPressed: () => Navigator.pushNamed(context, GameJoinScreen.routeName)),
+                const SizedBox(
+                  height: kPadding,
+                ),
+                CustomButton(
+                    text: "Конструктор",
+                    onPressed: () => Navigator.pushNamed(context, ConstructorScreen.routeName)),
+                const SizedBox(
+                  height: kPadding,
+                ),
+                CustomButton(text: "Тест экранов", onPressed: () => Navigator.pushNamed(context, TestsScreen.routeName))
+              ]),
+            ),
           ),
         ],
       ),

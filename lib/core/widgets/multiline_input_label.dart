@@ -26,27 +26,30 @@ class _MultiLineInputLabelState extends State<MultiLineInputLabel> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-        focusNode: focusNode,
-        controller: controller,
-        onFieldSubmitted: widget.onSubmitted,
-        cursorColor: Colors.white,
-        minLines: 1,
-        maxLines: 5,
-        onTapOutside: (e) {
-          focusNode.unfocus();
-          String current = controller.text;
-          if (current.isEmpty) {
-            initialText = current;
-            return;
-          }
-          if (current != initialText) {
-            initialText = current;
-            widget.onSubmitted(initialText);
-          }
-        },
-        style: const TextStyle(
-            fontSize: 18, fontFamily: kFontFamily, color: Colors.white),
-        decoration: inputDecoration(labelText: widget.labelText));
+    return Padding(
+      padding: const EdgeInsets.all(kPadding / 2),
+      child: TextFormField(
+          focusNode: focusNode,
+          controller: controller,
+          onFieldSubmitted: widget.onSubmitted,
+          cursorColor: Colors.white,
+          minLines: 1,
+          maxLines: 5,
+          onTapOutside: (e) {
+            focusNode.unfocus();
+            String current = controller.text;
+            if (current.isEmpty) {
+              initialText = current;
+              return;
+            }
+            if (current != initialText) {
+              initialText = current;
+              widget.onSubmitted(initialText);
+            }
+          },
+          style: const TextStyle(
+              fontSize: 18, fontFamily: kFontFamily, color: Colors.white),
+          decoration: inputDecoration(labelText: widget.labelText)),
+    );
   }
 }

@@ -36,6 +36,7 @@ class _SingleLineInputLabelState extends State<SingleLineInputLabel> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.all(kPadding / 2),
       decoration: BoxDecoration(
           borderRadius: kBorderRadius,
           boxShadow: submitResult == SubmitResult.empty

@@ -14,12 +14,22 @@ void showMessage(BuildContext context, String message) {
               BorderWrapper(
                 padding: 15.0,
                 fillColor: darken(kPrimaryDarkColor, .6),
-                child: Text(message,
-                    style: const TextStyle(
-                        color: kFontColor,
-                        fontFamily: kFontFamily,
-                        fontSize: 18)),
-              )
+                child: Column(
+                  children: [
+                    Text(message,
+                        style: const TextStyle(
+                            color: kFontColor,
+                            fontFamily: kFontFamily,
+                            fontSize: 18)),
+                    // const SizedBox(
+                    //   height: kPadding,
+                    // ),
+                    // CustomButton(
+                    //     width: 100,
+                    //     text: "OК", onPressed: () => Navigator.of(context).pop())
+                  ],
+                ),
+              ),
             ]),
           ));
 }

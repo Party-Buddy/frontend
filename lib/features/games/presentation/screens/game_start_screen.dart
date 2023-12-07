@@ -208,13 +208,13 @@ class _GameStartScreenState extends State<GameStartScreen> {
               tasksCount: gameSession.value.tasks.length));
 
       // temporary code
-      if (currentTask.index == gameSession.value.tasks.length - 1) {
-        Future.delayed(
-            const Duration(seconds: 10),
-            () => Navigator.pushNamed(context, GameResultsScreen.routeName,
-                arguments:
-                    GameResultsScreenArguments(gameResults: gameResultsMock)));
-      }
+      // if (currentTask.index == gameSession.value.tasks.length - 1) {
+      //   Future.delayed(
+      //       const Duration(seconds: 10),
+      //       () => Navigator.pushNamed(context, GameResultsScreen.routeName,
+      //           arguments:
+      //               GameResultsScreenArguments(gameResults: gameResultsMock)));
+      // }
     });
   }
 }

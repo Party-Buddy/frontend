@@ -14,6 +14,7 @@ class BaseScreen extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(gradient: kBackgroundGradient),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
           backgroundColor: Colors.transparent,
           appBar: appBarTitle == null
               ? null

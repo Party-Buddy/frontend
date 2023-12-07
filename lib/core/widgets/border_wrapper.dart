@@ -8,16 +8,18 @@ class BorderWrapper extends StatelessWidget {
       required this.child,
       this.padding = kPadding,
       this.fillColor,
-      this.border,
+      this.borderColor,
       this.shadowColor = kPrimaryColor,
-      this.shadow = false});
+      this.shadow = false,
+      this.blurRadius = 12.0});
 
   final Widget child;
   final double padding;
   final Color? fillColor;
   final Color shadowColor;
   final bool shadow;
-  final BoxBorder? border;
+  final Color? borderColor;
+  final double blurRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +27,8 @@ class BorderWrapper extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: kBorderRadius,
             color: fillColor ?? kAppBarColor,
-            border: border,
-            boxShadow: shadow ? [highlightShadow(color: shadowColor)] : []),
+            border: Border.all(color: borderColor?? Colors.transparent, width: 1.5),
+            boxShadow: shadow ? [highlightShadow(color: shadowColor, blurRadius: blurRadius)] : []),
         padding: EdgeInsets.all(padding),
         child: child);
   }
