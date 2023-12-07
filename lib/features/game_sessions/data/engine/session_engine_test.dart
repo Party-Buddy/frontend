@@ -200,7 +200,12 @@ class SessionEngineTestImpl implements SessionEngine {
       'time': 6000,
       'players': [
         {'player-id': 1, 'nickname': nickname},
-        {'player-id': 2, 'nickname': 'Alex', 'image': 'https://gravatar.com/avatar/f79cc32d7f9cee4a094d1b1772c56d1c?s=400&d=robohash&r=x'}
+        {
+          'player-id': 2,
+          'nickname': 'Alex',
+          'image':
+              'https://gravatar.com/avatar/f79cc32d7f9cee4a094d1b1772c56d1c?s=400&d=robohash&r=x'
+        }
       ]
     });
 
@@ -217,9 +222,24 @@ class SessionEngineTestImpl implements SessionEngine {
       'time': 10000,
       'players': [
         {'player-id': 1, 'nickname': nickname},
-        {'player-id': 2, 'nickname': 'Alex', 'image': 'https://gravatar.com/avatar/f79cc32d7f9cee4a094d1b1772c56d1c?s=400&d=robohash&r=x'},
-        {'player-id': 3, 'nickname': 'James', 'image': "https://robohash.org/f79cc32d7f9cee4a094d1b1772c56d1c?set=set4&bgset=&size=400x400"},
-        {'player-id': 4, 'nickname': 'Сладкая Дыня', 'image': "https://robohash.org/63704034a6c7a8ce2ed2b9007faededa?set=set4&bgset=&size=400x400"},
+        {
+          'player-id': 2,
+          'nickname': 'Alex',
+          'image': // proto-violation
+              'https://gravatar.com/avatar/f79cc32d7f9cee4a094d1b1772c56d1c?s=400&d=robohash&r=x'
+        },
+        {
+          'player-id': 3,
+          'nickname': 'James',
+          'image': // proto-violation
+              "https://robohash.org/f79cc32d7f9cee4a094d1b1772c56d1c?set=set4&bgset=&size=400x400"
+        },
+        {
+          'player-id': 4,
+          'nickname': 'Сладкая Дыня',
+          'image': // proto-violation
+              "https://robohash.org/63704034a6c7a8ce2ed2b9007faededa?set=set4&bgset=&size=400x400"
+        },
       ]
     });
 
@@ -350,6 +370,23 @@ class SessionEngineTestImpl implements SessionEngine {
       joinCompleter = Completer<DataState<String>>();
       _listen();
       _sendMesage('join', {'nickname': username.username});
+    } catch (e) {
+      return const DataFailed('cannot connect to server');
+    }
+    DataState<String> sid = await joinCompleter!.future;
+    joinCompleter = null;
+    return sid;
+  }
+
+  @override
+  Future<DataState<String>> reconnectSession(String sessionId) async {
+    uid = await uidGetter;
+    debugPrint('device uid is $uid');
+    gameSession = GameSessionModel();
+    try {
+      joinCompleter = Completer<DataState<String>>();
+      _listen();
+      _sendMesage('join', {'nickname': 'nickname'});
     } catch (e) {
       return const DataFailed('cannot connect to server');
     }

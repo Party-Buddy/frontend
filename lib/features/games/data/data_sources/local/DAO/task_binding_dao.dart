@@ -7,8 +7,6 @@ import 'package:party_games_app/features/tasks/data/data_sources/local/tables/ba
 import 'package:party_games_app/features/tasks/data/data_sources/local/tables/checked_text_task.dart';
 import 'package:party_games_app/features/tasks/data/data_sources/local/tables/choice_task_options.dart';
 import 'package:party_games_app/features/tasks/data/data_sources/local/tables/poll_task.dart';
-import 'package:party_games_app/features/tasks/data/models/task_model.dart';
-import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 
 part 'task_binding_dao.g.dart';
 

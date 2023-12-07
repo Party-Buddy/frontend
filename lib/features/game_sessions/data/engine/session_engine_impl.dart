@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:party_games_app/config/server/paths.dart';
 import 'package:party_games_app/core/resources/data_state.dart';
@@ -16,6 +15,7 @@ import 'package:party_games_app/features/game_sessions/domain/entities/current_t
 import 'package:party_games_app/features/game_sessions/domain/entities/game_results.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/poll_info.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/task_results.dart';
+import 'package:party_games_app/features/game_sessions/domain/repository/session_data_repository.dart';
 import 'package:party_games_app/features/games/data/models/game_model.dart';
 import 'package:party_games_app/features/user_data/domain/usecases/get_uid.dart';
 import 'package:web_socket_channel/io.dart';
@@ -26,9 +26,6 @@ import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/user_data/domain/entities/username.dart';
 
 class SessionEngineImpl implements SessionEngine {
-  WebSocketChannel? _channel;
-  late final Future<String> uidGetter;
-  String? uid;
   Function(GameSession)? _onGameStatus;
   Function(int?)? _onGameStart;
   Function(String)? _onGameInterrupted;
@@ -39,20 +36,22 @@ class SessionEngineImpl implements SessionEngine {
   Function(PollInfo)? _onPollStart;
   Function(GameResults)? _onGameEnd;
 
+  WebSocketChannel? _channel;
+  late final Future<String> uidGetter;
+  late final SessionRepository _sessionRepository;
+  String? uid;
   GameSessionModel gameSession = GameSessionModel();
   SyncCounter messageIdGenerator = SyncCounter();
   Completer<DataState<String>>? joinCompleter;
 
-  SessionEngineImpl(GetUIDUseCase getUIDUseCase) {
+  SessionEngineImpl(
+      GetUIDUseCase getUIDUseCase, SessionRepository sessionRepository) {
     uidGetter = getUIDUseCase.call();
+    _sessionRepository = sessionRepository;
   }
 
   void _sendGameStatus() {
     _onGameStatus?.call(gameSession.toEntity());
-  }
-
-  void _sendJoinFailure(String msg) {
-    _onJoinFailure?.call(msg);
   }
 
   void _onJoinedMessage(Map<String, dynamic> data) {
@@ -107,6 +106,7 @@ class SessionEngineImpl implements SessionEngine {
   }
 
   void _onGameEndMessage(Map<String, dynamic> data) {
+    _clearSessionInfo();
     _onGameEnd?.call(GameResultsModel.fromJson(data).toEntity());
   }
 
@@ -116,7 +116,7 @@ class SessionEngineImpl implements SessionEngine {
 
   void _onJoinFailureMessage(Map<String, dynamic> data) {
     joinCompleter?.complete(DataFailed(data['message'] ?? data['kind']));
-    _sendJoinFailure(data['message'] ?? data['kind']);
+    _onJoinFailure?.call(data['message'] ?? data['kind']);
   }
 
   void _onOpErrorMessage(Map<String, dynamic> data) {
@@ -125,14 +125,25 @@ class SessionEngineImpl implements SessionEngine {
 
   void _onConnectionClosed() {
     joinCompleter?.complete(const DataFailed('connection closed'));
-    _onGameInterrupted?.call('connection closed');
+  }
+
+  void _clearSessionInfo(){
+    _sessionRepository.clearSession();
+  }
+
+  void _onGameInterruptedMessage(Map<String, dynamic> data) {
+    if (joinCompleter != null) {
+      joinCompleter?.complete(const DataFailed('connection closed'));
+    } else {
+      _clearSessionInfo();
+      _onGameInterrupted?.call(data['message'] ?? data['kind']);
+    }
   }
 
   void _listen() {
     _channel?.stream.listen((message) {
       final Map<String, dynamic> data = jsonDecode(message);
-      final String kind = data['kind'];
-
+      final String? kind = data['kind'];
       if (kind == 'game-status') {
         _onGameStatusMessage(data);
       } else if (kind == 'joined') {
@@ -155,6 +166,13 @@ class SessionEngineImpl implements SessionEngine {
         _onJoinFailureMessage(data);
       } else if (kind == 'op-only') {
         _onOpErrorMessage(data);
+      } else if (kind == 'internal' ||
+          kind == 'malformed-msg' ||
+          kind == 'proto-violation' ||
+          kind == 'reconnected' ||
+          kind == 'inactivity' ||
+          kind == 'session-closed') {
+        _onGameInterruptedMessage(data);
       }
     }, onDone: () {
       _onConnectionClosed();
@@ -187,38 +205,64 @@ class SessionEngineImpl implements SessionEngine {
         // TODO img-requests: [] ImageRequestResponse field
         return joinSession(sessionId, username);
       } else {
-        return DataFailed('Start game session code: ${response.statusCode}.');
+        return DataFailed(
+            'Ошибка при создании сессии: ${response.statusCode}.');
       }
     } catch (e) {
-      return const DataFailed('cannot connect to server');
+      return const DataFailed('Сервер недоступен');
     }
   }
 
   @override
   Future<DataState<String>> joinSession(
-      String sessionId, Username username) async {
+      String inviteCode, Username username) async {
     gameSession = GameSessionModel();
     uid = await uidGetter;
     try {
-      await WebSocket.connect(
-          'ws://$serverDomain:$serverWsPort$sessionPath?${joinSessionParams[1]}=$sessionId',
-          headers: <String, String>{
-            'Authorization': 'Bearer $uid'
-          },
-          protocols: [
-            'websocket'
-          ]).then((ws) {
-        _channel = IOWebSocketChannel(ws);
-      }).timeout(const Duration(seconds: 5));
-      _listen();
+      _channel = IOWebSocketChannel.connect(
+          'ws://$serverDomain:$serverWsPort$sessionPath?${joinSessionParams[1]}=$inviteCode',
+          headers: <String, String>{'Authorization': 'Bearer $uid'},
+          protocols: ['websocket'],
+          connectTimeout: const Duration(seconds: 5));
       joinCompleter = Completer<DataState<String>>();
+      _listen();
       _sendMesage('join', {'nickname': username.username});
     } catch (e) {
       return const DataFailed('cannot connect to server');
     }
     DataState<String> sid = await joinCompleter!.future;
     joinCompleter = null;
-    return sid;
+    if (sid.error != null) {
+      return DataFailed(sid.error!);
+    } else {
+      _sessionRepository.saveSession(sid.data!);
+      return DataSuccess(inviteCode);
+    }
+  }
+
+  @override
+  Future<DataState<String>> reconnectSession(String sessionId) async {
+    gameSession = GameSessionModel();
+    uid = await uidGetter;
+    try {
+      _channel = IOWebSocketChannel.connect(
+          'ws://$serverDomain:$serverWsPort$sessionPath?${joinSessionParams[0]}=$sessionId',
+          headers: <String, String>{'Authorization': 'Bearer $uid'},
+          protocols: ['websocket'],
+          connectTimeout: const Duration(seconds: 5));
+      joinCompleter = Completer<DataState<String>>();
+      _listen();
+      _sendMesage('join', {'nickname': 'nickname'});
+    } catch (e) {
+      return const DataFailed('cannot connect to server');
+    }
+    DataState<String> sid = await joinCompleter!.future;
+    joinCompleter = null;
+    if (sid.error != null) {
+      return DataFailed(sid.error!);
+    } else {
+      return const DataSuccess('UNKNOWN');
+    }
   }
 
   void _sendMesage(String kind, Map<String, dynamic> body) async {

@@ -47,11 +47,10 @@ class TaskInfoModel {
   }
 
   factory TaskInfoModel.fromJson(Map<String, dynamic> map) {
-
     return TaskInfoModel(
         name: map['name'],
         description: map['description'],
-        duration: map['duration'],
+        duration: map['duration']?['secs'],
         photoUrl: map['img-uri'],
         type: map['type'] == 'checked-text'
             ? TaskType.checkedText

@@ -1,8 +1,12 @@
 import 'package:get_it/get_it.dart';
 import 'package:party_games_app/core/database/app_database.dart';
+import 'package:party_games_app/features/game_sessions/data/data_sources/local/local_datasource.dart';
 import 'package:party_games_app/features/game_sessions/data/engine/session_engine_impl.dart';
 import 'package:party_games_app/features/game_sessions/data/engine/session_engine_test.dart';
+import 'package:party_games_app/features/game_sessions/data/repository/session_data_repository_impl.dart';
 import 'package:party_games_app/features/game_sessions/domain/engine/session_engine.dart';
+import 'package:party_games_app/features/game_sessions/domain/repository/session_data_repository.dart';
+import 'package:party_games_app/features/game_sessions/domain/usecases/get_sid.dart';
 import 'package:party_games_app/features/games/data/data_sources/testing/games_generator.dart';
 import 'package:party_games_app/features/games/data/repository/game_repository_impl.dart';
 import 'package:party_games_app/features/games/domain/repository/game_repository.dart';
@@ -49,11 +53,17 @@ Future<void> initializeDependenices() async {
   //   tasks
   sl.registerSingleton<TasksGenerator>(TasksGenerator());
   sl.registerSingleton<TaskRepository>(TaskRepositoryImpl(sl(), sl()));
-  //   username
+  //   userdata
   sl.registerSingleton(LocalUsernameDatasource(sl()));
   sl.registerSingleton<UsernameRepository>(UsernameRepositoryImpl(sl()));
+  //   session
+  sl.registerSingleton(LocalSessionDatasource(sl()));
+  sl.registerSingleton<SessionRepository>(SessionRepositoryImpl(sl()));
 
   // usecases
+
+  //   session_data
+  sl.registerSingleton(GetSIDUseCase(sl()));
 
   //   games
   sl.registerSingleton(GetPublishedGamesUseCase(sl()));
@@ -78,7 +88,7 @@ Future<void> initializeDependenices() async {
   sl.registerSingleton(GetUIDUseCase(sl()));
   
   // engine
-  final SessionEngine engine = SessionEngineTestImpl();
+  final SessionEngine engine = SessionEngineImpl(sl(),sl());
   sl.registerSingleton<SessionEngine>(engine);
 
 }

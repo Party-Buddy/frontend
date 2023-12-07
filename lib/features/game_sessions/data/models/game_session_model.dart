@@ -57,8 +57,8 @@ class GameSessionModel {
         sessionId: map['session-id'],
         name: map['game']?['name'],
         description: map['game']?['description'],
-        imageUri: map['game']?['image-uri'],
-        maxPlayersCount: map['max-players'] ?? consts.maxPlayersCount,
+        imageUri: map['game']?['img-uri'],
+        maxPlayersCount: map['max-players'],
         ownerId: null,
         currentPlayerId: map['player-id'],
         tasks: (map['game']?['tasks'] as List?)
