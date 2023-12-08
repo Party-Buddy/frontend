@@ -36,21 +36,20 @@ class GameStartScreen extends StatefulWidget {
 }
 
 class _GameStartScreenState extends State<GameStartScreen> {
-  Game game = Game(
-      id: 1,
+  Game game = PublishedGame(
+      id: '11112222-3333-4444-5555-131072262144',
       name: "Minecraft",
       imageUri:
           "https://cdn.iconscout.com/icon/free/png-256/free-minecraft-15-282774.png",
       tasks: [
-        const CheckedTextTask(
-            id: 1,
+        PublishedCheckedTextTask(
+            id: '12345678-1234-1234-1234-123456789abc',
             name: "Basics1",
             description: "what is the max stack size for swords?",
             duration: 10,
             answer: "1"),
       ],
-      updatedAt: DateTime.now(),
-      source: Source.public);
+      updatedAt: DateTime.now());
 
   final SessionEngine _sessionEngine = GetIt.instance<SessionEngine>();
   final ValidateUsernameUseCase _validateUsernameUseCase =
@@ -166,7 +165,8 @@ class _GameStartScreenState extends State<GameStartScreen> {
     );
 
     DataState<String> sessionId = await _sessionEngine.startSession(
-        game, Username(username: username), selectedMaxPlayersCount);
+        game, Username(username: username),
+        maxPlayersCount: selectedMaxPlayersCount);
 
     debugPrint(sessionId.data);
 
