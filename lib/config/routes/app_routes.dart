@@ -9,7 +9,6 @@ import 'package:party_games_app/features/game_sessions/presentation/screens/wait
 import 'package:party_games_app/features/games/presentation/screens/game_start_screen.dart';
 import 'package:party_games_app/features/games/presentation/screens/game_join_screen.dart';
 import 'package:party_games_app/features/games/presentation/screens/main_menu_screen.dart';
-import 'package:party_games_app/features/tasks/domain/entities/choice_task.dart';
 import 'package:party_games_app/tests_screen.dart';
 
 class AppRoutes {
@@ -22,8 +21,16 @@ class AppRoutes {
         return _materialRoute(const GameStartScreen());
 
       case GameJoinScreen.routeName:
-        return _materialRoute(const GameJoinScreen());
-
+      {
+        if (settings.arguments != null){
+          final args = settings.arguments as GameJoinScreenArguments;
+        
+        return _materialRoute(GameJoinScreen(inviteCode: args.inviteCode));
+        }
+        else{
+          return _materialRoute(const GameJoinScreen());
+        }
+      }
       case ConstructorScreen.routeName:
         return _materialRoute(const ConstructorScreen());
 

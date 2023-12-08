@@ -6,9 +6,15 @@ import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/base_screen.dart';
 import 'package:party_games_app/core/widgets/custom_button.dart';
 
-class GameJoinScreen extends StatefulWidget {
-  const GameJoinScreen({super.key});
+class GameJoinScreenArguments {
+  final String inviteCode;
+  const GameJoinScreenArguments({required this.inviteCode});
+}
 
+class GameJoinScreen extends StatefulWidget {
+  const GameJoinScreen({super.key, this.inviteCode});
+
+  final String? inviteCode;
   static const routeName = "/JoinGame";
 
   @override
@@ -68,7 +74,7 @@ class _GameJoinScreenState extends State<GameJoinScreen>
           CustomButton(
               text: "Сканировать QR",
               onPressed: () => showMessage(context,
-                  "Тут должна будет открыться камера для сканирования 🙂")),
+                  "Тут должна будет открыться камера для сканирования 🙂 ${widget.inviteCode ?? 'inivte code is null'}")),
         ]));
   }
 }
