@@ -7,10 +7,10 @@ class ChoiceTaskOption {
   const ChoiceTaskOption({required this.alternative, required this.correct});
 }
 
-class ChoiceTask extends Task {
+class OwnedChoiceTask extends OwnedTask {
   final Set<ChoiceTaskOption> options;
 
-  const ChoiceTask(
+  OwnedChoiceTask(
       {super.id,
       required super.name,
       required super.description,
@@ -21,10 +21,9 @@ class ChoiceTask extends Task {
       required this.options})
       : super(type: TaskType.choice);
 
-  factory ChoiceTask.fromOtherTask(
+  factory OwnedChoiceTask.fromOtherTask(
       Task baseTask, Set<ChoiceTaskOption> options) {
-    return ChoiceTask(
-        id: baseTask.id,
+    return OwnedChoiceTask(
         name: baseTask.name,
         description: baseTask.description,
         imageUri: baseTask.imageUri,
@@ -35,7 +34,7 @@ class ChoiceTask extends Task {
   }
 
   @override
-  Task copyWith(
+  OwnedTask copyWith(
       {int? id,
       String? name,
       String? description,
@@ -45,7 +44,56 @@ class ChoiceTask extends Task {
       DateTime? createdAt,
       DateTime? updatedAt,
       Set<ChoiceTaskOption>? options}) {
-    return ChoiceTask(
+    return OwnedChoiceTask(
+        id: id ?? super.id,
+        name: name ?? super.name,
+        description: description ?? super.description,
+        imageUri: imageUri ?? super.imageUri,
+        duration: duration ?? super.duration,
+        createdAt: createdAt ?? super.createdAt,
+        updatedAt: updatedAt ?? super.updatedAt,
+        options: options ?? this.options);
+  }
+}
+
+class PublishedChoiceTask extends PublishedTask {
+  final Set<ChoiceTaskOption> options;
+
+  PublishedChoiceTask(
+      {super.id,
+      required super.name,
+      required super.description,
+      super.imageUri,
+      required super.duration,
+      super.createdAt,
+      super.updatedAt,
+      required this.options})
+      : super(type: TaskType.choice);
+
+  factory PublishedChoiceTask.fromOtherTask(
+      Task baseTask, Set<ChoiceTaskOption> options) {
+    return PublishedChoiceTask(
+        name: baseTask.name,
+        description: baseTask.description,
+        imageUri: baseTask.imageUri,
+        duration: baseTask.duration,
+        createdAt: baseTask.createdAt,
+        updatedAt: baseTask.updatedAt,
+        options: options);
+  }
+
+  @override
+  PublishedTask copyWith(
+      {String? id,
+      String? name,
+      String? description,
+      String? imageUri,
+      int? duration,
+      TaskType? type,
+      DateTime? createdAt,
+      DateTime? updatedAt,
+      Set<ChoiceTaskOption>? options}) {
+    return PublishedChoiceTask(
         id: id ?? super.id,
         name: name ?? super.name,
         description: description ?? super.description,

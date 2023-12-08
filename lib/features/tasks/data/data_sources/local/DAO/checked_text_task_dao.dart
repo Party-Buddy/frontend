@@ -14,7 +14,7 @@ class CheckedTextTaskDao extends DatabaseAccessor<AppDatabase> with _$CheckedTex
 
   CheckedTextTaskDao(this.db) : super(db);
 
-  Future<TaskModel> getTask(int taskId) {
+  Future<OwnedTaskModel> getTask(int taskId) {
     return (select(checkedTextTasks)
     ..where((t) => t.baseTaskId.equals(taskId)))
     .join([
@@ -23,13 +23,13 @@ class CheckedTextTaskDao extends DatabaseAccessor<AppDatabase> with _$CheckedTex
     .getSingle()
     .then(
       (row) {
-        return CheckedTextTaskModel.fromTables(
+        return OwnedCheckedTextTaskModel.fromTables(
           row.readTable(baseTasks),
           row.readTable(checkedTextTasks));
       });
   }
 
-  Future<List<TaskModel>> getAllTasks() {
+  Future<List<OwnedTaskModel>> getAllTasks() {
     return select(checkedTextTasks)
     .join([
       leftOuterJoin(baseTasks, baseTasks.id.equalsExp(checkedTextTasks.baseTaskId))
@@ -37,7 +37,7 @@ class CheckedTextTaskDao extends DatabaseAccessor<AppDatabase> with _$CheckedTex
     .get()
     .then((rows) => rows.map(
       (row) {
-        return CheckedTextTaskModel.fromTables(
+        return OwnedCheckedTextTaskModel.fromTables(
           row.readTable(baseTasks),
           row.readTable(checkedTextTasks));
       })
@@ -45,17 +45,17 @@ class CheckedTextTaskDao extends DatabaseAccessor<AppDatabase> with _$CheckedTex
       );
   }
 
-  Future<int> insertTask(CheckedTextTaskModel task) {
+  Future<int> insertTask(OwnedCheckedTextTaskModel task) {
     return into(baseTasks).insert(task.baseToInsertable())
     .then((baseId) => into(checkedTextTasks).insert(task.toInsertable(baseId: baseId)));
     }
 
-  Future updateTask(CheckedTextTaskModel task) async {
+  Future updateTask(OwnedCheckedTextTaskModel task) async {
     update(baseTasks).replace(task.baseToUpdatable());
     update(checkedTextTasks).replace(task.toInsertable());
     }
   
-  Future deleteTask(CheckedTextTaskModel task) async {
+  Future deleteTask(OwnedCheckedTextTaskModel task) async {
     delete(baseTasks).delete(task.baseToRemovable());
     }
 

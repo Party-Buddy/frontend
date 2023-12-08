@@ -10,7 +10,7 @@ class GetPublishedTasksUseCase implements UseCase<DataState<List<Task>>, void>{
   GetPublishedTasksUseCase(this._taskRepository);
 
   @override
-  Future<DataState<List<Task>>> call({void params}) {
+  Future<DataState<List<PublishedTask>>> call({void params}) {
     return _taskRepository.getPublishedTasks();
   }
 

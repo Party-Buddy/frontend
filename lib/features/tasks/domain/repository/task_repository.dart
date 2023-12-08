@@ -5,13 +5,13 @@ abstract class TaskRepository {
 
   // API
 
-  Future<DataState<List<Task>>> getPublishedTasks();
+  Future<DataState<List<PublishedTask>>> getPublishedTasks();
 
 
 
   // Database
 
-  Future<List<Task>> getLocalTasks();
+  Future<List<OwnedTask>> getLocalTasks();
 
   Future<Task> saveTask(Task task);
 

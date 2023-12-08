@@ -17,19 +17,19 @@ class TestsScreen extends StatelessWidget {
 
   static const routeName = "testScreen";
 
-  static const ChoiceTask choiceTaskExample = ChoiceTask(
+  static OwnedChoiceTask choiceTaskExample = OwnedChoiceTask(
       name: "Выберите элемент, который выделяется",
       description:
           "Здесь должно быть описание задания, но пока тут будет просто текст для теста, чтобы проверить, что все хорошо отображается.",
       duration: 30,
       options: {
-        ChoiceTaskOption(alternative: "Огурец", correct: false),
-        ChoiceTaskOption(alternative: "Помидор", correct: true),
-        ChoiceTaskOption(alternative: "Баклажан", correct: false),
-        ChoiceTaskOption(alternative: "Винегрет", correct: false),
+        const ChoiceTaskOption(alternative: "Огурец", correct: false),
+        const ChoiceTaskOption(alternative: "Помидор", correct: true),
+        const ChoiceTaskOption(alternative: "Баклажан", correct: false),
+        const ChoiceTaskOption(alternative: "Винегрет", correct: false),
       });
 
-  static const PollTask pollTaskTextExample = PollTask(
+  static OwnedPollTask pollTaskTextExample = OwnedPollTask(
       name: "Напишите стих про монады",
       description:
           "Задание потребует ваших креативных способностей, нужно сложить стихотворение, оду, которое бы возвысило ФП над всем земным.",
@@ -38,7 +38,7 @@ class TestsScreen extends StatelessWidget {
       pollFixedDuration: 3,
       pollDynamicDuration: 4);
 
-  static const PollTask pollTaskImageExample = PollTask(
+  static OwnedPollTask pollTaskImageExample = OwnedPollTask(
       name: "Нарисуйте Луну",
       description:
           "Задача состоит в том, чтобы нарисовать Луну. Не путать с сыром.",

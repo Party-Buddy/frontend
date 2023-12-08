@@ -19,7 +19,7 @@ class ChoiceTaskDao extends DatabaseAccessor<AppDatabase>
         .get();
   }
 
-  Future bindAllOptionsToTask(ChoiceTaskModel task) async {
+  Future bindAllOptionsToTask(OwnedChoiceTaskModel task) async {
     (delete(choiceTaskOptions)
           ..where((option) => option.baseTaskId.equals(task.id)))
         .go()

@@ -9,30 +9,31 @@ import 'package:party_games_app/features/tasks/domain/entities/checked_text_task
 import 'package:party_games_app/features/tasks/domain/entities/choice_task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/poll_task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
+import 'package:party_games_app/features/tasks/domain/repository/remote_tasks_source.dart';
 import 'package:party_games_app/features/tasks/domain/repository/task_repository.dart';
 
 class TaskRepositoryImpl implements TaskRepository {
   final AppDatabase _database;
 
-  final TasksGenerator _tasksGenerator;
+  final RemoteTasksDataSource _remoteTasksDataSource;
 
-  TaskRepositoryImpl(this._database, this._tasksGenerator);
+  TaskRepositoryImpl(this._database, this._remoteTasksDataSource);
 
   // API
 
   @override
-  Future<DataState<List<Task>>> getPublishedTasks() async {
-    return DataSuccess(_tasksGenerator.generateTasks());
+  Future<DataState<List<PublishedTask>>> getPublishedTasks() async {
+    return _remoteTasksDataSource.getTasks();
   }
 
   // Database
 
   @override
-  Future<List<Task>> getLocalTasks() async {
-    List<TaskModel> allTasks = await _database.baseTaskDao
+  Future<List<OwnedTask>> getLocalTasks() async {
+    List<OwnedTaskModel> allTasks = await _database.baseTaskDao
         .getAllTasksByType(TaskType.choice.name)
         .then((baseTasks) => Future.wait(baseTasks.map((baseTask) async {
-              return ChoiceTaskModel.fromTables(
+              return OwnedChoiceTaskModel.fromTables(
                   baseTask,
                   await _database.choiceTaskDao.getAllOptions(baseTask.id).then(
                       (options) => options
@@ -48,20 +49,20 @@ class TaskRepositoryImpl implements TaskRepository {
 
   @override
   Future<Task> saveTask(Task task) async {
-    if (task is CheckedTextTask) {
+    if (task is OwnedCheckedTextTask) {
       var id = await _database.checkedTextTaskDao
-          .insertTask(CheckedTextTaskModel.fromEntity(task));
+          .insertTask(OwnedCheckedTextTaskModel.fromEntity(task));
       return task.copyWith(id: id);
-    } else if (task is PollTask) {
+    } else if (task is OwnedPollTask) {
       var id = await _database.pollTaskDao
-          .insertTask(PollTaskModel.fromEntity(task));
+          .insertTask(OwnedPollTaskModel.fromEntity(task));
       return task.copyWith(id: id);
-    } else if (task is ChoiceTask) {
+    } else if (task is OwnedChoiceTask) {
       var id = await _database.baseTaskDao
-          .insertTask(ChoiceTaskModel.fromEntity(task));
-      ChoiceTask newTask = task.copyWith(id: id) as ChoiceTask;
+          .insertTask(OwnedChoiceTaskModel.fromEntity(task));
+      OwnedChoiceTask newTask = task.copyWith(id: id) as OwnedChoiceTask;
       await _database.choiceTaskDao
-          .bindAllOptionsToTask(ChoiceTaskModel.fromEntity(newTask));
+          .bindAllOptionsToTask(OwnedChoiceTaskModel.fromEntity(newTask));
       return newTask;
     } else {
       throw Error();
@@ -70,17 +71,17 @@ class TaskRepositoryImpl implements TaskRepository {
 
   @override
   Future<Task> updateTask(Task task) async {
-    if (task is CheckedTextTask) {
+    if (task is OwnedCheckedTextTask) {
       await _database.checkedTextTaskDao
-          .updateTask(CheckedTextTaskModel.fromEntity(task));
+          .updateTask(OwnedCheckedTextTaskModel.fromEntity(task));
       return task;
-    } else if (task is PollTask) {
-      await _database.pollTaskDao.updateTask(PollTaskModel.fromEntity(task));
+    } else if (task is OwnedPollTask) {
+      await _database.pollTaskDao.updateTask(OwnedPollTaskModel.fromEntity(task));
       return task;
-    } else if (task is ChoiceTask) {
-      await _database.baseTaskDao.updateTask(ChoiceTaskModel.fromEntity(task));
+    } else if (task is OwnedChoiceTask) {
+      await _database.baseTaskDao.updateTask(OwnedChoiceTaskModel.fromEntity(task));
       await _database.choiceTaskDao
-          .bindAllOptionsToTask(ChoiceTaskModel.fromEntity(task));
+          .bindAllOptionsToTask(OwnedChoiceTaskModel.fromEntity(task));
       return task;
     } else {
       throw Error();
@@ -89,13 +90,13 @@ class TaskRepositoryImpl implements TaskRepository {
 
   @override
   Future<void> deleteTask(Task task) async {
-    if (task is CheckedTextTask) {
+    if (task is OwnedCheckedTextTask) {
       await _database.checkedTextTaskDao
-          .deleteTask(CheckedTextTaskModel.fromEntity(task));
-    } else if (task is PollTask) {
-      await _database.pollTaskDao.deleteTask(PollTaskModel.fromEntity(task));
-    } else if (task is ChoiceTask) {
-      await _database.baseTaskDao.deleteTask(ChoiceTaskModel.fromEntity(task));
+          .deleteTask(OwnedCheckedTextTaskModel.fromEntity(task));
+    } else if (task is OwnedPollTask) {
+      await _database.pollTaskDao.deleteTask(OwnedPollTaskModel.fromEntity(task));
+    } else if (task is OwnedChoiceTask) {
+      await _database.baseTaskDao.deleteTask(OwnedChoiceTaskModel.fromEntity(task));
       //options are removed by cascade
     } else {
       throw Error();

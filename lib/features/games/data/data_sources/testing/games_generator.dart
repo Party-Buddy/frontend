@@ -14,14 +14,14 @@ class GamesGenerator implements RemoteGamesDataSource {
           imageUri:
               "https://cdn.iconscout.com/icon/free/png-256/free-minecraft-15-282774.png",
           tasks: [
-            const CheckedTextTask(
-                id: 0,
+            PublishedCheckedTextTask(
+                id: 'todo',
                 name: "Basics0",
                 description: "what is the max stack size for wood?",
                 duration: 10,
                 answer: "64"),
-            const CheckedTextTask(
-                id: 999,
+            PublishedCheckedTextTask(
+                id: 'todo',
                 name: "Basics1",
                 description: "what is the max stack size for swords?",
                 duration: 10,
@@ -33,8 +33,8 @@ class GamesGenerator implements RemoteGamesDataSource {
           name: "Terraria",
           imageUri: "https://toppng.com/public/uploads/preview/tree-terraria-tree-logo-115630004484aweqy3qjv.png",
           tasks: [
-            const CheckedTextTask(
-                id: 1,
+            PublishedCheckedTextTask(
+                id: 'todo',
                 name: "The Weapon",
                 description: "what is the best melee weapon?",
                 duration: 15,
@@ -52,8 +52,8 @@ class GamesGenerator implements RemoteGamesDataSource {
           imageUri:
               "https://cdn.iconscout.com/icon/free/png-256/free-minecraft-15-282774.png",
           tasks: [
-            const CheckedTextTask(
-                id: 999,
+            PublishedCheckedTextTask(
+                id: 'todo',
                 name: "Basics1",
                 description: "what is the max stack size for swords?",
                 duration: 10,
@@ -66,8 +66,8 @@ class GamesGenerator implements RemoteGamesDataSource {
           imageUri:
               "https://seeklogo.com/images/C/counter-strike-global-offensive-logo-CFCEFBBCE2-seeklogo.com.png",
           tasks: [
-            const PollTask(
-                id: 998,
+            PublishedPollTask(
+                id: 'todo',
                 name: "Skins",
                 description: "Draw a fork skin",
                 duration: 150,

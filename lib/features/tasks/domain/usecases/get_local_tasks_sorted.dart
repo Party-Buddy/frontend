@@ -12,16 +12,16 @@ class GetLocalTasksSortedUseCase
 
   GetLocalTasksSortedUseCase(this._taskRepository);
 
-  int _typeValue(Task a) {
-    if (a is PollTask) {
+  int _typeValue(OwnedTask a) {
+    if (a is OwnedPollTask) {
       if (a.pollAnswerType.name == 'image') {
         return 3;
       } else {
         return -1;
       }
-    } else if (a is ChoiceTask) {
+    } else if (a is OwnedChoiceTask) {
       return 2;
-    } else if (a is CheckedTextTask) {
+    } else if (a is OwnedCheckedTextTask) {
       return 1;
     } else {
       throw Error();

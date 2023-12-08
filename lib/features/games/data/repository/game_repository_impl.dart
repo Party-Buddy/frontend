@@ -40,7 +40,7 @@ class GameRepositoryImpl implements GameRepository {
                       case TaskType.poll:
                         return _database.pollTaskDao.getTask(task.id);
                       case TaskType.choice:
-                        return ChoiceTaskModel.fromTables(
+                        return OwnedChoiceTaskModel.fromTables(
                             task,
                             await _database.choiceTaskDao
                                 .getAllOptions(task.id)

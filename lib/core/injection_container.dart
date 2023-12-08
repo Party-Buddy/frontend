@@ -18,8 +18,10 @@ import 'package:party_games_app/features/games/domain/usecases/get_local_games_s
 import 'package:party_games_app/features/games/domain/usecases/get_published_games.dart';
 import 'package:party_games_app/features/games/domain/usecases/save_game.dart';
 import 'package:party_games_app/features/games/domain/usecases/update_game.dart';
+import 'package:party_games_app/features/tasks/data/data_sources/remote/rest_database.dart';
 import 'package:party_games_app/features/tasks/data/data_sources/testing/tasks_generator.dart';
 import 'package:party_games_app/features/tasks/data/repository/task_repository_impl.dart';
+import 'package:party_games_app/features/tasks/domain/repository/remote_tasks_source.dart';
 import 'package:party_games_app/features/tasks/domain/repository/task_repository.dart';
 import 'package:party_games_app/features/tasks/domain/usecases/delete_task.dart';
 import 'package:party_games_app/features/tasks/domain/usecases/get_local_tasks.dart';
@@ -56,18 +58,17 @@ Future<void> initializeDependenices() async {
   //   session
   sl.registerSingleton(LocalSessionDatasource(sl()));
   sl.registerSingleton<SessionRepository>(SessionRepositoryImpl(sl()));
+  sl.registerSingleton(GetSIDUseCase(sl()));
   //   games
-  //sl.registerSingleton<RemoteGamesDataSource>(RestDatabase(sl()));
+  //sl.registerSingleton<RemoteGamesDataSource>(RestGameDatabase(sl()));
   sl.registerSingleton<RemoteGamesDataSource>(GamesGenerator());
   sl.registerSingleton<GameRepository>(GameRepositoryImpl(sl(), sl()));
   //   tasks
-  sl.registerSingleton<TasksGenerator>(TasksGenerator());
+  //sl.registerSingleton<RemoteTasksDataSource>(RestTaskDatabase(sl()));
+  sl.registerSingleton<RemoteTasksDataSource>(TasksGenerator());
   sl.registerSingleton<TaskRepository>(TaskRepositoryImpl(sl(), sl()));
 
   // usecases
-
-  //   session_data
-  sl.registerSingleton(GetSIDUseCase(sl()));
 
   //   games
   sl.registerSingleton(GetPublishedGamesUseCase(sl()));

@@ -4,12 +4,12 @@ import 'package:party_games_app/features/tasks/data/models/task_model.dart';
 import 'package:party_games_app/features/tasks/domain/entities/poll_task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 
-class PollTaskModel extends TaskModel {
+class OwnedPollTaskModel extends OwnedTaskModel {
   final PollTaskAnswerType? pollAnswerType;
   final int? pollFixedDuration;
   final int? pollDynamicDuration;
 
-  const PollTaskModel(
+  const OwnedPollTaskModel(
       {super.id,
       super.name,
       super.description,
@@ -23,20 +23,6 @@ class PollTaskModel extends TaskModel {
       : super(type: TaskType.poll);
 
   // JSON
-
-  factory PollTaskModel.fromJson(Map<String, dynamic> map) {
-    return PollTaskModel(
-        id: map['id'],
-        name: map['name'],
-        description: map['description'],
-        imageUri: map['imageId'] ?? "",
-        duration: map['duration'],
-        updatedAt: map['updatedAt'],
-        createdAt: map['createdAt'],
-        pollAnswerType: PollTaskAnswerType.values.firstWhere(
-            (element) => element.toString() == map['pollAnswerType']));
-        // TODO poll duration
-  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -53,8 +39,8 @@ class PollTaskModel extends TaskModel {
   // Domain
 
   @override
-  Task toEntity() {
-    return PollTask(
+  OwnedTask toEntity() {
+    return OwnedPollTask(
         id: id,
         name: name ?? "",
         description: description ?? "",
@@ -67,8 +53,8 @@ class PollTaskModel extends TaskModel {
         pollDynamicDuration: pollDynamicDuration ?? 0);
   }
 
-  factory PollTaskModel.fromEntity(PollTask task) {
-    return PollTaskModel(
+  factory OwnedPollTaskModel.fromEntity(OwnedPollTask task) {
+    return OwnedPollTaskModel(
         id: task.id,
         name: task.name,
         description: task.description,
@@ -83,9 +69,9 @@ class PollTaskModel extends TaskModel {
 
   // Storage
 
-  factory PollTaskModel.fromTables(
+  factory OwnedPollTaskModel.fromTables(
       LocalBaseTask baseTask, LocalPollTask pollTask) {
-    return PollTaskModel(
+    return OwnedPollTaskModel(
         id: baseTask.id,
         name: baseTask.name,
         description: baseTask.description,
@@ -113,4 +99,83 @@ class PollTaskModel extends TaskModel {
             ? const Value(0)
             : const Value.absent());
   }
+}
+
+class PublishedPollTaskModel extends PublishedTaskModel {
+  final PollTaskAnswerType? pollAnswerType;
+  final int? pollFixedDuration;
+  final int? pollDynamicDuration;
+
+  const PublishedPollTaskModel(
+      {super.id,
+      super.name,
+      super.description,
+      super.imageUri,
+      super.duration,
+      super.createdAt,
+      super.updatedAt,
+      this.pollAnswerType,
+      this.pollFixedDuration,
+      this.pollDynamicDuration})
+      : super(type: TaskType.poll);
+
+  // JSON
+
+  factory PublishedPollTaskModel.fromJson(Map<String, dynamic> map) {
+    return PublishedPollTaskModel(
+        id: map['id'],
+        name: map['name'],
+        description: map['description'],
+        imageUri: map['imageId'] ?? "",
+        duration: map['duration'],
+        updatedAt: map['updatedAt'],
+        createdAt: map['createdAt'],
+        pollAnswerType: PollTaskAnswerType.values.firstWhere(
+            (element) => element.toString() == map['pollAnswerType']));
+        // TODO poll duration
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    var json = baseToJson();
+    json.addAll({
+      'type': pollAnswerType == PollTaskAnswerType.image ? 'photo' : 'text',
+      'poll-duration': pollFixedDuration != 0
+          ? {'kind': 'fixed', 'secs': pollFixedDuration ?? 0}
+          : {'kind': 'dynamic', 'secs': pollDynamicDuration ?? 0},
+    });
+    return json;
+  }
+
+  // Domain
+
+  @override
+  PublishedTask toEntity() {
+    return PublishedPollTask(
+        id: id,
+        name: name ?? "",
+        description: description ?? "",
+        imageUri: imageUri,
+        duration: duration ?? 0,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+        pollAnswerType: pollAnswerType ?? PollTaskAnswerType.text,
+        pollFixedDuration: pollFixedDuration ?? 0,
+        pollDynamicDuration: pollDynamicDuration ?? 0);
+  }
+
+  factory PublishedPollTaskModel.fromEntity(PublishedPollTask task) {
+    return PublishedPollTaskModel(
+        id: task.id,
+        name: task.name,
+        description: task.description,
+        imageUri: task.imageUri,
+        duration: task.duration,
+        createdAt: task.createdAt,
+        updatedAt: task.updatedAt,
+        pollAnswerType: task.pollAnswerType,
+        pollFixedDuration: task.pollFixedDuration,
+        pollDynamicDuration: task.pollDynamicDuration);
+  }
+
 }

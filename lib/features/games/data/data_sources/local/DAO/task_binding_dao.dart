@@ -7,6 +7,7 @@ import 'package:party_games_app/features/tasks/data/data_sources/local/tables/ba
 import 'package:party_games_app/features/tasks/data/data_sources/local/tables/checked_text_task.dart';
 import 'package:party_games_app/features/tasks/data/data_sources/local/tables/choice_task_options.dart';
 import 'package:party_games_app/features/tasks/data/data_sources/local/tables/poll_task.dart';
+import 'package:party_games_app/features/tasks/data/models/task_model.dart';
 
 part 'task_binding_dao.g.dart';
 
@@ -48,8 +49,16 @@ class TaskBindingDao extends DatabaseAccessor<AppDatabase>
       for (var entry in game.tasks!.asMap().entries) {
         int index = entry.key;
         var value = entry.value;
+        OwnedTaskModel ownedValue;
+        if (value is PublishedTaskModel) {
+          // TODO save published task and set ownedValue to created OwnedTaskModel
+          ownedValue = value as OwnedTaskModel;
+        } else {
+          ownedValue = value as OwnedTaskModel;
+        }
+
         into(taskBindings)
-            .insert(game.toBinding(taskId: value.id, taskOrder: index));
+            .insert(game.toBinding(taskId: ownedValue.id, taskOrder: index));
       }
     });
   }

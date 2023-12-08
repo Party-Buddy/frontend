@@ -9,7 +9,6 @@ import 'package:party_games_app/features/tasks/domain/entities/poll_task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 
 abstract class TaskModel {
-  final int? id;
   final String? name;
   final String? description;
   final String? imageUri;
@@ -19,8 +18,7 @@ abstract class TaskModel {
   final DateTime? updatedAt;
 
   const TaskModel(
-      {this.id,
-      this.name,
+      {this.name,
       this.description,
       this.imageUri,
       this.duration,
@@ -31,12 +29,10 @@ abstract class TaskModel {
   // Domain
 
   factory TaskModel.fromEntity(Task task) {
-    if (task is CheckedTextTask) {
-      return CheckedTextTaskModel.fromEntity(task);
-    } else if (task is ChoiceTask) {
-      return ChoiceTaskModel.fromEntity(task);
-    } else if (task is PollTask) {
-      return PollTaskModel.fromEntity(task);
+    if (task is OwnedTask) {
+      return OwnedTaskModel.fromEntity(task);
+    } else if (task is PublishedTask) {
+      return PublishedTaskModel.fromEntity(task);
     } else {
       throw Error();
     }
@@ -44,20 +40,7 @@ abstract class TaskModel {
 
   Task toEntity();
 
-  // JSON
-
-  factory TaskModel.fromJson(Map<String, dynamic> map) {
-    TaskType type = TaskType.values.firstWhere(
-        (element) => element.toString() == 'TaskTypes.${map['type']}');
-    switch (type) {
-      case TaskType.checkedText:
-        return CheckedTextTaskModel.fromJson(map);
-      default:
-        throw ArgumentError('Invalid type');
-    }
-  }
-
-  Map<String, dynamic> baseToJson(){
+  Map<String, dynamic> baseToJson() {
     var json = <String, dynamic>{
       'name': name ?? '',
       'description': description ?? '',
@@ -67,8 +50,35 @@ abstract class TaskModel {
   }
 
   Map<String, dynamic> toJson();
+}
 
-  // Storage
+abstract class OwnedTaskModel extends TaskModel {
+  final int? id;
+
+  const OwnedTaskModel(
+      {this.id,
+      super.name,
+      super.description,
+      super.imageUri,
+      super.duration,
+      super.type,
+      super.createdAt,
+      super.updatedAt});
+
+  factory OwnedTaskModel.fromEntity(OwnedTask task) {
+    if (task is OwnedCheckedTextTask) {
+      return OwnedCheckedTextTaskModel.fromEntity(task);
+    } else if (task is OwnedChoiceTask) {
+      return OwnedChoiceTaskModel.fromEntity(task);
+    } else if (task is OwnedPollTask) {
+      return OwnedPollTaskModel.fromEntity(task);
+    } else {
+      throw Error();
+    }
+  }
+
+  @override
+  OwnedTask toEntity();
 
   Insertable<LocalBaseTask> baseToInsertable() {
     return BaseTasksCompanion(
@@ -99,5 +109,49 @@ abstract class TaskModel {
   Insertable<LocalBaseTask> baseToRemovable() {
     return BaseTasksCompanion(
         id: id != null ? Value(id!) : const Value.absent());
+  }
+}
+
+abstract class PublishedTaskModel extends TaskModel {
+  final String? id;
+
+  const PublishedTaskModel(
+      {this.id,
+      super.name,
+      super.description,
+      super.imageUri,
+      super.duration,
+      super.type,
+      super.createdAt,
+      super.updatedAt});
+
+  factory PublishedTaskModel.fromEntity(PublishedTask task) {
+    if (task is PublishedCheckedTextTask) {
+      return PublishedCheckedTextTaskModel.fromEntity(task);
+    } else if (task is PublishedChoiceTask) {
+      return PublishedChoiceTaskModel.fromEntity(task);
+    } else if (task is PublishedPollTask) {
+      return PublishedPollTaskModel.fromEntity(task);
+    } else {
+      throw Error();
+    }
+  }
+
+  @override
+  PublishedTask toEntity();
+
+  factory PublishedTaskModel.fromJson(Map<String, dynamic> map) {
+    TaskType type = TaskType.values.firstWhere(
+        (element) => element.toString() == 'TaskTypes.${map['type']}');
+    switch (type) {
+      case TaskType.checkedText:
+        return PublishedCheckedTextTaskModel.fromJson(map);
+      case TaskType.choice:
+        return PublishedChoiceTaskModel.fromJson(map);
+      case TaskType.poll:
+        return PublishedPollTaskModel.fromJson(map);
+      default:
+        throw ArgumentError('Invalid type');
+    }
   }
 }

@@ -14,7 +14,7 @@ class PollTaskDao extends DatabaseAccessor<AppDatabase> with _$PollTaskDaoMixin 
 
   PollTaskDao(this.db) : super(db);
 
-  Future<TaskModel> getTask(int taskId) {
+  Future<OwnedTaskModel> getTask(int taskId) {
     return (select(pollTasks)
     ..where((t) => t.baseTaskId.equals(taskId)))
     .join([
@@ -23,13 +23,13 @@ class PollTaskDao extends DatabaseAccessor<AppDatabase> with _$PollTaskDaoMixin 
     .getSingle()
     .then(
       (row) {
-        return PollTaskModel.fromTables(
+        return OwnedPollTaskModel.fromTables(
           row.readTable(baseTasks),
           row.readTable(pollTasks));
       });
   }
 
-  Future<List<TaskModel>> getAllTasks() {
+  Future<List<OwnedTaskModel>> getAllTasks() {
     return select(pollTasks)
     .join([
       leftOuterJoin(baseTasks, baseTasks.id.equalsExp(pollTasks.baseTaskId))
@@ -37,7 +37,7 @@ class PollTaskDao extends DatabaseAccessor<AppDatabase> with _$PollTaskDaoMixin 
     .get()
     .then((rows) => rows.map(
       (row) {
-        return PollTaskModel.fromTables(
+        return OwnedPollTaskModel.fromTables(
           row.readTable(baseTasks),
           row.readTable(pollTasks));
       })
@@ -45,17 +45,17 @@ class PollTaskDao extends DatabaseAccessor<AppDatabase> with _$PollTaskDaoMixin 
       );
   }
 
-  Future<int> insertTask(PollTaskModel task) {
+  Future<int> insertTask(OwnedPollTaskModel task) {
     return into(baseTasks).insert(task.baseToInsertable())
     .then((baseId) => into(pollTasks).insert(task.toInsertable(baseId: baseId)));
     }
 
-  Future updateTask(PollTaskModel task) async {
+  Future updateTask(OwnedPollTaskModel task) async {
     update(baseTasks).replace(task.baseToInsertable());
     update(pollTasks).replace(task.toInsertable());
     }
   
-  Future deleteTask(PollTaskModel task) async {
+  Future deleteTask(OwnedPollTaskModel task) async {
     delete(baseTasks).delete(task.baseToInsertable());
     }
 

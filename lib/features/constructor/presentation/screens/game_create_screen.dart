@@ -14,8 +14,6 @@ import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/games/domain/usecases/params/game_params.dart';
 import 'package:party_games_app/features/games/domain/usecases/save_game.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
-import 'package:party_games_app/features/tasks/domain/usecases/params/task_params.dart';
-import 'package:party_games_app/features/tasks/domain/usecases/save_task.dart';
 import 'package:party_games_app/features/tasks/presentation/widgets/task_header.dart';
 import 'package:party_games_app/features/tasks/presentation/widgets/task_list.dart';
 
@@ -35,7 +33,6 @@ class _GameCreateScreenState extends State<GameCreateScreen> {
   String description = "";
 
   final SaveGameUseCase _saveGameUseCase = GetIt.instance<SaveGameUseCase>();
-  final SaveTaskUseCase _saveTaskUseCase = GetIt.instance<SaveTaskUseCase>();
 
   @override
   Widget build(BuildContext context) {
@@ -86,9 +83,6 @@ class _GameCreateScreenState extends State<GameCreateScreen> {
                     height: kPadding * 2,
                   ),
                   CustomButton(text: "Создать игру", onPressed: () async {
-                    tasks = await Future.wait(tasks.map((task) async {
-                      return _saveTaskUseCase.call(params: TaskParams(task: task.copyWith(id:null)));
-                    }));
                     Game game = OwnedGame(name: name, description: description, tasks: tasks, imageUri: 'https://w.forfun.com/fetch/44/442b75da8b5a006a23fc61f0ca31f76f.jpeg');
                     await _saveGameUseCase.call(params: GameParams(game: game));
                     await Future.microtask(() => showMessage(context, "Игра была создана!"));
@@ -150,7 +144,7 @@ class _GameCreateScreenState extends State<GameCreateScreen> {
               children: [
                 for (Task task in tasks)
                   ListTile(
-                    key: ValueKey(task.id),
+                    key: ValueKey(task.hashId),
                     contentPadding: const EdgeInsets.all(0),
                     iconColor: Colors.transparent,
                     title: ReorderableDelayedDragStartListener(
