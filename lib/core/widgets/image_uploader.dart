@@ -10,6 +10,7 @@ import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/custom_button.dart';
 import 'package:party_games_app/core/widgets/inkwell_border_wrapper.dart';
 import "package:path/path.dart";
+import 'package:path_provider/path_provider.dart';
 
 class ImageUploader extends StatefulWidget {
   const ImageUploader(
@@ -31,6 +32,7 @@ class _ImageUploaderState extends State<ImageUploader> {
   final controller = CropController(aspectRatio: 1);
 
   Future getImage(BuildContext context) async {
+
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image == null) return;
 
@@ -57,9 +59,9 @@ class _ImageUploaderState extends State<ImageUploader> {
                     final bitmap = await controller.croppedBitmap();
                     final byteData =
                         await bitmap.toByteData(format: ImageByteFormat.png);
-                    final dirName = dirname(image.path);
+                    final dirName = await getApplicationDocumentsDirectory();
 
-                    File file = File(join(dirName, "cropped_image.png"));
+                    File file = File(join(dirName.path, '${DateTime.now().microsecondsSinceEpoch}.png'));
                     await file.writeAsBytes(byteData!.buffer.asUint8List(
                         byteData.offsetInBytes, byteData.lengthInBytes));
 

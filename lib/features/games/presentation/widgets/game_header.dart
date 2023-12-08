@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
 import 'package:party_games_app/core/widgets/inkwell_border_wrapper.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class GameHeader extends StatelessWidget {
   const GameHeader({super.key, required this.game, required this.onTap});
@@ -16,44 +19,56 @@ class GameHeader extends StatelessWidget {
     return InkwellBorderWrapper(
         onPressed: onTap,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                BorderWrapper(
-                  fillColor: lighten(kAppBarColor, .1),
-                  child: Text(
-                    game.name,
-                    style: const TextStyle(
-                        fontFamily: kFontFamily,
-                        fontSize: 18,
-                        color: kFontColor),
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BorderWrapper(
+                    fillColor: lighten(kAppBarColor, .1),
+                    child: Text(
+                      game.name,
+                      style: const TextStyle(
+                          fontFamily: kFontFamily,
+                          fontSize: 18,
+                          color: kFontColor),
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: kPadding / 2,
-                ),
-                BorderWrapper(
-                  fillColor: lighten(kAppBarColor, .1),
-                  child: Text(
-                    getTasksCountLabel(),
-                    style: TextStyle(
-                        fontFamily: kFontFamily,
-                        fontSize: 16,
-                        color: kFontColor.withOpacity(.9)),
+                  const SizedBox(
+                    height: kPadding / 2,
                   ),
-                )
-              ],
-            ),
-            Image.network(
-              game.imageUri ?? "TO DO",
-              height: 90,
-            ),
-          ],
-        ));
+                  BorderWrapper(
+                    fillColor: lighten(kAppBarColor, .1),
+                    child: Text(
+                      getTasksCountLabel(),
+                      style: TextStyle(
+                          fontFamily: kFontFamily,
+                          fontSize: 16,
+                          color: kFontColor.withOpacity(.9)),
+                    ),
+                  )
+                ],
+              ),
+              game.imageUri != null
+                  ? (game.imageUri!.startsWith('http')
+                      ? CachedNetworkImage(
+                          imageUrl: game.imageUri!,
+                          height: 90,
+                          placeholder: (context, url) => const SizedBox(
+                            height: 90,
+                            width: 90,
+                            child: Center(child: CircularProgressIndicator()),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error, size: 90),
+                        )
+                      : Image.file(File(game.imageUri!), height: 90))
+                  : const Image(
+                      image: AssetImage('assets/images/no-photo.png'),
+                      height: 90)
+            ]));
   }
 
   String getTasksCountLabel() {

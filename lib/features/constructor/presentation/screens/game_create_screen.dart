@@ -83,7 +83,7 @@ class _GameCreateScreenState extends State<GameCreateScreen> {
                     height: kPadding * 2,
                   ),
                   CustomButton(text: "Создать игру", onPressed: () async {
-                    Game game = OwnedGame(name: name, description: description, tasks: tasks, imageUri: 'https://w.forfun.com/fetch/44/442b75da8b5a006a23fc61f0ca31f76f.jpeg');
+                    Game game = OwnedGame(name: name, description: description, tasks: tasks, imageUri: image?.path);
                     await _saveGameUseCase.call(params: GameParams(game: game));
                     await Future.microtask(() => showMessage(context, "Игра была создана!"));
                   }),
