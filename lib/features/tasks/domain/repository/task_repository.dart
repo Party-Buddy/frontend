@@ -13,10 +13,10 @@ abstract class TaskRepository {
 
   Future<List<OwnedTask>> getLocalTasks();
 
-  Future<Task> saveTask(Task task);
+  Future<OwnedTask> saveTask(Task task);
 
   Future<Task> updateTask(Task task);
 
-  Future<void> deleteTask(Task task);
+  Future<bool> deleteTask(Task task);
 
 } 

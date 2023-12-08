@@ -59,14 +59,14 @@ Future<void> initializeDependenices() async {
   sl.registerSingleton(LocalSessionDatasource(sl()));
   sl.registerSingleton<SessionRepository>(SessionRepositoryImpl(sl()));
   sl.registerSingleton(GetSIDUseCase(sl()));
-  //   games
-  //sl.registerSingleton<RemoteGamesDataSource>(RestGameDatabase(sl()));
-  sl.registerSingleton<RemoteGamesDataSource>(GamesGenerator());
-  sl.registerSingleton<GameRepository>(GameRepositoryImpl(sl(), sl()));
   //   tasks
   //sl.registerSingleton<RemoteTasksDataSource>(RestTaskDatabase(sl()));
   sl.registerSingleton<RemoteTasksDataSource>(TasksGenerator());
   sl.registerSingleton<TaskRepository>(TaskRepositoryImpl(sl(), sl()));
+  //   games
+  //sl.registerSingleton<RemoteGamesDataSource>(RestGameDatabase(sl()));
+  sl.registerSingleton<RemoteGamesDataSource>(GamesGenerator());
+  sl.registerSingleton<GameRepository>(GameRepositoryImpl(sl(), sl(), sl()));
 
   // usecases
 
@@ -90,10 +90,9 @@ Future<void> initializeDependenices() async {
   sl.registerSingleton(GetUsernameUseCase(sl()));
   sl.registerSingleton(SaveUsernameUseCase(sl()));
   sl.registerSingleton(ValidateUsernameUseCase());
-  
+
   // engine
   //final SessionEngine engine = SessionEngineImpl(sl(),sl());
   final SessionEngine engine = SessionEngineTestImpl();
   sl.registerSingleton<SessionEngine>(engine);
-
 }

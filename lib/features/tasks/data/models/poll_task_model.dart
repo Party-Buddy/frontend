@@ -4,12 +4,26 @@ import 'package:party_games_app/features/tasks/data/models/task_model.dart';
 import 'package:party_games_app/features/tasks/domain/entities/poll_task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 
-class OwnedPollTaskModel extends OwnedTaskModel {
-  final PollTaskAnswerType? pollAnswerType;
-  final int? pollFixedDuration;
-  final int? pollDynamicDuration;
+mixin PollTaskMixin {
+  late final PollTaskAnswerType? pollAnswerType;
+  late final int? pollFixedDuration;
+  late final int? pollDynamicDuration;
 
-  const OwnedPollTaskModel(
+  PollTasksCompanion mixinToInsertable() {
+    return PollTasksCompanion(
+        pollAnswerType: pollAnswerType != null
+            ? Value(pollAnswerType!.toString())
+            : const Value.absent(),
+        pollFixedDuration:
+            pollFixedDuration != null ? const Value(0) : const Value.absent(),
+        pollDynamicDuration: pollDynamicDuration != null
+            ? const Value(0)
+            : const Value.absent());
+  }
+}
+
+class OwnedPollTaskModel extends OwnedTaskModel with PollTaskMixin {
+  OwnedPollTaskModel(
       {super.id,
       super.name,
       super.description,
@@ -17,10 +31,15 @@ class OwnedPollTaskModel extends OwnedTaskModel {
       super.duration,
       super.createdAt,
       super.updatedAt,
-      this.pollAnswerType,
-      this.pollFixedDuration,
-      this.pollDynamicDuration})
-      : super(type: TaskType.poll);
+      super.sourceId,
+      PollTaskAnswerType? pollAnswerType,
+      int? pollFixedDuration,
+      int? pollDynamicDuration})
+      : super(type: TaskType.poll) {
+    this.pollAnswerType = pollAnswerType;
+    this.pollFixedDuration = pollFixedDuration;
+    this.pollDynamicDuration = pollDynamicDuration;
+  }
 
   // JSON
 
@@ -48,6 +67,7 @@ class OwnedPollTaskModel extends OwnedTaskModel {
         duration: duration ?? 0,
         createdAt: createdAt,
         updatedAt: updatedAt,
+        sourceId: sourceId,
         pollAnswerType: pollAnswerType ?? PollTaskAnswerType.text,
         pollFixedDuration: pollFixedDuration ?? 0,
         pollDynamicDuration: pollDynamicDuration ?? 0);
@@ -62,6 +82,7 @@ class OwnedPollTaskModel extends OwnedTaskModel {
         duration: task.duration,
         createdAt: task.createdAt,
         updatedAt: task.updatedAt,
+        sourceId: task.sourceId,
         pollAnswerType: task.pollAnswerType,
         pollFixedDuration: task.pollFixedDuration,
         pollDynamicDuration: task.pollDynamicDuration);
@@ -79,6 +100,7 @@ class OwnedPollTaskModel extends OwnedTaskModel {
         duration: baseTask.duration,
         createdAt: baseTask.createdAt,
         updatedAt: baseTask.updatedAt,
+        sourceId: baseTask.sourceId,
         pollAnswerType: PollTaskAnswerType.values.firstWhere(
             (element) => element.toString() == pollTask.pollAnswerType),
         pollFixedDuration: pollTask.pollFixedDuration,
@@ -86,27 +108,15 @@ class OwnedPollTaskModel extends OwnedTaskModel {
   }
 
   Insertable<LocalPollTask> toInsertable({int? baseId}) {
-    return PollTasksCompanion(
+    return mixinToInsertable().copyWith(
         baseTaskId: baseId != null
             ? Value(baseId)
-            : (id != null ? Value(id!) : const Value.absent()),
-        pollAnswerType: pollAnswerType != null
-            ? Value(pollAnswerType!.toString())
-            : const Value.absent(),
-        pollFixedDuration:
-            pollFixedDuration != null ? const Value(0) : const Value.absent(),
-        pollDynamicDuration: pollDynamicDuration != null
-            ? const Value(0)
-            : const Value.absent());
+            : (id != null ? Value(id!) : const Value.absent()));
   }
 }
 
-class PublishedPollTaskModel extends PublishedTaskModel {
-  final PollTaskAnswerType? pollAnswerType;
-  final int? pollFixedDuration;
-  final int? pollDynamicDuration;
-
-  const PublishedPollTaskModel(
+class PublishedPollTaskModel extends PublishedTaskModel with PollTaskMixin {
+  PublishedPollTaskModel(
       {super.id,
       super.name,
       super.description,
@@ -114,10 +124,14 @@ class PublishedPollTaskModel extends PublishedTaskModel {
       super.duration,
       super.createdAt,
       super.updatedAt,
-      this.pollAnswerType,
-      this.pollFixedDuration,
-      this.pollDynamicDuration})
-      : super(type: TaskType.poll);
+      PollTaskAnswerType? pollAnswerType,
+      int? pollFixedDuration,
+      int? pollDynamicDuration})
+      : super(type: TaskType.poll) {
+    this.pollAnswerType = pollAnswerType;
+    this.pollFixedDuration = pollFixedDuration;
+    this.pollDynamicDuration = pollDynamicDuration;
+  }
 
   // JSON
 
@@ -132,7 +146,7 @@ class PublishedPollTaskModel extends PublishedTaskModel {
         createdAt: map['createdAt'],
         pollAnswerType: PollTaskAnswerType.values.firstWhere(
             (element) => element.toString() == map['pollAnswerType']));
-        // TODO poll duration
+    // TODO poll duration
   }
 
   @override
@@ -178,4 +192,21 @@ class PublishedPollTaskModel extends PublishedTaskModel {
         pollDynamicDuration: task.pollDynamicDuration);
   }
 
+  Insertable<LocalPollTask> toInsertable(int baseId) {
+    return mixinToInsertable().copyWith(baseTaskId: Value(baseId));
+  }
+
+  OwnedPollTaskModel makeOwned() {
+    return OwnedPollTaskModel(
+        name: name,
+        description: description,
+        imageUri: imageUri,
+        duration: duration,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+        sourceId: id,
+        pollAnswerType: pollAnswerType,
+        pollFixedDuration: pollFixedDuration,
+        pollDynamicDuration: pollDynamicDuration);
+  }
 }

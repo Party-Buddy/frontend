@@ -18,12 +18,18 @@ class BaseTaskDao extends DatabaseAccessor<AppDatabase>
     return (select(baseTasks)..where((t) => t.type.equals(type))).get();
   }
 
+  Future<int?> existsSource(String sourceId) {
+    return (select(baseTasks)..where((t) => t.sourceId.equals(sourceId)))
+        .getSingleOrNull()
+        .then((value) => value?.id);
+  }
+
   Future<int> insertTask(OwnedTaskModel task) =>
       into(baseTasks).insert(task.baseToInsertable());
 
   Future updateTask(OwnedTaskModel task) =>
       update(baseTasks).replace(task.baseToInsertable());
 
-  Future deleteTask(OwnedTaskModel task) =>
+  Future<int> deleteTask(OwnedTaskModel task) =>
       delete(baseTasks).delete(task.baseToInsertable());
 }

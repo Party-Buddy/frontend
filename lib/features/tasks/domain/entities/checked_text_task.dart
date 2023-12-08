@@ -5,6 +5,7 @@ class OwnedCheckedTextTask extends OwnedTask {
 
   OwnedCheckedTextTask(
       {super.id,
+      super.sourceId,
       required super.name,
       required super.description,
       super.imageUri,
@@ -28,6 +29,7 @@ class OwnedCheckedTextTask extends OwnedTask {
   @override
   OwnedTask copyWith(
       {int? id,
+      String? sourceId,
       String? name,
       String? description,
       String? imageUri,
@@ -38,6 +40,7 @@ class OwnedCheckedTextTask extends OwnedTask {
       String? answer}) {
     return OwnedCheckedTextTask(
         id: id ?? super.id,
+        sourceId: sourceId ?? super.sourceId,
         name: name ?? super.name,
         description: description ?? super.description,
         imageUri: imageUri ?? super.imageUri,

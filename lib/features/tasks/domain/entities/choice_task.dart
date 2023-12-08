@@ -12,6 +12,7 @@ class OwnedChoiceTask extends OwnedTask {
 
   OwnedChoiceTask(
       {super.id,
+      super.sourceId,
       required super.name,
       required super.description,
       super.imageUri,
@@ -36,6 +37,7 @@ class OwnedChoiceTask extends OwnedTask {
   @override
   OwnedTask copyWith(
       {int? id,
+      String? sourceId,
       String? name,
       String? description,
       String? imageUri,
@@ -46,6 +48,7 @@ class OwnedChoiceTask extends OwnedTask {
       Set<ChoiceTaskOption>? options}) {
     return OwnedChoiceTask(
         id: id ?? super.id,
+        sourceId: sourceId ?? super.sourceId,
         name: name ?? super.name,
         description: description ?? super.description,
         imageUri: imageUri ?? super.imageUri,

@@ -4,10 +4,17 @@ import 'package:party_games_app/features/tasks/data/models/task_model.dart';
 import 'package:party_games_app/features/tasks/domain/entities/choice_task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 
-class OwnedChoiceTaskModel extends OwnedTaskModel {
-  final Set<ChoiceTaskOption>? options;
+mixin ChoiceTaskMixin {
+  late final Set<ChoiceTaskOption>? options;
 
-  const OwnedChoiceTaskModel(
+  ChoiceTaskOptionsCompanion mixinToBinding(ChoiceTaskOption option) {
+    return ChoiceTaskOptionsCompanion(
+        answer: Value(option.alternative), correct: Value(option.correct));
+  }
+}
+
+class OwnedChoiceTaskModel extends OwnedTaskModel with ChoiceTaskMixin {
+  OwnedChoiceTaskModel(
       {super.id,
       super.name,
       super.description,
@@ -15,8 +22,11 @@ class OwnedChoiceTaskModel extends OwnedTaskModel {
       super.duration,
       super.createdAt,
       super.updatedAt,
-      this.options})
-      : super(type: TaskType.choice);
+      super.sourceId,
+      Set<ChoiceTaskOption>? options})
+      : super(type: TaskType.choice) {
+    this.options = options;
+  }
 
   // JSON
 
@@ -43,6 +53,7 @@ class OwnedChoiceTaskModel extends OwnedTaskModel {
         duration: duration ?? 0,
         createdAt: createdAt,
         updatedAt: updatedAt,
+        sourceId: sourceId,
         options: options ?? {});
   }
 
@@ -55,17 +66,16 @@ class OwnedChoiceTaskModel extends OwnedTaskModel {
         duration: task.duration,
         createdAt: task.createdAt,
         updatedAt: task.updatedAt,
+        sourceId: task.sourceId,
         options: task.options);
   }
 
   // Storage
 
-  Insertable<LocalChoiceTaskOption> toBinding({ChoiceTaskOption? option}) {
-    return ChoiceTaskOptionsCompanion(
-        baseTaskId: id != null ? Value(id!) : const Value.absent(),
-        answer:
-            option != null ? Value(option.alternative) : const Value.absent(),
-        correct: option != null ? Value(option.correct) : const Value.absent());
+  Insertable<LocalChoiceTaskOption> toBinding(
+      {required ChoiceTaskOption option}) {
+    return mixinToBinding(option)
+        .copyWith(baseTaskId: id != null ? Value(id!) : const Value.absent());
   }
 
   factory OwnedChoiceTaskModel.fromTables(
@@ -78,14 +88,13 @@ class OwnedChoiceTaskModel extends OwnedTaskModel {
         duration: baseTask.duration,
         createdAt: baseTask.createdAt,
         updatedAt: baseTask.updatedAt,
+        sourceId: baseTask.sourceId,
         options: Set.from(options));
   }
 }
 
-class PublishedChoiceTaskModel extends PublishedTaskModel {
-  final Set<ChoiceTaskOption>? options;
-
-  const PublishedChoiceTaskModel(
+class PublishedChoiceTaskModel extends PublishedTaskModel with ChoiceTaskMixin {
+  PublishedChoiceTaskModel(
       {super.id,
       super.name,
       super.description,
@@ -93,8 +102,10 @@ class PublishedChoiceTaskModel extends PublishedTaskModel {
       super.duration,
       super.createdAt,
       super.updatedAt,
-      this.options})
-      : super(type: TaskType.choice);
+      Set<ChoiceTaskOption>? options})
+      : super(type: TaskType.choice) {
+    this.options = options;
+  }
 
   // JSON
 
@@ -146,5 +157,22 @@ class PublishedChoiceTaskModel extends PublishedTaskModel {
         createdAt: task.createdAt,
         updatedAt: task.updatedAt,
         options: task.options);
+  }
+
+  Insertable<LocalChoiceTaskOption> toBinding(
+      int baseTaskId, ChoiceTaskOption option) {
+    return mixinToBinding(option).copyWith(baseTaskId: Value(baseTaskId));
+  }
+
+  OwnedChoiceTaskModel makeOwned() {
+    return OwnedChoiceTaskModel(
+        name: name,
+        description: description,
+        imageUri: imageUri,
+        duration: duration,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+        sourceId: id,
+        options: options);
   }
 }

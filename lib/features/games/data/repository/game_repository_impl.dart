@@ -8,13 +8,17 @@ import 'package:party_games_app/features/games/domain/repository/remote_games_so
 import 'package:party_games_app/features/tasks/data/models/choice_task_model.dart';
 import 'package:party_games_app/features/tasks/domain/entities/choice_task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
+import 'package:party_games_app/features/tasks/domain/repository/task_repository.dart';
 
 class GameRepositoryImpl implements GameRepository {
   final AppDatabase _database;
 
   final RemoteGamesDataSource _remoteGamesDataSource;
 
-  GameRepositoryImpl(this._remoteGamesDataSource, this._database);
+  final TaskRepository _taskRepository;
+
+  GameRepositoryImpl(
+      this._remoteGamesDataSource, this._database, this._taskRepository);
 
   // API
 
@@ -75,13 +79,26 @@ class GameRepositoryImpl implements GameRepository {
     return _gamesWithBindings(allGames);
   }
 
+  Future<List<OwnedTask>> _saveTasks(List<Task> tasks) {
+    return Future.wait(tasks.map((task) async {
+      if (task is OwnedTask) {
+        return task;
+      } else if (task is PublishedTask) {
+        return _taskRepository.saveTask(task);
+      } else {
+        throw ('meow');
+      }
+    }));
+  }
+
   @override
   Future<Game> saveGame(Game game) async {
     if (game is OwnedGame) {
       return _database.gameDao
           .insertGame(OwnedGameModel.fromEntity(game))
-          .then((gameId) {
-        OwnedGame gameWithId = game.copyWith(id: gameId);
+          .then((gameId) async {
+        List<OwnedTask> savedTasks = await _saveTasks(game.tasks);
+        OwnedGame gameWithId = game.copyWith(id: gameId, tasks: savedTasks);
         _database.taskBindingDao
             .bindAllTasksToGame(OwnedGameModel.fromEntity(gameWithId));
         return gameWithId;
@@ -113,8 +130,7 @@ class GameRepositoryImpl implements GameRepository {
             .bindAllTasksToGame(OwnedGameModel.fromEntity(gameWithId));
         return gameWithId;
       });
-    }
-    else{
+    } else {
       debugPrint('cannot update public games right now');
       return game;
     }

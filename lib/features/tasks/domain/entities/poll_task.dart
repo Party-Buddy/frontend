@@ -9,6 +9,7 @@ class OwnedPollTask extends OwnedTask {
 
   OwnedPollTask({
     super.id,
+    super.sourceId,
     required super.name,
     required super.description,
     super.imageUri,
@@ -38,6 +39,7 @@ class OwnedPollTask extends OwnedTask {
   @override
   OwnedTask copyWith(
       {int? id,
+      String? sourceId,
       String? name,
       String? description,
       String? imageUri,
@@ -50,6 +52,7 @@ class OwnedPollTask extends OwnedTask {
       int? pollDynamicDuration}) {
     return OwnedPollTask(
         id: id ?? super.id,
+        sourceId: sourceId ?? super.sourceId,
         name: name ?? super.name,
         description: description ?? super.description,
         imageUri: imageUri ?? super.imageUri,

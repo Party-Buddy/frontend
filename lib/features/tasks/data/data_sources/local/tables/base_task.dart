@@ -12,5 +12,6 @@ class BaseTasks extends Table{
   TextColumn get type => text()();
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
+  TextColumn get sourceId => text().withLength(min: 1, max:40).nullable()();
 
 }

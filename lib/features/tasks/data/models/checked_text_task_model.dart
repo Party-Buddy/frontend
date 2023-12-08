@@ -4,10 +4,17 @@ import 'package:party_games_app/features/tasks/data/models/task_model.dart';
 import 'package:party_games_app/features/tasks/domain/entities/checked_text_task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 
-class OwnedCheckedTextTaskModel extends OwnedTaskModel {
-  final String? answer;
+mixin CheckedTextTaskMixin {
+  late final String? answer;
+  CheckedTextTasksCompanion mixinToInsertable() {
+    return CheckedTextTasksCompanion(
+        answer: answer != null ? Value(answer!) : const Value.absent());
+  }
+}
 
-  const OwnedCheckedTextTaskModel(
+class OwnedCheckedTextTaskModel extends OwnedTaskModel
+    with CheckedTextTaskMixin {
+  OwnedCheckedTextTaskModel(
       {super.id,
       super.name,
       super.description,
@@ -15,8 +22,11 @@ class OwnedCheckedTextTaskModel extends OwnedTaskModel {
       super.duration,
       super.createdAt,
       super.updatedAt,
-      this.answer})
-      : super(type: TaskType.checkedText);
+      super.sourceId,
+      String? answer})
+      : super(type: TaskType.checkedText) {
+    this.answer = answer;
+  }
 
   // JSON
 
@@ -42,6 +52,7 @@ class OwnedCheckedTextTaskModel extends OwnedTaskModel {
         duration: duration ?? 0,
         createdAt: createdAt,
         updatedAt: updatedAt,
+        sourceId: sourceId,
         answer: answer ?? "");
   }
 
@@ -54,6 +65,7 @@ class OwnedCheckedTextTaskModel extends OwnedTaskModel {
         duration: task.duration,
         createdAt: task.createdAt,
         updatedAt: task.updatedAt,
+        sourceId: task.sourceId,
         answer: task.answer);
   }
 
@@ -69,22 +81,21 @@ class OwnedCheckedTextTaskModel extends OwnedTaskModel {
         duration: baseTask.duration,
         createdAt: baseTask.createdAt,
         updatedAt: baseTask.updatedAt,
+        sourceId: baseTask.sourceId,
         answer: checkedTextTask.answer);
   }
 
   Insertable<LocalCheckedTextTask> toInsertable({int? baseId}) {
-    return CheckedTextTasksCompanion(
+    return mixinToInsertable().copyWith(
         baseTaskId: baseId != null
             ? Value(baseId)
-            : (id != null ? Value(id!) : const Value.absent()),
-        answer: answer != null ? Value(answer!) : const Value.absent());
+            : (id != null ? Value(id!) : const Value.absent()));
   }
 }
 
-class PublishedCheckedTextTaskModel extends PublishedTaskModel {
-  final String? answer;
-
-  const PublishedCheckedTextTaskModel(
+class PublishedCheckedTextTaskModel extends PublishedTaskModel
+    with CheckedTextTaskMixin {
+  PublishedCheckedTextTaskModel(
       {super.id,
       super.name,
       super.description,
@@ -92,8 +103,23 @@ class PublishedCheckedTextTaskModel extends PublishedTaskModel {
       super.duration,
       super.createdAt,
       super.updatedAt,
-      this.answer})
-      : super(type: TaskType.checkedText);
+      String? answer})
+      : super(type: TaskType.checkedText) {
+    this.answer = answer;
+  }
+
+  OwnedCheckedTextTaskModel makeOwned() {
+    return OwnedCheckedTextTaskModel(
+      name: name,
+      description: description,
+      imageUri: imageUri,
+      duration: duration,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      sourceId: id,
+      answer: answer,
+    );
+  }
 
   // JSON
 
@@ -145,5 +171,9 @@ class PublishedCheckedTextTaskModel extends PublishedTaskModel {
         createdAt: task.createdAt,
         updatedAt: task.updatedAt,
         answer: task.answer);
+  }
+
+  Insertable<LocalCheckedTextTask> toInsertable({required int baseId}) {
+    return mixinToInsertable().copyWith(baseTaskId: Value(baseId));
   }
 }

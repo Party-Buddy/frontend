@@ -350,6 +350,7 @@ class LocalBaseTask extends DataClass implements Insertable<LocalBaseTask> {
   final String type;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String? sourceId;
   LocalBaseTask(
       {required this.id,
       required this.name,
@@ -358,7 +359,8 @@ class LocalBaseTask extends DataClass implements Insertable<LocalBaseTask> {
       required this.duration,
       required this.type,
       required this.createdAt,
-      required this.updatedAt});
+      required this.updatedAt,
+      this.sourceId});
   factory LocalBaseTask.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
@@ -380,6 +382,8 @@ class LocalBaseTask extends DataClass implements Insertable<LocalBaseTask> {
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
       updatedAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
+      sourceId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}source_id']),
     );
   }
   @override
@@ -395,6 +399,9 @@ class LocalBaseTask extends DataClass implements Insertable<LocalBaseTask> {
     map['type'] = Variable<String>(type);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || sourceId != null) {
+      map['source_id'] = Variable<String?>(sourceId);
+    }
     return map;
   }
 
@@ -410,6 +417,9 @@ class LocalBaseTask extends DataClass implements Insertable<LocalBaseTask> {
       type: Value(type),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      sourceId: sourceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sourceId),
     );
   }
 
@@ -425,6 +435,7 @@ class LocalBaseTask extends DataClass implements Insertable<LocalBaseTask> {
       type: serializer.fromJson<String>(json['type']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      sourceId: serializer.fromJson<String?>(json['sourceId']),
     );
   }
   @override
@@ -439,6 +450,7 @@ class LocalBaseTask extends DataClass implements Insertable<LocalBaseTask> {
       'type': serializer.toJson<String>(type),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'sourceId': serializer.toJson<String?>(sourceId),
     };
   }
 
@@ -450,7 +462,8 @@ class LocalBaseTask extends DataClass implements Insertable<LocalBaseTask> {
           int? duration,
           String? type,
           DateTime? createdAt,
-          DateTime? updatedAt}) =>
+          DateTime? updatedAt,
+          String? sourceId}) =>
       LocalBaseTask(
         id: id ?? this.id,
         name: name ?? this.name,
@@ -460,6 +473,7 @@ class LocalBaseTask extends DataClass implements Insertable<LocalBaseTask> {
         type: type ?? this.type,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
+        sourceId: sourceId ?? this.sourceId,
       );
   @override
   String toString() {
@@ -471,14 +485,15 @@ class LocalBaseTask extends DataClass implements Insertable<LocalBaseTask> {
           ..write('duration: $duration, ')
           ..write('type: $type, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('sourceId: $sourceId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      id, name, description, imageUri, duration, type, createdAt, updatedAt);
+  int get hashCode => Object.hash(id, name, description, imageUri, duration,
+      type, createdAt, updatedAt, sourceId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -490,7 +505,8 @@ class LocalBaseTask extends DataClass implements Insertable<LocalBaseTask> {
           other.duration == this.duration &&
           other.type == this.type &&
           other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt);
+          other.updatedAt == this.updatedAt &&
+          other.sourceId == this.sourceId);
 }
 
 class BaseTasksCompanion extends UpdateCompanion<LocalBaseTask> {
@@ -502,6 +518,7 @@ class BaseTasksCompanion extends UpdateCompanion<LocalBaseTask> {
   final Value<String> type;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
+  final Value<String?> sourceId;
   const BaseTasksCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -511,6 +528,7 @@ class BaseTasksCompanion extends UpdateCompanion<LocalBaseTask> {
     this.type = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.sourceId = const Value.absent(),
   });
   BaseTasksCompanion.insert({
     this.id = const Value.absent(),
@@ -521,6 +539,7 @@ class BaseTasksCompanion extends UpdateCompanion<LocalBaseTask> {
     required String type,
     required DateTime createdAt,
     required DateTime updatedAt,
+    this.sourceId = const Value.absent(),
   })  : name = Value(name),
         description = Value(description),
         duration = Value(duration),
@@ -536,6 +555,7 @@ class BaseTasksCompanion extends UpdateCompanion<LocalBaseTask> {
     Expression<String>? type,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<String?>? sourceId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -546,6 +566,7 @@ class BaseTasksCompanion extends UpdateCompanion<LocalBaseTask> {
       if (type != null) 'type': type,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (sourceId != null) 'source_id': sourceId,
     });
   }
 
@@ -557,7 +578,8 @@ class BaseTasksCompanion extends UpdateCompanion<LocalBaseTask> {
       Value<int>? duration,
       Value<String>? type,
       Value<DateTime>? createdAt,
-      Value<DateTime>? updatedAt}) {
+      Value<DateTime>? updatedAt,
+      Value<String?>? sourceId}) {
     return BaseTasksCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -567,6 +589,7 @@ class BaseTasksCompanion extends UpdateCompanion<LocalBaseTask> {
       type: type ?? this.type,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      sourceId: sourceId ?? this.sourceId,
     );
   }
 
@@ -597,6 +620,9 @@ class BaseTasksCompanion extends UpdateCompanion<LocalBaseTask> {
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
+    if (sourceId.present) {
+      map['source_id'] = Variable<String?>(sourceId.value);
+    }
     return map;
   }
 
@@ -610,7 +636,8 @@ class BaseTasksCompanion extends UpdateCompanion<LocalBaseTask> {
           ..write('duration: $duration, ')
           ..write('type: $type, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('sourceId: $sourceId')
           ..write(')'))
         .toString();
   }
@@ -671,9 +698,26 @@ class $BaseTasksTable extends BaseTasks
   late final GeneratedColumn<DateTime?> updatedAt = GeneratedColumn<DateTime?>(
       'updated_at', aliasedName, false,
       type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _sourceIdMeta = const VerificationMeta('sourceId');
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, name, description, imageUri, duration, type, createdAt, updatedAt];
+  late final GeneratedColumn<String?> sourceId = GeneratedColumn<String?>(
+      'source_id', aliasedName, true,
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 40),
+      type: const StringType(),
+      requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        name,
+        description,
+        imageUri,
+        duration,
+        type,
+        createdAt,
+        updatedAt,
+        sourceId
+      ];
   @override
   String get aliasedName => _alias ?? 'base_tasks';
   @override
@@ -727,6 +771,10 @@ class $BaseTasksTable extends BaseTasks
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
     } else if (isInserting) {
       context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('source_id')) {
+      context.handle(_sourceIdMeta,
+          sourceId.isAcceptableOrUnknown(data['source_id']!, _sourceIdMeta));
     }
     return context;
   }

@@ -25,8 +25,7 @@ class ChoiceTaskDao extends DatabaseAccessor<AppDatabase>
         .go()
         .then((_) {
       for (var entry in task.options!) {
-        into(choiceTaskOptions)
-            .insert(task.toBinding(option: entry));
+        into(choiceTaskOptions).insert(task.toBinding(option: entry));
       }
     });
   }

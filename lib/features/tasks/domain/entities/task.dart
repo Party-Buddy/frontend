@@ -27,9 +27,11 @@ abstract class Task {
 
 class OwnedTask extends Task {
   final int? id;
+  final String? sourceId;
 
   OwnedTask(
       {this.id,
+      this.sourceId,
       required super.name,
       required super.description,
       super.imageUri,
@@ -41,6 +43,7 @@ class OwnedTask extends Task {
   @override
   OwnedTask copyWith(
       {int? id,
+      String? sourceId,
       String? name,
       String? description,
       String? imageUri,
@@ -50,6 +53,7 @@ class OwnedTask extends Task {
       DateTime? updatedAt}) {
     return OwnedTask(
         id: id ?? this.id,
+        sourceId: sourceId ?? this.sourceId,
         name: name ?? super.name,
         description: description ?? super.description,
         imageUri: imageUri ?? super.imageUri,
@@ -58,7 +62,7 @@ class OwnedTask extends Task {
         createdAt: createdAt ?? super.createdAt,
         updatedAt: updatedAt ?? super.updatedAt);
   }
-  
+
   @override
   String get hashId => 'o$id';
 }
@@ -96,7 +100,7 @@ class PublishedTask extends Task {
         createdAt: createdAt ?? super.createdAt,
         updatedAt: updatedAt ?? super.updatedAt);
   }
-  
+
   @override
   String get hashId => 'p$id';
 }

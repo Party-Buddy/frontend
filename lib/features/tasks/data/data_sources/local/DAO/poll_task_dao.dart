@@ -55,8 +55,8 @@ class PollTaskDao extends DatabaseAccessor<AppDatabase> with _$PollTaskDaoMixin 
     update(pollTasks).replace(task.toInsertable());
     }
   
-  Future deleteTask(OwnedPollTaskModel task) async {
-    delete(baseTasks).delete(task.baseToInsertable());
+  Future<int> deleteTask(OwnedPollTaskModel task) async {
+    return delete(baseTasks).delete(task.baseToInsertable());
     }
 
 }

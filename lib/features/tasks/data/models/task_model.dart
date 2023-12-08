@@ -50,13 +50,17 @@ abstract class TaskModel {
   }
 
   Map<String, dynamic> toJson();
+
+  Insertable<LocalBaseTask> baseToInsertable();
 }
 
 abstract class OwnedTaskModel extends TaskModel {
   final int? id;
+  final String? sourceId;
 
   const OwnedTaskModel(
       {this.id,
+      this.sourceId,
       super.name,
       super.description,
       super.imageUri,
@@ -80,6 +84,7 @@ abstract class OwnedTaskModel extends TaskModel {
   @override
   OwnedTask toEntity();
 
+  @override
   Insertable<LocalBaseTask> baseToInsertable() {
     return BaseTasksCompanion(
         id: const Value.absent(),
@@ -90,7 +95,8 @@ abstract class OwnedTaskModel extends TaskModel {
         duration: duration != null ? Value(duration!) : const Value.absent(),
         type: duration != null ? Value(type!.toString()) : const Value.absent(),
         createdAt: Value(DateTime.now()),
-        updatedAt: Value(DateTime.now()));
+        updatedAt: Value(DateTime.now()),
+        sourceId: sourceId != null ? Value(sourceId!) : const Value.absent());
   }
 
   Insertable<LocalBaseTask> baseToUpdatable() {
@@ -103,7 +109,8 @@ abstract class OwnedTaskModel extends TaskModel {
         duration: duration != null ? Value(duration!) : const Value.absent(),
         type: duration != null ? Value(type!.toString()) : const Value.absent(),
         createdAt: Value(DateTime.now()),
-        updatedAt: Value(DateTime.now()));
+        updatedAt: Value(DateTime.now()),
+        sourceId: const Value.absent());
   }
 
   Insertable<LocalBaseTask> baseToRemovable() {
@@ -153,5 +160,20 @@ abstract class PublishedTaskModel extends TaskModel {
       default:
         throw ArgumentError('Invalid type');
     }
+  }
+
+  @override
+  Insertable<LocalBaseTask> baseToInsertable() {
+    return BaseTasksCompanion(
+        id: const Value.absent(),
+        name: name != null ? Value(name!) : const Value.absent(),
+        description:
+            description != null ? Value(description!) : const Value.absent(),
+        imageUri: imageUri != null ? Value(imageUri!) : const Value.absent(),
+        duration: duration != null ? Value(duration!) : const Value.absent(),
+        type: duration != null ? Value(type!.toString()) : const Value.absent(),
+        createdAt: Value(DateTime.now()),
+        updatedAt: Value(DateTime.now()),
+        sourceId: id != null ? Value(id!) : const Value.absent());
   }
 }
