@@ -147,7 +147,7 @@ class _GameStartScreenState extends State<GameStartScreen> {
     var runner = SessionRunner(sessionEngine: _sessionEngine);
     runner.runNewGame(context,
         game: game,
-        maxPlayersCount: maxPossiblePlayersCount,
+        maxPlayersCount: maxPlayersCount,
         username: Username(username: username));
   }
 }

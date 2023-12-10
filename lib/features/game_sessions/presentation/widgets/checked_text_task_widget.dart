@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/multiline_input_label.dart';
+import 'package:party_games_app/core/widgets/single_input_label.dart';
 import 'package:party_games_app/features/game_sessions/domain/engine/session_engine.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/current_task.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/task_info.dart';
@@ -26,7 +27,11 @@ class _CheckedTextTaskWidgetState extends State<CheckedTextTaskWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        MultiLineInputLabel(labelText: "Введите ответ", onSubmitted: (s) {}),
+        SingleLineInputLabel(
+            labelText: "Введите ответ",
+            onSubmitted: (s) async {
+              return SubmitResult.empty;
+            }),
         const SizedBox(
           height: kPadding,
         ),

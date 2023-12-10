@@ -6,9 +6,12 @@ import 'package:party_games_app/core/resources/data_state.dart';
 import 'package:party_games_app/features/game_sessions/domain/engine/session_engine.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/game_session.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/task_info.dart';
+import 'package:party_games_app/features/game_sessions/presentation/screens/game_results_screen.dart';
+import 'package:party_games_app/features/game_sessions/presentation/screens/task_results_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/task_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/waiting_room_screen.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
+import 'package:party_games_app/features/games/presentation/screens/main_menu_screen.dart';
 import 'package:party_games_app/features/user_data/domain/entities/username.dart';
 
 class SessionRunner {
@@ -21,7 +24,8 @@ class SessionRunner {
       required int maxPlayersCount,
       required Username username}) async {
     _runGameSession(context,
-        sessionIdFuture: sessionEngine.startSession(game, username, maxPlayersCount: maxPlayersCount));
+        sessionIdFuture: sessionEngine.startSession(game, username,
+            maxPlayersCount: maxPlayersCount));
   }
 
   Future joinExistingGame(BuildContext context,
@@ -89,6 +93,37 @@ class SessionRunner {
               currentTask: currentTask,
               sessionEngine: sessionEngine,
               tasksCount: gameSession.value.tasks.length));
+    });
+
+    sessionEngine.onTaskEnd((taskResults) {
+      TaskInfo taskInfo = gameSession.value.tasks[taskResults.index];
+
+      Navigator.pushNamed(context, TaskResultsScreen.routeName,
+          arguments: TaskResultsScreenArguments(
+              sessionEngine: sessionEngine,
+              taskResults: taskResults,
+              taskInfo: taskInfo,
+              gameName: gameSession.value.name,
+              players: gameSession.value.players,
+              tasksCount: gameSession.value.tasks.length));
+    });
+
+    sessionEngine.onGameEnd((gameResults) {
+      Navigator.pushNamed(context, GameResultsScreen.routeName,
+          arguments: GameResultsScreenArguments(
+              gameName: gameSession.value.name,
+              gameResults: gameResults,
+              players: gameSession.value.players));
+    });
+
+    sessionEngine.onGameInterrupted((reason) {
+      Navigator.pushNamed(context, MainMenuScreen.routeName);
+      showMessage(context, "Данная игры была прервана.");
+    });
+
+    sessionEngine.onJoinFailure((p0) {
+      Navigator.pushNamed(context, MainMenuScreen.routeName);
+      showMessage(context, "Не удалось присоединиться.");
     });
   }
 }

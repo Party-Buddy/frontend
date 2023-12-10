@@ -164,7 +164,7 @@ class SessionEngineTestImpl implements SessionEngine {
       'kind': 'joined',
       'msg-id': 1,
       'time': 1000,
-      'player-id': 1,
+      'player-id': 0,
       'session-id': 'AB8HJ7',
       'max-players': maxPlayers,
       'game': {
@@ -200,7 +200,7 @@ class SessionEngineTestImpl implements SessionEngine {
       'players': [
         {'player-id': 1, 'nickname': nickname},
         {
-          'player-id': 2,
+          'player-id': 1,
           'nickname': 'Alex',
           'image':
               'https://gravatar.com/avatar/f79cc32d7f9cee4a094d1b1772c56d1c?s=400&d=robohash&r=x'
@@ -220,21 +220,21 @@ class SessionEngineTestImpl implements SessionEngine {
       'msg-id': 4,
       'time': 10000,
       'players': [
-        {'player-id': 1, 'nickname': nickname},
+        {'player-id': 0, 'nickname': nickname},
         {
-          'player-id': 2,
+          'player-id': 1,
           'nickname': 'Alex',
           'image': // proto-violation
               'https://gravatar.com/avatar/f79cc32d7f9cee4a094d1b1772c56d1c?s=400&d=robohash&r=x'
         },
         {
-          'player-id': 3,
+          'player-id': 2,
           'nickname': 'James',
           'image': // proto-violation
               "https://robohash.org/f79cc32d7f9cee4a094d1b1772c56d1c?set=set4&bgset=&size=400x400"
         },
         {
-          'player-id': 4,
+          'player-id': 3,
           'nickname': 'Сладкая Дыня',
           'image': // proto-violation
               "https://robohash.org/63704034a6c7a8ce2ed2b9007faededa?set=set4&bgset=&size=400x400"
@@ -277,20 +277,22 @@ class SessionEngineTestImpl implements SessionEngine {
         {'player-id': 3, 'task-points': 0, 'total-points': 0}
       ],
       'answers': [
-        {'value': 'the correct one', 'player-count': 2, 'correct': true},
-        {'value': 'wrong!', 'player-count': 2, 'correct': false}
+        {'value': 'year', 'player-count': 2, 'correct': true},
+        {'value': 'облако в штанах', 'player-count': 2, 'correct': false},
+        {'value': 'шампунь', 'player-count': 2, 'correct': false},
       ]
     });
 
+    debugPrint(DateTime.now().toString());
     await _delayedMessage(5, {
       'kind': 'task-start',
       'task-idx': 1,
-      'deadline': DateTime.now().millisecondsSinceEpoch + 30000,
+      'deadline': DateTime.now().millisecondsSinceEpoch + 10000,
       'msg-id': 9,
       'time': 22000,
     });
 
-    await _delayedMessage(30, {
+    await _delayedMessage(10, {
       'kind': 'poll-start',
       'index': 1,
       'deadline': DateTime.now().millisecondsSinceEpoch + 5000,

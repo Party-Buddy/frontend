@@ -33,7 +33,7 @@ class PlayerHeader extends StatelessWidget {
       decoration: BoxDecoration(
           borderRadius: kBorderRadius,
           color: kAppBarColor,
-          border: highlight ? Border.all(color: kPrimaryColor) : null,
+          border: highlight ? Border.all(color: kPrimaryColor, width: 2) : null,
           boxShadow: isWinner
               ? [const BoxShadow(color: Colors.yellow, blurRadius: 9)]
               : []),

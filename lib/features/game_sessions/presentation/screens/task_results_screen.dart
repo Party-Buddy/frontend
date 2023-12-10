@@ -302,21 +302,27 @@ class TaskResultsScreen extends StatelessWidget {
         .toList();
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Правильный ответ:",
-              style: defaultTextStyle(fontSize: fontSize),
-            ),
-            BorderWrapper(
-              shadow: true,
-              child: Text(
-                correctAnswer.value,
+        Container(
+          alignment: Alignment.centerLeft,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Правильный ответ:",
                 style: defaultTextStyle(fontSize: fontSize),
               ),
-            )
-          ],
+              const SizedBox(
+                height: kPadding * 1.5,
+              ),
+              BorderWrapper(
+                shadow: true,
+                child: Text(
+                  correctAnswer.value,
+                  style: defaultTextStyle(fontSize: fontSize),
+                ),
+              )
+            ],
+          ),
         ),
         const SizedBox(
           height: kPadding * 1.5,
