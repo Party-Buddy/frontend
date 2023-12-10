@@ -5,6 +5,7 @@ import 'package:linear_timer/linear_timer.dart';
 import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/utils.dart';
 import 'package:party_games_app/config/view_config.dart';
+import 'package:party_games_app/core/widgets/image_network.dart';
 import 'package:party_games_app/core/widgets/base_screen.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
 import 'package:party_games_app/core/widgets/custom_button.dart';
@@ -16,9 +17,11 @@ import 'package:party_games_app/features/games/presentation/screens/main_menu_sc
 import 'package:party_games_app/features/tasks/domain/entities/poll_task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 
-TaskResults checkedTextTaskResultsMock() => TaskResults(
+TaskResults checkedTextTaskResultsMock() =>
+    TaskResults(
         index: 3,
-        deadline: DateTime.now()
+        deadline: DateTime
+            .now()
             .add(const Duration(seconds: 15))
             .millisecondsSinceEpoch,
         scoreboard: [
@@ -34,9 +37,11 @@ TaskResults checkedTextTaskResultsMock() => TaskResults(
           TaskAnswer(value: "Огород", score: 0, correct: true),
         ]);
 
-TaskResults photoTaskResultsMock() => TaskResults(
+TaskResults photoTaskResultsMock() =>
+    TaskResults(
         index: 3,
-        deadline: DateTime.now()
+        deadline: DateTime
+            .now()
             .add(const Duration(seconds: 15))
             .millisecondsSinceEpoch,
         scoreboard: [
@@ -48,22 +53,22 @@ TaskResults photoTaskResultsMock() => TaskResults(
         answers: [
           TaskAnswer(
               value:
-                  "https://calorizator.ru/sites/default/files/imagecache/product_512/product/cucumber-1.jpg",
+              "https://calorizator.ru/sites/default/files/imagecache/product_512/product/cucumber-1.jpg",
               score: 3,
               correct: false),
           TaskAnswer(
               value:
-                  "https://m.dom-eda.com/uploads/images/catalog/item/c6ebcf64ba/e87b941b85_500.jpg",
+              "https://m.dom-eda.com/uploads/images/catalog/item/c6ebcf64ba/e87b941b85_500.jpg",
               score: 1,
               correct: false),
           TaskAnswer(
               value:
-                  "https://main-cdn.sbermegamarket.ru/big2/hlr-system/166/623/387/391/411/3/100039740892b0.jpg",
+              "https://main-cdn.sbermegamarket.ru/big2/hlr-system/166/623/387/391/411/3/100039740892b0.jpg",
               score: 2,
               correct: false),
           TaskAnswer(
               value:
-                  "https://avatars.dzeninfra.ru/get-zen_doc/1780598/pub_5cdd36137ff3a600b290bf7f_5cddbb19dee36d00b47e4c0c/scale_1200",
+              "https://avatars.dzeninfra.ru/get-zen_doc/1780598/pub_5cdd36137ff3a600b290bf7f_5cddbb19dee36d00b47e4c0c/scale_1200",
               score: 0,
               correct: true),
         ]);
@@ -75,22 +80,20 @@ class TaskResultsScreenArguments {
   final List<GamePlayer> players;
   final int tasksCount;
 
-  TaskResultsScreenArguments(
-      {required this.taskResults,
-      required this.taskInfo,
-      required this.gameName,
-      required this.players,
-      required this.tasksCount});
+  TaskResultsScreenArguments({required this.taskResults,
+    required this.taskInfo,
+    required this.gameName,
+    required this.players,
+    required this.tasksCount});
 }
 
 class TaskResultsScreen extends StatelessWidget {
-  TaskResultsScreen(
-      {super.key,
-      required this.taskResults,
-      required this.taskInfo,
-      required this.gameName,
-      required this.players,
-      required this.tasksCount}) {
+  TaskResultsScreen({super.key,
+    required this.taskResults,
+    required this.taskInfo,
+    required this.gameName,
+    required this.players,
+    required this.tasksCount}) {
     taskResults.answers.sort((a1, a2) => -a1.score.compareTo(a2.score));
 
     winnerScoreThreshold = taskResults.answers
@@ -128,9 +131,12 @@ class TaskResultsScreen extends StatelessWidget {
                   height: kPadding,
                 ),
                 SizedBox(
-                    height: MediaQuery.of(context).size.height * .6,
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height * .6,
                     child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(kPadding * 2),
+                        padding: const EdgeInsets.all(kPadding * 2),
                         child: buildContent(context))
                 ),
                 Visibility(
@@ -145,10 +151,12 @@ class TaskResultsScreen extends StatelessWidget {
                 ),
                 CustomButton(
                     text: "Покинуть игру",
-                    onPressed: () => showConfirmationDialog(context,
-                        text: "Вы точно хотите выйти?",
-                        onConfirmed: () => Navigator.pushNamed(
-                            context, MainMenuScreen.routeName))),
+                    onPressed: () =>
+                        showConfirmationDialog(context,
+                            text: "Вы точно хотите выйти?",
+                            onConfirmed: () =>
+                                Navigator.pushNamed(
+                                    context, MainMenuScreen.routeName))),
                 const SizedBox(
                   height: kPadding * 2,
                 ),
@@ -158,8 +166,8 @@ class TaskResultsScreen extends StatelessWidget {
               children: [
                 LinearTimer(
                   duration:
-                      DateTime.fromMillisecondsSinceEpoch(taskResults.deadline)
-                          .difference(DateTime.now()),
+                  DateTime.fromMillisecondsSinceEpoch(taskResults.deadline)
+                      .difference(DateTime.now()),
                   color: kPrimaryColor,
                   backgroundColor: kAppBarColor,
                 ),
@@ -193,12 +201,13 @@ class TaskResultsScreen extends StatelessWidget {
       spacing: kPadding,
       runSpacing: kPadding,
       children: taskResults.answers
-          .map((answer) => GestureDetector(
+          .map((answer) =>
+          GestureDetector(
             onTap: () {
               showWidget(context, content: ClipRRect(
                   borderRadius: kBorderRadius,
-                  child: Image.network(
-                    answer.value,
+                  child: ImageNetwork(
+                    url: answer.value,
                     width: 300,
                     height: 300,
                   )));
@@ -207,13 +216,11 @@ class TaskResultsScreen extends StatelessWidget {
                 shadow: answer.score >= winnerScoreThreshold,
                 blurRadius: 8,
                 shadowColor: kPrimaryColor,
-                child: ClipRRect(
-                    borderRadius: kBorderRadius,
-                    child: Image.network(
-                      answer.value,
-                      width: 120,
-                      height: 120,
-                    ))),
+                child: ImageNetwork(
+                  url: answer.value,
+                  width: 120,
+                  height: 120,
+                )),
           ))
           .toList(),
     );

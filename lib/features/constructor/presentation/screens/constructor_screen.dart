@@ -8,8 +8,9 @@ import 'package:party_games_app/core/widgets/custom_icon_button.dart';
 import 'package:party_games_app/core/widgets/dropdown_button.dart';
 import 'package:party_games_app/core/widgets/option_switcher.dart';
 import 'package:party_games_app/features/constructor/presentation/screens/game_create_screen.dart';
-import 'package:party_games_app/features/games/domain/entities/game.dart';
+import 'package:party_games_app/features/games/presentation/screens/game_info_screen.dart';
 import 'package:party_games_app/features/games/presentation/widgets/game_list.dart';
+import 'package:party_games_app/features/tasks/presentation/screens/task_info_screen.dart';
 import 'package:party_games_app/features/tasks/presentation/widgets/task_list.dart';
 
 class ConstructorScreen extends StatefulWidget {
@@ -32,7 +33,8 @@ class _ConstructorScreenState extends State<ConstructorScreen> {
 
   double get labelWidth => 300.0;
 
-  String get createText => currObjType == ObjectType.game ? "Создать игру" : "Создать задание";
+  String get createText =>
+      currObjType == ObjectType.game ? "Создать игру" : "Создать задание";
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +65,8 @@ class _ConstructorScreenState extends State<ConstructorScreen> {
                       options: Source.values,
                       onTap: (o) => setState(() => currSource = o),
                       initialOption: currSource,
-                      stringMapper: (o) => o == Source.owned ? "Свои" : "Каталог"),
+                      stringMapper: (o) =>
+                          o == Source.owned ? "Свои" : "Каталог"),
                 ),
                 const SizedBox(
                   height: kPadding,
@@ -94,7 +97,8 @@ class _ConstructorScreenState extends State<ConstructorScreen> {
                         width: kPadding,
                       ),
                       CustomIconButton(
-                          onPressed: () => setState(() => descending = !descending),
+                          onPressed: () =>
+                              setState(() => descending = !descending),
                           iconData: descending
                               ? Icons.arrow_downward
                               : Icons.arrow_upward)
@@ -107,12 +111,27 @@ class _ConstructorScreenState extends State<ConstructorScreen> {
                 SizedBox(
                   height: 300,
                   child: currObjType == ObjectType.game
-                    ? buildGameList(onTapOnGame: (g) {}, source: currSource)
-                    : buildTaskList(onTapOnTask: (t) {}, source: currSource),
+                      ? buildGameList(
+                          onTapOnGame: (game) {
+                            Navigator.pushNamed(
+                                context, GameInfoScreen.routeName,
+                                arguments: GameInfoScreenArguments(game: game));
+                          },
+                          source: currSource)
+                      : buildTaskList(
+                          onTapOnTask: (task) {
+                            Navigator.pushNamed(
+                                context, TaskInfoScreen.routeName,
+                                arguments: TaskInfoScreenArguments(task: task));
+                          },
+                          source: currSource),
                 )
               ],
             ),
-            CustomButton(text: createText, onPressed: () => Navigator.pushNamed(context, GameCreateScreen.routeName))
+            CustomButton(
+                text: createText,
+                onPressed: () =>
+                    Navigator.pushNamed(context, GameCreateScreen.routeName))
           ],
         ));
   }

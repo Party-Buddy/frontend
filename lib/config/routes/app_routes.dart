@@ -6,9 +6,11 @@ import 'package:party_games_app/features/game_sessions/presentation/screens/game
 import 'package:party_games_app/features/game_sessions/presentation/screens/task_results_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/task_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/waiting_room_screen.dart';
+import 'package:party_games_app/features/games/presentation/screens/game_info_screen.dart';
 import 'package:party_games_app/features/games/presentation/screens/game_start_screen.dart';
 import 'package:party_games_app/features/games/presentation/screens/game_join_screen.dart';
 import 'package:party_games_app/features/games/presentation/screens/main_menu_screen.dart';
+import 'package:party_games_app/features/tasks/presentation/screens/task_info_screen.dart';
 import 'package:party_games_app/tests_screen.dart';
 
 class AppRoutes {
@@ -21,16 +23,15 @@ class AppRoutes {
         return _materialRoute(const GameStartScreen());
 
       case GameJoinScreen.routeName:
-      {
-        if (settings.arguments != null){
-          final args = settings.arguments as GameJoinScreenArguments;
-        
-        return _materialRoute(GameJoinScreen(inviteCode: args.inviteCode));
+        {
+          if (settings.arguments != null) {
+            final args = settings.arguments as GameJoinScreenArguments;
+
+            return _materialRoute(GameJoinScreen(inviteCode: args.inviteCode));
+          } else {
+            return _materialRoute(const GameJoinScreen());
+          }
         }
-        else{
-          return _materialRoute(const GameJoinScreen());
-        }
-      }
       case ConstructorScreen.routeName:
         return _materialRoute(const ConstructorScreen());
 
@@ -48,6 +49,20 @@ class AppRoutes {
             gameSession: args.gameSession,
             sessionEngine: args.sessionEngine,
           ));
+        }
+
+      case GameInfoScreen.routeName:
+        {
+          final args = settings.arguments as GameInfoScreenArguments;
+
+          return _materialRoute(GameInfoScreen(game: args.game));
+        }
+
+      case TaskInfoScreen.routeName:
+        {
+          final args = settings.arguments as TaskInfoScreenArguments;
+
+          return _materialRoute(TaskInfoScreen(task: args.task));
         }
 
       case GameResultsScreen.routeName:

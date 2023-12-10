@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
 import 'package:party_games_app/core/widgets/inkwell_border_wrapper.dart';
@@ -59,10 +58,10 @@ class GameHeader extends StatelessWidget {
                           placeholder: (context, url) => const SizedBox(
                             height: 90,
                             width: 90,
-                            child: Center(child: CircularProgressIndicator()),
+                            child: Center(child: CircularProgressIndicator(color: kPrimaryColor,)),
                           ),
                           errorWidget: (context, url, error) =>
-                              const Icon(Icons.error, size: 90),
+                              const Icon(Icons.error, size: 90, color: kPrimaryColor,),
                         )
                       : Image.file(File(game.imageUri!), height: 90))
                   : const Image(

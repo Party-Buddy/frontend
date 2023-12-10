@@ -3,6 +3,7 @@ import 'package:linear_timer/linear_timer.dart';
 import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/utils.dart';
 import 'package:party_games_app/config/view_config.dart';
+import 'package:party_games_app/core/widgets/image_network.dart';
 import 'package:party_games_app/core/widgets/base_screen.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
 import 'package:party_games_app/core/widgets/custom_button.dart';
@@ -74,12 +75,14 @@ class TaskScreen extends StatelessWidget {
                   if (taskInfo.photoUrl != null)
                     Container(
                       padding: const EdgeInsets.only(bottom: kPadding),
-                      height: 200,
-                      width: 200,
                       alignment: Alignment.center,
                       child: ClipRRect(
                         borderRadius: kBorderRadius,
-                        child: Image.network(taskInfo.photoUrl!),
+                        child: ImageNetwork(
+                          url: taskInfo.photoUrl!,
+                          height: 200,
+                          width: 200,
+                        ),
                       ),
                     ),
                   buildTaskContent(),

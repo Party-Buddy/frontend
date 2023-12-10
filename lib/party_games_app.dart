@@ -9,6 +9,7 @@ import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 class PartyGamesAppInitData {
   String? inviteCode;
+
   PartyGamesAppInitData({this.inviteCode});
 }
 

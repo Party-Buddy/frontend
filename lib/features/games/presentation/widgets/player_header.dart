@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/view_config.dart';
+import 'package:party_games_app/core/widgets/image_network.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/game_player.dart';
 
 class PlayerHeader extends StatelessWidget {
@@ -43,7 +44,11 @@ class PlayerHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(children: [
-            Image.network(player.photoUrl ?? defaultPhotoUrl),
+            ImageNetwork(
+              url: player.photoUrl ?? defaultPhotoUrl,
+              height: 40,
+              width: 40,
+            ),
             const SizedBox(
               width: kPadding,
             ),

@@ -21,8 +21,6 @@ class GameList extends StatefulWidget {
   State<StatefulWidget> createState() => _GameListState();
 }
 
-
-
 class _GameListState extends State<GameList> {
   Source gameType = Source.owned;
 
