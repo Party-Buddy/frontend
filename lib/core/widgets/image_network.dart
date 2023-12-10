@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:party_games_app/config/view_config.dart';
 
@@ -16,39 +17,23 @@ class ImageNetwork extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
         borderRadius: kBorderRadius,
-        child: Stack(
-          children: [
-            Container(
-              height: height,
-              width: width,
-              alignment: Alignment.center,
-              child: const CircularProgressIndicator(color: kPrimaryColor,),
-            ),
-            Image.network(url,
-                width: width,
-                height: height,
-                // loadingBuilder: (BuildContext context, Widget child,
-                //     ImageChunkEvent? loadingProgress) {
-                //   if (loadingProgress == null) return child;
-                //   return Container(
-                //     width: width,
-                //     height: height,
-                //     alignment: Alignment.center,
-                //     child: CircularProgressIndicator(
-                //       color: kPrimaryColor,
-                //       value: loadingProgress.expectedTotalBytes != null
-                //           ? loadingProgress.cumulativeBytesLoaded /
-                //               loadingProgress.expectedTotalBytes!
-                //           : null,
-                //     ),
-                //   );
-                // },
-                errorBuilder: (context, _, error) => const Icon(
-                      Icons.error,
-                      size: 90,
-                      color: kPrimaryColor,
-                    ))
-          ],
+        child: CachedNetworkImage(
+          imageUrl: url,
+          height: height,
+          width: width,
+          placeholder: (context, url) => SizedBox(
+            height: height,
+            width: width,
+            child: const Center(
+                child: CircularProgressIndicator(
+              color: kPrimaryColor,
+            )),
+          ),
+          errorWidget: (context, url, error) => const Icon(
+            Icons.error,
+            size: 30,
+            color: kPrimaryColor,
+          ),
         ));
   }
 }

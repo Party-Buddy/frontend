@@ -5,6 +5,9 @@ ThemeData theme() {
   return ThemeData(
       fontFamily: 'Muli',
       appBarTheme: appBarTheme(),
+      colorScheme: ColorScheme.fromSwatch(
+        accentColor: kPrimaryColor
+      ),
       textSelectionTheme: TextSelectionThemeData(
           selectionColor: kPrimaryColor.withOpacity(.5)));
 }
@@ -42,13 +45,13 @@ InputDecoration inputDecoration({String? labelText, Color? fillColor}) {
       labelStyle: const TextStyle(color: kFontColor, fontFamily: kFontFamily),
       enabledBorder: OutlineInputBorder(
           borderRadius: kBorderRadius,
-          borderSide: BorderSide(color: kAppBarColor)),
+          borderSide: BorderSide(color: kAppBarColor, width: 2)),
       border: OutlineInputBorder(
           borderRadius: kBorderRadius,
-          borderSide: BorderSide(color: kAppBarColor)),
+          borderSide: BorderSide(color: kAppBarColor, width: 2)),
       focusedBorder: const OutlineInputBorder(
           borderRadius: kBorderRadius,
-          borderSide: BorderSide(color: kPrimaryColor)));
+          borderSide: BorderSide(color: kPrimaryColor, width: 2)));
 }
 
 Border border() => Border.all(color: kBorderColor, width: 1);

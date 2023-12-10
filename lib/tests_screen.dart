@@ -79,10 +79,11 @@ class TestsScreen extends StatelessWidget {
               height: kPadding,
             ),
             CustomButton(
-                text: "Итоги задания с текстом",
+                text: "Итоги задания 'Текст с проверкой'",
                 onPressed: () =>
                     Navigator.pushNamed(context, TaskResultsScreen.routeName,
                         arguments: TaskResultsScreenArguments(
+                            sessionEngine: sessionEngine,
                             players: playersMock,
                             gameName: "Minecraft Quiz",
                             taskInfo: const TaskInfo(
@@ -97,21 +98,58 @@ class TestsScreen extends StatelessWidget {
               height: kPadding,
             ),
             CustomButton(
-                text: "Итоги задания с фотками",
-                onPressed: () =>
-                    Navigator.pushNamed(context, TaskResultsScreen.routeName,
-                        arguments: TaskResultsScreenArguments(
-                            players: playersMock,
-                            gameName: "Minecraft Quiz",
-                            taskInfo: const TaskInfo(
-                              name: "Фото овощей",
-                              description: "Это задание с фотографиями",
-                              duration: 30,
-                              type: TaskType.poll,
-                              pollAnswerType: PollTaskAnswerType.image
-                            ),
-                            tasksCount: 10,
-                            taskResults: photoTaskResultsMock()))),
+                text: "Итоги задания 'Фото'",
+                onPressed: () => Navigator.pushNamed(
+                    context, TaskResultsScreen.routeName,
+                    arguments: TaskResultsScreenArguments(
+                      sessionEngine: sessionEngine,
+                        players: playersMock,
+                        gameName: "Minecraft Quiz",
+                        taskInfo: const TaskInfo(
+                            name: "Фото овощей",
+                            description: "Это задание с фотографиями",
+                            duration: 30,
+                            type: TaskType.poll,
+                            pollAnswerType: PollTaskAnswerType.image),
+                        tasksCount: 10,
+                        taskResults: imagePollTaskResultsMock()))),
+            const SizedBox(
+              height: kPadding,
+            ),
+            CustomButton(
+                text: "Итоги задания 'Текст'",
+                onPressed: () => Navigator.pushNamed(
+                    context, TaskResultsScreen.routeName,
+                    arguments: TaskResultsScreenArguments(
+                        sessionEngine: sessionEngine,
+                        players: playersMock,
+                        gameName: "Minecraft Quiz",
+                        taskInfo: const TaskInfo(
+                            name: "Фото овощей",
+                            description: "Это задание с фотографиями",
+                            duration: 30,
+                            type: TaskType.poll,
+                            pollAnswerType: PollTaskAnswerType.text),
+                        tasksCount: 10,
+                        taskResults: textPollTaskResultsMock()))),
+            const SizedBox(
+              height: kPadding,
+            ),
+            CustomButton(
+                text: "Итоги задания 'Выбор варианта'",
+                onPressed: () => Navigator.pushNamed(
+                    context, TaskResultsScreen.routeName,
+                    arguments: TaskResultsScreenArguments(
+                        sessionEngine: sessionEngine,
+                        players: playersMock,
+                        gameName: "Minecraft Quiz",
+                        taskInfo: const TaskInfo(
+                            name: "Фото овощей",
+                            description: "Это задание с фотографиями",
+                            duration: 30,
+                            type: TaskType.choice),
+                        tasksCount: 10,
+                        taskResults: choiceTaskResultsMock()))),
             // const SizedBox(
             //   height: kPadding,
             // ),

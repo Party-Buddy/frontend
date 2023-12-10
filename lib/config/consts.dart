@@ -1,2 +1,2 @@
-const minPlayersCount = 2;
-const maxPlayersCount = 20;
+const minPossiblePlayersCount = 2;
+const maxPossiblePlayersCount = 20;

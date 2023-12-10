@@ -31,7 +31,7 @@ class GameSessionModel {
         name: name ?? "",
         description: description ?? "",
         imageUri: imageUri,
-        maxPlayersCount: maxPlayersCount ?? consts.maxPlayersCount,
+        maxPlayersCount: maxPlayersCount ?? consts.maxPossiblePlayersCount,
         ownerId: ownerId,
         currentPlayerId: currentPlayerId,
         players: players?.map((player) => player.toEntity()).toList() ?? [],

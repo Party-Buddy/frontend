@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
+import 'package:party_games_app/core/widgets/image_network.dart';
 import 'package:party_games_app/core/widgets/inkwell_border_wrapper.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class GameHeader extends StatelessWidget {
   const GameHeader({super.key, required this.game, required this.onTap});
@@ -52,17 +52,7 @@ class GameHeader extends StatelessWidget {
               ),
               game.imageUri != null
                   ? (game.imageUri!.startsWith('http')
-                      ? CachedNetworkImage(
-                          imageUrl: game.imageUri!,
-                          height: 90,
-                          placeholder: (context, url) => const SizedBox(
-                            height: 90,
-                            width: 90,
-                            child: Center(child: CircularProgressIndicator(color: kPrimaryColor,)),
-                          ),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error, size: 90, color: kPrimaryColor,),
-                        )
+                      ? ImageNetwork(url: game.imageUri!, height: 90, width: 90)
                       : Image.file(File(game.imageUri!), height: 90))
                   : const Image(
                       image: AssetImage('assets/images/no-photo.png'),

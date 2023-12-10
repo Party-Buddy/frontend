@@ -6,10 +6,11 @@ enum SubmitResult { success, error, empty }
 
 class SingleLineInputLabel extends StatefulWidget {
   const SingleLineInputLabel(
-      {super.key, required this.onSubmitted, this.labelText});
+      {super.key, required this.onSubmitted, this.labelText, this.initialText = ""});
 
   final Future<SubmitResult> Function(String) onSubmitted;
   final String? labelText;
+  final String initialText;
 
   @override
   State<SingleLineInputLabel> createState() => _SingleLineInputLabelState();
@@ -19,7 +20,7 @@ class _SingleLineInputLabelState extends State<SingleLineInputLabel> {
   final controller = TextEditingController();
   final focusNode = FocusNode();
   SubmitResult submitResult = SubmitResult.empty;
-  String initialText = "";
+  late String initialText = widget.initialText;
 
   @override
   void dispose() {
@@ -28,7 +29,7 @@ class _SingleLineInputLabelState extends State<SingleLineInputLabel> {
   }
 
   Color get shadowColor => switch (submitResult) {
-        SubmitResult.success => const Color.fromARGB(255, 64, 238, 70),
+        SubmitResult.success => const Color.fromARGB(255, 0, 125, 7),
         SubmitResult.error => Colors.red,
         _ => Colors.transparent
       };
@@ -41,7 +42,7 @@ class _SingleLineInputLabelState extends State<SingleLineInputLabel> {
           borderRadius: kBorderRadius,
           boxShadow: submitResult == SubmitResult.empty
               ? []
-              : [BoxShadow(color: shadowColor, blurRadius: 10)]),
+              : [BoxShadow(color: shadowColor, blurRadius: 6)]),
       child: TextField(
         controller: controller,
         onSubmitted: (s) async {

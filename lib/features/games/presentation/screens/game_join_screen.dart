@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:lottie/lottie.dart';
-import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/utils.dart';
 import 'package:party_games_app/config/view_config.dart';
+import 'package:party_games_app/core/resources/data_state.dart';
 import 'package:party_games_app/core/widgets/base_screen.dart';
 import 'package:party_games_app/core/widgets/custom_button.dart';
+import 'package:party_games_app/core/widgets/single_input_label.dart';
+import 'package:party_games_app/features/game_sessions/domain/engine/session_engine.dart';
+import 'package:party_games_app/features/game_sessions/presentation/session_runner/session_runner.dart';
+import 'package:party_games_app/features/user_data/domain/entities/username.dart';
+import 'package:party_games_app/features/user_data/domain/usecases/params/username_params.dart';
+import 'package:party_games_app/features/user_data/domain/usecases/validate_username.dart';
 
 class GameJoinScreenArguments {
   final String inviteCode;
+
   const GameJoinScreenArguments({required this.inviteCode});
 }
 
@@ -25,6 +33,12 @@ class _GameJoinScreenState extends State<GameJoinScreen>
     with TickerProviderStateMixin {
   static double controllerValue = 0;
   late final AnimationController controller;
+  String username = "";
+  String inviteCode = "";
+
+  final SessionEngine _sessionEngine = GetIt.instance<SessionEngine>();
+  final ValidateUsernameUseCase _validateUsernameUseCase =
+      GetIt.instance<ValidateUsernameUseCase>();
 
   @override
   void initState() {
@@ -57,7 +71,7 @@ class _GameJoinScreenState extends State<GameJoinScreen>
                 height: 200,
                 width: 200,
                 decoration: const BoxDecoration(
-                    color: kPrimaryColor,
+                    color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(20.0))),
               ),
               Lottie.network(
@@ -73,10 +87,66 @@ class _GameJoinScreenState extends State<GameJoinScreen>
           ),
           CustomButton(
               text: "Сканировать QR",
-              onPressed: () => showMessage(context,
-                  "Тут должна будет открыться камера для сканирования 🙂 ${widget.inviteCode ?? 'inivte code is null'}")),
+              width: 220,
+              onPressed: () =>
+                  showMessage(context, "В данный момент камера недоступна.")),
+          const SizedBox(
+            height: kPadding,
+          ),
+          CustomButton(
+              text: "Присоединиться по id", width: 220, onPressed: onJoinById),
+          const SizedBox(
+            height: kPadding,
+          ),
+          CustomButton(
+              text: "Выйти",
+              width: 220,
+              onPressed: () => Navigator.of(context).pop())
         ]));
   }
-}
 
-// https://lottie.host/808f95d0-715b-4340-a212-694470efa19c/FL2CLCdShE.json
+  void onJoinById() {
+    showWidget(context,
+        content: Column(
+          children: [
+            SingleLineInputLabel(
+                initialText: inviteCode,
+                labelText: "id сессии",
+                onSubmitted: (code) async {
+                  inviteCode = code;
+                  return SubmitResult.empty;
+                }),
+            const SizedBox(
+              height: kPadding,
+            ),
+            SingleLineInputLabel(
+                initialText: username,
+                labelText: "Ваш никнейм",
+                onSubmitted: onSubmittedUsername),
+            const SizedBox(
+              height: kPadding,
+            ),
+            CustomButton(text: "Присоединиться", onPressed: joinGame)
+          ],
+        ));
+  }
+
+  Future joinGame() async {
+    var runner = SessionRunner(sessionEngine: _sessionEngine);
+    runner.joinExistingGame(context,
+        inviteCode: inviteCode, username: Username(username: username));
+  }
+
+  Future<SubmitResult> onSubmittedUsername(String username) async {
+    bool isValid = await _validateUsernameUseCase.call(
+        params: UsernameParams(username: Username(username: username)));
+
+    if (isValid) {
+      this.username = username;
+      return SubmitResult.success;
+    }
+    await Future.microtask(() =>
+        showMessage(context, ValidateUsernameUseCase.nicknameRequirements));
+    return SubmitResult.error;
+  }
+}

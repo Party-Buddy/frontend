@@ -7,7 +7,6 @@ import 'package:party_games_app/core/resources/data_state.dart';
 import 'package:party_games_app/core/resources/source_enum.dart';
 import 'package:party_games_app/core/widgets/future_builder_wrapper.dart';
 import 'package:party_games_app/core/widgets/option_switcher.dart';
-import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 import 'package:party_games_app/features/tasks/domain/usecases/get_local_tasks.dart';
 import 'package:party_games_app/features/tasks/domain/usecases/get_published_tasks.dart';

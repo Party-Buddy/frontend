@@ -39,6 +39,7 @@ class _GameCreateScreenState extends State<GameCreateScreen> {
     return BaseScreen(
         appBarTitle: "Создать игру",
         content: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -151,6 +152,7 @@ class _GameCreateScreenState extends State<GameCreateScreen> {
                         index: tasks.indexOf(task),
                         child: TaskHeader(
                           enableShadow: false,
+                          imgSize: 80,
                           task: task,
                           onTap: () {
                           },

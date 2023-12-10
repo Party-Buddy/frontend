@@ -58,10 +58,9 @@ class TaskScreen extends StatelessWidget {
               child: Column(
                 children: [
                   buildTaskHeader(
-                    taskInfo: taskInfo,
-                    index: currentTask.index,
-                    total: tasksCount
-                  ),
+                      taskInfo: taskInfo,
+                      index: currentTask.index,
+                      total: tasksCount),
                   Container(
                     padding: kPaddingAll,
                     child: Text(
@@ -95,8 +94,7 @@ class TaskScreen extends StatelessWidget {
                     text: "Покинуть игру",
                     onPressed: () => showConfirmationDialog(context,
                         text: "Вы точно хотите выйти?",
-                        onConfirmed: () => Navigator.pushNamed(
-                            context, MainMenuScreen.routeName))),
+                        onConfirmed: () => onExit(context))),
                 const SizedBox(
                   height: kPadding * 2,
                 ),
@@ -108,7 +106,13 @@ class TaskScreen extends StatelessWidget {
               ],
             )
           ],
-        ));
+        )
+    );
+  }
+
+  void onExit(BuildContext context) {
+    sessionEngine.leaveSession();
+    Navigator.pushNamed(context, MainMenuScreen.routeName);
   }
 
   static Row buildTaskHeader(

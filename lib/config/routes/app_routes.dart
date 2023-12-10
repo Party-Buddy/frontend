@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:party_games_app/features/constructor/presentation/screens/constructor_screen.dart';
 import 'package:party_games_app/features/constructor/presentation/screens/game_create_screen.dart';
-import 'package:party_games_app/features/game_sessions/domain/entities/task_results.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/game_results_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/task_results_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/task_screen.dart';
@@ -81,6 +80,7 @@ class AppRoutes {
           final args = settings.arguments as TaskResultsScreenArguments;
 
           return _materialRoute(TaskResultsScreen(
+            sessionEngine: args.sessionEngine,
             taskResults: args.taskResults,
             taskInfo: args.taskInfo,
             tasksCount: args.tasksCount,

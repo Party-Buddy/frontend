@@ -18,7 +18,6 @@ import 'package:party_games_app/features/game_sessions/domain/entities/current_t
 import 'package:party_games_app/features/game_sessions/domain/entities/game_results.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/poll_info.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/task_results.dart';
-import 'package:party_games_app/features/games/data/models/game_model.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/game_session.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/user_data/domain/entities/username.dart';
@@ -40,7 +39,7 @@ class SessionEngineTestImpl implements SessionEngine {
   GameSessionModel gameSession = GameSessionModel();
   SyncCounter messageIdGenerator = SyncCounter();
   String nickname = 'Your nickname';
-  int maxPlayers = maxPlayersCount;
+  int maxPlayers = maxPossiblePlayersCount;
   var logger = Logger();
   Completer<DataState<String>>? joinCompleter;
 

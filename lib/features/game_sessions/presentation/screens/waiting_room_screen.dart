@@ -186,13 +186,17 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                       text: "Покинуть игру",
                       onPressed: () => showConfirmationDialog(context,
                           text: "Вы точно хотите выйти?",
-                          onConfirmed: () => Navigator.pushNamed(
-                              context, MainMenuScreen.routeName))),
+                          onConfirmed: onExit)),
                 ],
               )
             ],
           )),
     );
+  }
+
+  void onExit() {
+    widget.sessionEngine.leaveSession();
+    Navigator.pushNamed(context, MainMenuScreen.routeName);
   }
 
   Widget buildQRWidget(String sessionId) {
