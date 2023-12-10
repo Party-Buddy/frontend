@@ -6,10 +6,8 @@ class PlayerFinalResult {
 }
 
 class GameResults {
-  final int index;
-  final int deadline;
   final List<PlayerFinalResult> scoreboard;
 
   GameResults(
-      {required this.index, required this.deadline, required this.scoreboard});
+      {required this.scoreboard});
 }

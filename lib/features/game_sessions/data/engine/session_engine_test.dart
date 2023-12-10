@@ -160,6 +160,9 @@ class SessionEngineTestImpl implements SessionEngine {
   }
 
   void _listen() async {
+    int taskResults = 10;
+    int pollDuration = 10;
+
     await _delayedMessage(2, {
       'kind': 'joined',
       'msg-id': 1,
@@ -249,25 +252,29 @@ class SessionEngineTestImpl implements SessionEngine {
       'ready': [1, 2, 3, 4]
     });
 
-    await _delayedMessage(1, {
+    await Future.delayed(const Duration(seconds: 2));
+    await _handleMessage({
       'kind': 'game-start',
       'deadline': DateTime.now().millisecondsSinceEpoch + 5000,
       'msg-id': 6,
       'time': 12000
     });
+    await Future.delayed(const Duration(seconds: 5));
 
-    await _delayedMessage(5, {
+    int task1Duration = 10;
+    await _handleMessage({
       'kind': 'task-start',
       'task-idx': 0,
-      'deadline': DateTime.now().millisecondsSinceEpoch + 10000,
+      'deadline': DateTime.now().millisecondsSinceEpoch + task1Duration * 1000,
       'msg-id': 7,
       'time': 15000
     });
+    await Future.delayed(Duration(seconds: task1Duration));
 
-    await _delayedMessage(10, {
+    await _handleMessage({
       'kind': 'task-end',
       'task-idx': 0,
-      'deadline': DateTime.now().millisecondsSinceEpoch + 5000,
+      'deadline': DateTime.now().millisecondsSinceEpoch + taskResults * 1000,
       'msg-id': 8,
       'time': 17000,
       'scoreboard': [
@@ -282,33 +289,36 @@ class SessionEngineTestImpl implements SessionEngine {
         {'value': 'шампунь', 'player-count': 2, 'correct': false},
       ]
     });
+    await Future.delayed(Duration(seconds: taskResults));
 
-    debugPrint(DateTime.now().toString());
-    await _delayedMessage(5, {
+    int task2Duration = 15;
+    await _handleMessage({
       'kind': 'task-start',
       'task-idx': 1,
-      'deadline': DateTime.now().millisecondsSinceEpoch + 10000,
+      'deadline': DateTime.now().millisecondsSinceEpoch + task2Duration * 1000,
       'msg-id': 9,
       'time': 22000,
     });
+    await Future.delayed(Duration(seconds: task2Duration));
 
-    await _delayedMessage(10, {
+    await _handleMessage({
       'kind': 'poll-start',
       'index': 1,
-      'deadline': DateTime.now().millisecondsSinceEpoch + 5000,
+      'deadline': DateTime.now().millisecondsSinceEpoch + pollDuration * 1000,
       'msg-id': 10,
       'time': 23000,
       'options': [
         'https://i.pinimg.com/736x/13/99/f4/1399f4bda826ac629f07277be6b2ba4e.jpg',
-        'https://sun9-8.userapi.com/impg/lSJGYXohgBrdZtSLEW0x6RFPgL9c7hkzLl8G4A/SiCq0z2kO5w.jpg?size=1440x1440&quality=95&sign=39ae4e4ecd33a495b4ea5a095667bebe&c_uniq_tag=xxP_8FQHcoaN5BhRFL9l-lLnVCz3fDWM6qMbn9parik&type=album',
-        'https://yt3.ggpht.com/ytc/AKedOLRIBpbC4usga9kP1bzA_LPp2wMeb6kmsLodIrMG=s900-c-k-c0x00ffffff-no-rj'
+        'https://i.pinimg.com/originals/ea/29/cf/ea29cfe50fcab5d7dbff81c6bc300811.jpg',
+        'https://i.pinimg.com/originals/f3/44/be/f344be7f01caece19afbcb613a2b0471.jpg'
       ]
     });
+    await Future.delayed(Duration(seconds: pollDuration));
 
-    await _delayedMessage(5, {
+    await _handleMessage({
       'kind': 'task-end',
       'task-idx': 1,
-      'deadline': DateTime.now().millisecondsSinceEpoch + 5000,
+      'deadline': DateTime.now().millisecondsSinceEpoch + taskResults * 1000,
       'msg-id': 11,
       'time': 24000,
       'scoreboard': [
@@ -325,18 +335,19 @@ class SessionEngineTestImpl implements SessionEngine {
         },
         {
           'value':
-              'https://sun9-8.userapi.com/impg/lSJGYXohgBrdZtSLEW0x6RFPgL9c7hkzLl8G4A/SiCq0z2kO5w.jpg?size=1440x1440&quality=95&sign=39ae4e4ecd33a495b4ea5a095667bebe&c_uniq_tag=xxP_8FQHcoaN5BhRFL9l-lLnVCz3fDWM6qMbn9parik&type=album',
+              'https://i.pinimg.com/originals/ea/29/cf/ea29cfe50fcab5d7dbff81c6bc300811.jpg',
           'votes': 0
         },
         {
           'value':
-              'https://yt3.ggpht.com/ytc/AKedOLRIBpbC4usga9kP1bzA_LPp2wMeb6kmsLodIrMG=s900-c-k-c0x00ffffff-no-rj',
+              'https://i.pinimg.com/originals/f3/44/be/f344be7f01caece19afbcb613a2b0471.jpg',
           'votes': 2
         }
       ]
     });
+    await Future.delayed(Duration(seconds: taskResults));
 
-    await _delayedMessage(5, {
+    await _handleMessage({
       'kind': 'game-end',
       'msg-id': 12,
       'time': 25000,

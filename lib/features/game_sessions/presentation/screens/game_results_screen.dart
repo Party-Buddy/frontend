@@ -38,10 +38,6 @@ List<GamePlayer> playersMock = [
 ];
 
 GameResults gameResultsMock() => GameResults(
-        index: 5,
-        deadline: DateTime.now()
-            .add(const Duration(seconds: 20))
-            .millisecondsSinceEpoch,
         scoreboard: [
           PlayerFinalResult(playerId: 0, totalScore: 4),
           PlayerFinalResult(playerId: 1, totalScore: 3),
@@ -150,8 +146,7 @@ class GameResultsScreen extends StatelessWidget {
                     Navigator.pushNamed(context, MainMenuScreen.routeName);
                   },
                   duration:
-                      DateTime.fromMillisecondsSinceEpoch(gameResults.deadline)
-                          .difference(DateTime.now()),
+                      const Duration(seconds: 10),
                   color: kPrimaryColor,
                   backgroundColor: kAppBarColor,
                 ),
