@@ -9,10 +9,12 @@ import 'package:party_games_app/features/game_sessions/domain/entities/task_info
 import 'package:party_games_app/features/game_sessions/presentation/screens/game_results_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/task_results_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/task_screen.dart';
+import 'package:party_games_app/features/game_sessions/presentation/screens/voting_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/waiting_room_screen.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/games/presentation/screens/main_menu_screen.dart';
 import 'package:party_games_app/features/user_data/domain/entities/username.dart';
+import 'package:timer_count_down/timer_count_down.dart';
 
 class SessionRunner {
   final SessionEngine sessionEngine;
@@ -66,7 +68,37 @@ class SessionRunner {
     bool sessionReceived = false;
 
     late ValueNotifier<GameSession> gameSession;
-    sessionEngine.onGameStart((time) {});
+    sessionEngine.onGameStart((time) {
+      if (time == null) return;
+
+      showWidget(context,
+          content: Countdown(
+              seconds: DateTime.fromMillisecondsSinceEpoch(time)
+                  .difference(DateTime.now())
+                  .inSeconds,
+              interval: const Duration(milliseconds: 100),
+              build: (context, time) => time <= 0.0
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                      color: kPrimaryColor,
+                    ))
+                  : Column(
+                      children: [
+                        Text(
+                          "Игра начинается через",
+                          style: defaultTextStyle(fontSize: 22),
+                        ),
+                        const SizedBox(
+                          height: kPadding,
+                        ),
+                        Text(
+                          "$time",
+                          style: defaultTextStyle(
+                              fontSize: 26, color: kPrimaryColor),
+                        ),
+                      ],
+                    )));
+    });
 
     sessionEngine.onGameStatus((newGameSessionState) {
       if (!sessionReceived) {
@@ -114,6 +146,18 @@ class SessionRunner {
               gameName: gameSession.value.name,
               gameResults: gameResults,
               players: gameSession.value.players));
+    });
+
+    sessionEngine.onPollStart((pollInfo) {
+      TaskInfo taskInfo = gameSession.value.tasks[pollInfo.index];
+
+      Navigator.pushNamed(context, VotingScreen.routeName,
+          arguments: VotingScreenArguments(
+              sessionEngine: sessionEngine,
+              pollInfo: pollInfo,
+              taskInfo: taskInfo,
+              gameName: gameSession.value.name,
+              tasksCount: gameSession.value.tasks.length));
     });
 
     sessionEngine.onGameInterrupted((reason) {

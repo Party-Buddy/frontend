@@ -158,53 +158,51 @@ class TaskResultsScreen extends StatelessWidget {
         appBarTitle: "Итоги задания",
         showBackButton: false,
         content: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              children: [
-                TaskScreen.buildTaskHeader(
-                    taskInfo: taskInfo,
-                    index: taskResults.index,
-                    total: tasksCount),
-                const SizedBox(
-                  height: kPadding,
-                ),
-                SizedBox(
-                    height: MediaQuery.of(context).size.height * .45,
-                    child: SingleChildScrollView(
-                        padding: const EdgeInsets.all(kPadding * 2),
-                        child: buildContent(context))),
-                Visibility(
-                  visible: taskInfo.description.isNotEmpty,
-                  child: CustomButton(
-                      text: "Описание задания",
-                      onPressed: () =>
-                          showMessage(context, taskInfo.description)),
-                ),
-                const SizedBox(
-                  height: kPadding,
-                ),
-                CustomButton(
-                    text: "Покинуть игру",
-                    onPressed: () => showConfirmationDialog(context,
-                        text: "Вы точно хотите выйти?",
-                        onConfirmed: () => onExit(context))),
-                const SizedBox(
-                  height: kPadding * 2,
-                ),
-              ],
+            Expanded(
+              child: TaskScreen.buildTaskHeader(
+                  taskInfo: taskInfo,
+                  index: taskResults.index,
+                  total: tasksCount),
             ),
-            Column(
-              children: [
-                LinearTimer(
-                  duration:
-                      DateTime.fromMillisecondsSinceEpoch(taskResults.deadline)
-                          .difference(DateTime.now()),
-                  color: kPrimaryColor,
-                  backgroundColor: kAppBarColor,
-                ),
-              ],
-            )
+            Expanded(
+              flex: 11,
+              child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(kPadding * 2),
+                  child: buildContent(context)),
+            ),
+            Expanded(
+              flex: 3,
+              child: Column(
+                children: [
+                  Visibility(
+                    visible: taskInfo.description.isNotEmpty,
+                    child: CustomButton(
+                        text: "Описание задания",
+                        onPressed: () =>
+                            showMessage(context, taskInfo.description)),
+                  ),
+                  const SizedBox(
+                    height: kPadding,
+                  ),
+                  CustomButton(
+                      text: "Покинуть игру",
+                      onPressed: () => showConfirmationDialog(context,
+                          text: "Вы точно хотите выйти?",
+                          onConfirmed: () => onExit(context))),
+                  const SizedBox(
+                    height: kPadding * 2,
+                  ),
+                  LinearTimer(
+                    duration: DateTime.fromMillisecondsSinceEpoch(
+                            taskResults.deadline)
+                        .difference(DateTime.now()),
+                    color: kPrimaryColor,
+                    backgroundColor: kAppBarColor,
+                  ),
+                ],
+              ),
+            ),
           ],
         ));
   }
@@ -364,11 +362,11 @@ class TaskResultsScreen extends StatelessWidget {
             runSpacing: kPadding,
             children: incorrectAnswers
                 .map((e) => BorderWrapper(
-                  child: Text(
+                      child: Text(
                         e.value,
                         style: defaultTextStyle(),
                       ),
-                ))
+                    ))
                 .toList(),
           )
       ],

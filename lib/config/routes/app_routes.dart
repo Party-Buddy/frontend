@@ -4,6 +4,7 @@ import 'package:party_games_app/features/constructor/presentation/screens/game_c
 import 'package:party_games_app/features/game_sessions/presentation/screens/game_results_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/task_results_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/task_screen.dart';
+import 'package:party_games_app/features/game_sessions/presentation/screens/voting_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/waiting_room_screen.dart';
 import 'package:party_games_app/features/games/presentation/screens/game_info_screen.dart';
 import 'package:party_games_app/features/games/presentation/screens/game_start_screen.dart';
@@ -48,6 +49,18 @@ class AppRoutes {
             gameSession: args.gameSession,
             sessionEngine: args.sessionEngine,
           ));
+        }
+
+      case VotingScreen.routeName:
+        {
+          final args = settings.arguments as VotingScreenArguments;
+
+          return _materialRoute(VotingScreen(
+              sessionEngine: args.sessionEngine,
+              pollInfo: args.pollInfo,
+              taskInfo: args.taskInfo,
+              gameName: args.gameName,
+              tasksCount: args.tasksCount));
         }
 
       case GameInfoScreen.routeName:

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:party_games_app/core/injection_container.dart';
 import 'package:party_games_app/party_games_app.dart';
@@ -11,6 +13,11 @@ Future<PartyGamesAppInitData> handleIntents() async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   initializeDependenices();
-  var sid = await handleIntents();
-  runApp(PartyGamesApp(initData: sid));
+
+  if (Platform.isAndroid) {
+    var sid = await handleIntents();
+    runApp(PartyGamesApp(initData: sid));
+  } else {
+    runApp(const PartyGamesApp());
+  }
 }
