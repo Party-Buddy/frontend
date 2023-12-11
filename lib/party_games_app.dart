@@ -14,9 +14,9 @@ class PartyGamesAppInitData {
 }
 
 class PartyGamesApp extends StatefulWidget {
-  const PartyGamesApp({super.key, required this.initData});
+  const PartyGamesApp({super.key, this.initData});
 
-  final PartyGamesAppInitData initData;
+  final PartyGamesAppInitData? initData;
 
   @override
   State<PartyGamesApp> createState() => _PartyGamesAppState();
@@ -29,6 +29,9 @@ class _PartyGamesAppState extends State<PartyGamesApp> {
   @override
   void initState() {
     super.initState();
+    if (widget.initData == null) {
+      return;
+    }
     _streamSubscription =
         ReceiveSharingIntent.getTextStreamAsUri().listen((uriEvent) {
       String? uri = uriEvent.queryParameters['invite-code'];
@@ -39,7 +42,7 @@ class _PartyGamesAppState extends State<PartyGamesApp> {
         _navKey.currentState!.pushNamed(GameJoinScreen.routeName);
       }
     });
-    var initUri = widget.initData.inviteCode;
+    var initUri = widget.initData!.inviteCode;
     if (initUri != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _navKey.currentState!.pushNamed(GameJoinScreen.routeName,

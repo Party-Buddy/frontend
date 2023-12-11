@@ -32,10 +32,10 @@ class PlayerHeader extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           borderRadius: kBorderRadius,
-          color: kAppBarColor,
+          color: isWinner ? lighten(kAppBarColor, .05) : kAppBarColor,
           border: highlight ? Border.all(color: kPrimaryColor, width: 2) : null,
           boxShadow: isWinner
-              ? [const BoxShadow(color: kPrimaryColor, blurRadius: 9)]
+              ? []
               : []),
       height: 60,
       padding: const EdgeInsets.all(kPadding / 2),

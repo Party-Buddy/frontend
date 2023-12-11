@@ -304,7 +304,7 @@ class SessionEngineTestImpl implements SessionEngine {
 
     await _handleMessage({
       'kind': 'poll-start',
-      'index': 1,
+      'task-idx': 1,
       'deadline': DateTime.now().millisecondsSinceEpoch + pollDuration * 1000,
       'msg-id': 10,
       'time': 23000,

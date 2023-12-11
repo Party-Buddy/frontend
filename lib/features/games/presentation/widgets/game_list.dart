@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:party_games_app/config/theme/commons.dart';
+import 'package:party_games_app/config/utils.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/async/future.dart';
 import 'package:party_games_app/core/resources/data_state.dart';
@@ -36,7 +37,7 @@ class _GameListState extends State<GameList> {
       const SizedBox(
         height: kPadding,
       ),
-      buildGameList(onTapOnGame: widget.onTapOnGame, source: gameType)
+      buildGameList(context, onTapOnGame: widget.onTapOnGame, source: gameType)
     ]);
   }
 }
@@ -46,9 +47,10 @@ final GetLocalGamesUseCase _getLocalGamesUseCase =
 final GetPublishedGamesUseCase _getPublishedGamesUseCase =
     GetIt.instance<GetPublishedGamesUseCase>();
 
-FutureBuilderWrapper<DataState<List<Game>>> buildGameList(
+FutureBuilderWrapper<DataState<List<Game>>> buildGameList(BuildContext context,
     {required Function(Game) onTapOnGame, required Source source}) {
   return FutureBuilderWrapper(
+      key: Key(source.name),
       future: source == Source.public
           ? convertFutureDataState(_getPublishedGamesUseCase.call())
           : convertFuture(_getLocalGamesUseCase.call()),
@@ -56,7 +58,7 @@ FutureBuilderWrapper<DataState<List<Game>>> buildGameList(
           buildNotFoundWidget(text: "У вас пока нет своих игр"),
       builder: (data) {
         if (data.error != null) {
-          return Container(); // TO DO: handle errors
+          showMessage(context, data.error!); // TO DO: handle errors
         }
         debugPrint(data.data!.toString());
         if (data.data!.isEmpty) {
