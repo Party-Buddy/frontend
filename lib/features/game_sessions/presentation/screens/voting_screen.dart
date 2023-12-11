@@ -9,6 +9,7 @@ import 'package:party_games_app/features/game_sessions/domain/engine/session_eng
 import 'package:party_games_app/features/game_sessions/domain/entities/poll_info.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/task_info.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/task_screen.dart';
+import 'package:party_games_app/features/game_sessions/presentation/widgets/ready_confirmation_label.dart';
 import 'package:party_games_app/features/games/presentation/screens/main_menu_screen.dart';
 import 'package:party_games_app/features/tasks/domain/entities/poll_task.dart';
 
@@ -44,6 +45,7 @@ class VotingScreen extends StatelessWidget {
   final String gameName;
   final int tasksCount;
   final ValueNotifier<int?> choiceNotifier = ValueNotifier(null);
+  final readyNotifier = ValueNotifier(false);
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +59,16 @@ class VotingScreen extends StatelessWidget {
               child: TaskScreen.buildTaskHeader(
                   taskInfo: taskInfo, index: pollInfo.index, total: tasksCount),
             ),
-            const SizedBox(height: kPadding * 2,),
-            Text("Выберите понравившийся вариант", style: defaultTextStyle(fontSize: 20),),
-            const SizedBox(height: kPadding * 2,),
+            const SizedBox(
+              height: kPadding * 2,
+            ),
+            Text(
+              "Выберите понравившийся вариант",
+              style: defaultTextStyle(fontSize: 20),
+            ),
+            const SizedBox(
+              height: kPadding * 2,
+            ),
             Expanded(
               flex: 16,
               child: SingleChildScrollView(
@@ -82,7 +91,12 @@ class VotingScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Container(),
+                  ValueListenableBuilder(
+                      valueListenable: choiceNotifier,
+                      builder: (context, choiceIdx, child) => choiceIdx == null
+                          ? Container()
+                          : ReadyConfirmationLabel(
+                              enabledNotifier: readyNotifier)),
                   LinearTimer(
                     duration:
                         DateTime.fromMillisecondsSinceEpoch(pollInfo.deadline)

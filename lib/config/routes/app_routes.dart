@@ -33,7 +33,7 @@ class AppRoutes {
           }
         }
       case ConstructorScreen.routeName:
-        return _materialRoute(const ConstructorScreen());
+        return _materialRoute(ConstructorScreen());
 
       case GameCreateScreen.routeName:
         return _materialRoute(const GameCreateScreen());

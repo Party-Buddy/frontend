@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/view_config.dart';
@@ -13,129 +15,147 @@ import 'package:party_games_app/features/games/presentation/widgets/game_list.da
 import 'package:party_games_app/features/tasks/presentation/screens/task_info_screen.dart';
 import 'package:party_games_app/features/tasks/presentation/widgets/task_list.dart';
 
-class ConstructorScreen extends StatefulWidget {
-  const ConstructorScreen({super.key});
-
-  static const routeName = "/Constructor";
-
-  @override
-  State<ConstructorScreen> createState() => _ConstructorScreenState();
-}
-
 enum ObjectType { task, game }
 
 enum SortType { date, type }
 
-class _ConstructorScreenState extends State<ConstructorScreen> {
-  ObjectType currObjType = ObjectType.game;
-  Source currSource = Source.owned;
-  bool descending = true;
+class ConstructorScreen extends StatelessWidget {
+  ConstructorScreen({super.key});
+
+  static const routeName = "/Constructor";
+
+  final currObjNotifier = ValueNotifier(ObjectType.game);
+  final currSourceNotifier = ValueNotifier(Source.owned);
 
   double get labelWidth => 300.0;
 
-  String get createText =>
-      currObjType == ObjectType.game ? "Создать игру" : "Создать задание";
+  String get createText => currObjNotifier.value == ObjectType.game
+      ? "Создать игру"
+      : "Создать задание";
 
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
-        appBarTitle: "Конструктор",
-        content: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  width: labelWidth,
-                  child: OptionSwitcher(
-                      options: ObjectType.values,
-                      onTap: (o) => setState(() => currObjType = o),
-                      initialOption: currObjType,
-                      stringMapper: (o) =>
-                          o == ObjectType.game ? "Игры" : "Задания"),
-                ),
-                const SizedBox(
-                  height: kPadding,
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  width: labelWidth,
-                  child: OptionSwitcher(
-                      options: Source.values,
-                      onTap: (o) => setState(() => currSource = o),
-                      initialOption: currSource,
-                      stringMapper: (o) =>
-                          o == Source.owned ? "Свои" : "Каталог"),
-                ),
-                const SizedBox(
-                  height: kPadding,
-                ),
-                Visibility(
-                  visible: false,
-                  child: SizedBox(
+      appBarTitle: "Конструктор",
+      content: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          ValueListenableBuilder(
+            valueListenable: currObjNotifier,
+            builder: (context, value, child) => Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: kPadding / 2),
+                    alignment: Alignment.center,
                     width: labelWidth,
-                    child: Row(
-                      children: [
-                        Text(
-                          "Сортировать",
-                          style: defaultTextStyle(),
-                        ),
-                        const SizedBox(
-                          width: kPadding,
-                        ),
-                        SizedBox(
-                          width: 100,
-                          child: CustomDropDownButton(
-                              initialItem: SortType.date,
-                              items: SortType.values,
-                              stringMapper: (t) => switch (t) {
-                                    SortType.date => "По дате",
-                                    SortType.type => "По типу"
-                                  },
-                              onChanged: (s) {}),
-                        ),
-                        const SizedBox(
-                          width: kPadding,
-                        ),
-                        CustomIconButton(
-                            onPressed: () =>
-                                setState(() => descending = !descending),
-                            iconData: descending
-                                ? Icons.arrow_downward
-                                : Icons.arrow_upward)
-                      ],
-                    ),
+                    child: OptionSwitcher(
+                        options: ObjectType.values,
+                        onTap: (o) => currObjNotifier.value = o,
+                        initialOption: currObjNotifier.value,
+                        stringMapper: (o) =>
+                            o == ObjectType.game ? "Игры" : "Задания"),
                   ),
+                ],
+              ),
+            ),
+          ),
+          ValueListenableBuilder(
+            valueListenable: currSourceNotifier,
+            builder: (context, value, child) => Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: kPadding / 2),
+                    alignment: Alignment.center,
+                    width: labelWidth,
+                    child: OptionSwitcher(
+                        options: Source.values,
+                        onTap: (o) => currSourceNotifier.value = o,
+                        initialOption: currSourceNotifier.value,
+                        stringMapper: (o) =>
+                            o == Source.owned ? "Свои" : "Каталог"),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Visibility(
+            visible: false,
+            child: Expanded(
+              child: SizedBox(
+                width: labelWidth,
+                child: Row(
+                  children: [
+                    Text(
+                      "Сортировать",
+                      style: defaultTextStyle(),
+                    ),
+                    const SizedBox(
+                      width: kPadding,
+                    ),
+                    SizedBox(
+                      width: 100,
+                      child: CustomDropDownButton(
+                          initialItem: SortType.date,
+                          items: SortType.values,
+                          stringMapper: (t) => switch (t) {
+                                SortType.date => "По дате",
+                                SortType.type => "По типу"
+                              },
+                          onChanged: (s) {}),
+                    ),
+                    const SizedBox(
+                      width: kPadding,
+                    ),
+                    CustomIconButton(
+                        onPressed: () => {},
+                        iconData:
+                            false ? Icons.arrow_downward : Icons.arrow_upward)
+                  ],
                 ),
-                const SizedBox(
-                  height: kPadding,
-                ),
-                SizedBox(
-                  height: 300,
-                  child: currObjType == ObjectType.game
-                      ? buildGameList(
-                          onTapOnGame: (game) {
-                            Navigator.pushNamed(
-                                context, GameInfoScreen.routeName,
-                                arguments: GameInfoScreenArguments(game: game));
-                          },
-                          source: currSource)
-                      : buildTaskList(
+              ),
+            ),
+          ),
+          ValueListenableBuilder(
+            valueListenable: currObjNotifier,
+            builder: (context, value, child) => Expanded(
+              flex: 8,
+              child: currObjNotifier.value == ObjectType.game
+                  ? ValueListenableBuilder(
+                      valueListenable: currSourceNotifier,
+                      builder: (context, value, child) =>
+                          buildGameList(context, onTapOnGame: (game) {
+                        Navigator.pushNamed(context, GameInfoScreen.routeName,
+                            arguments: GameInfoScreenArguments(game: game));
+                      }, source: currSourceNotifier.value),
+                    )
+                  : ValueListenableBuilder(
+                      valueListenable: currSourceNotifier,
+                      builder: (context, value, child) => buildTaskList(
                           onTapOnTask: (task) {
                             Navigator.pushNamed(
                                 context, TaskInfoScreen.routeName,
                                 arguments: TaskInfoScreenArguments(task: task));
                           },
-                          source: currSource),
-                )
+                          source: currSourceNotifier.value)),
+            ),
+          ),
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomButton(
+                    text: createText,
+                    onPressed: () =>
+                        Navigator.pushNamed(context, GameCreateScreen.routeName)),
               ],
             ),
-            CustomButton(
-                text: createText,
-                onPressed: () =>
-                    Navigator.pushNamed(context, GameCreateScreen.routeName))
-          ],
-        ));
+          )
+        ],
+      ),
+    );
   }
 }

@@ -6,7 +6,6 @@ import 'package:party_games_app/core/widgets/custom_button.dart';
 import 'package:party_games_app/features/constructor/presentation/screens/constructor_screen.dart';
 import 'package:party_games_app/features/games/presentation/screens/game_join_screen.dart';
 import 'package:party_games_app/features/games/presentation/screens/game_start_screen.dart';
-import 'package:party_games_app/tests_screen.dart';
 
 class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({super.key});
@@ -58,10 +57,10 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                 CustomButton(
                     text: "Конструктор",
                     onPressed: () => Navigator.pushNamed(context, ConstructorScreen.routeName)),
-                const SizedBox(
-                  height: kPadding,
-                ),
-                CustomButton(text: "Тест экранов", onPressed: () => Navigator.pushNamed(context, TestsScreen.routeName))
+                // const SizedBox(
+                //   height: kPadding,
+                // ),
+                // CustomButton(text: "Тест экранов", onPressed: () => Navigator.pushNamed(context, TestsScreen.routeName))
               ]),
             ),
           ),
