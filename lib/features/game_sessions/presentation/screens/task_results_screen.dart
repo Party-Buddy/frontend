@@ -170,7 +170,7 @@ class TaskResultsScreen extends StatelessWidget {
                   height: kPadding,
                 ),
                 SizedBox(
-                    height: MediaQuery.of(context).size.height * .6,
+                    height: MediaQuery.of(context).size.height * .4,
                     child: SingleChildScrollView(
                         padding: const EdgeInsets.all(kPadding * 2),
                         child: buildContent(context))),

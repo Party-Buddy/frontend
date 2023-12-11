@@ -37,13 +37,12 @@ List<GamePlayer> playersMock = [
           "https://robohash.org/63704034a6c7a8ce2ed2b9007faededa?set=set4&bgset=&size=400x400"),
 ];
 
-GameResults gameResultsMock() => GameResults(
-        scoreboard: [
-          PlayerFinalResult(playerId: 0, totalScore: 4),
-          PlayerFinalResult(playerId: 1, totalScore: 3),
-          PlayerFinalResult(playerId: 2, totalScore: 8),
-          PlayerFinalResult(playerId: 3, totalScore: 12),
-        ]);
+GameResults gameResultsMock() => GameResults(scoreboard: [
+      PlayerFinalResult(playerId: 0, totalScore: 4),
+      PlayerFinalResult(playerId: 1, totalScore: 3),
+      PlayerFinalResult(playerId: 2, totalScore: 8),
+      PlayerFinalResult(playerId: 3, totalScore: 12),
+    ]);
 
 class GameResultsScreenArguments {
   const GameResultsScreenArguments(
@@ -131,27 +130,10 @@ class GameResultsScreen extends StatelessWidget {
                 )
               ],
             ),
-            Column(
-              children: [
-                CustomButton(
-                    text: "Выйти",
-                    onPressed: () => Navigator.of(context)
-                        .pushNamed(MainMenuScreen.routeName)),
-                const SizedBox(
-                  height: kPadding * 2,
-                ),
-                LinearTimer(
-                  onTimerEnd: () {
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, MainMenuScreen.routeName);
-                  },
-                  duration:
-                      const Duration(seconds: 10),
-                  color: kPrimaryColor,
-                  backgroundColor: kAppBarColor,
-                ),
-              ],
-            )
+            CustomButton(
+                text: "Выйти",
+                onPressed: () =>
+                    Navigator.of(context).pushNamed(MainMenuScreen.routeName)),
           ],
         ));
   }
