@@ -41,7 +41,8 @@ class ChoiceTaskAnswer extends Answer {
 
 class ImageTaskAnswer extends Answer {
   final File file;
-  ImageTaskAnswer({required this.file});
+  final String uri;
+  ImageTaskAnswer({required this.file, required this.uri});
 
   @override
   dynamic get answer => file.uri;
