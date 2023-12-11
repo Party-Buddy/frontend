@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
-import 'package:party_games_app/core/widgets/image_network.dart';
+import 'package:party_games_app/core/widgets/image_widget.dart';
 import 'package:party_games_app/core/widgets/inkwell_border_wrapper.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 
@@ -63,7 +63,7 @@ class TaskHeader extends StatelessWidget {
             if (task.imageUri != null)
               Padding(
                 padding: const EdgeInsets.only(left: kPadding),
-                child: ImageNetwork(
+                child: ImageWidget(
                   url: task.imageUri!,
                   height: imgSize,
                   width: imgSize,

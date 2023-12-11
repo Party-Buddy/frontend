@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:crop_image/crop_image.dart';
@@ -29,10 +30,10 @@ class ImageUploader extends StatefulWidget {
 
 class _ImageUploaderState extends State<ImageUploader> {
   File? image;
+  Uint8List? imageBytes;
   final controller = CropController(aspectRatio: 1);
 
   Future getImage(BuildContext context) async {
-
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image == null) return;
 
@@ -56,15 +57,22 @@ class _ImageUploaderState extends State<ImageUploader> {
               CustomButton(
                   text: "Выбрать",
                   onPressed: () async {
+                    await Future.microtask(() => showWidget(context,
+                        content: const CircularProgressIndicator(
+                          color: kPrimaryColor,
+                        )));
                     final bitmap = await controller.croppedBitmap();
                     final byteData =
                         await bitmap.toByteData(format: ImageByteFormat.png);
                     final dirName = await getApplicationDocumentsDirectory();
 
-                    File file = File(join(dirName.path, '${DateTime.now().microsecondsSinceEpoch}.png'));
+                    File file = File(join(dirName.path,
+                        '${DateTime.now().microsecondsSinceEpoch}.png'));
                     await file.writeAsBytes(byteData!.buffer.asUint8List(
                         byteData.offsetInBytes, byteData.lengthInBytes));
 
+                    imageBytes = file.readAsBytesSync();
+                    await Future.microtask(() => Navigator.of(context).pop());
                     setState(() {
                       this.image = file;
                     });
@@ -80,11 +88,11 @@ class _ImageUploaderState extends State<ImageUploader> {
   Widget build(BuildContext context) {
     return InkwellBorderWrapper(
       onPressed: () async => getImage(context),
-      child: image != null
+      child: imageBytes != null
           ? ClipRRect(
               borderRadius: kBorderRadius,
               child: Image.memory(
-                image!.readAsBytesSync(),
+                imageBytes!,
                 fit: BoxFit.fitHeight,
                 width: widget.imageSize,
                 height: widget.imageSize,

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
-import 'package:party_games_app/core/widgets/image_network.dart';
+import 'package:party_games_app/core/widgets/image_widget.dart';
 import 'package:party_games_app/core/widgets/inkwell_border_wrapper.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 
@@ -51,9 +51,7 @@ class GameHeader extends StatelessWidget {
                 ],
               ),
               game.imageUri != null
-                  ? (game.imageUri!.startsWith('http')
-                      ? ImageNetwork(url: game.imageUri!, height: 90, width: 90)
-                      : Image.file(File(game.imageUri!), height: 90))
+                  ? ImageWidget(url: game.imageUri!, height: 90, width: 90)
                   : const Image(
                       image: AssetImage('assets/images/no-photo.png'),
                       height: 90)

@@ -352,10 +352,10 @@ class SessionEngineTestImpl implements SessionEngine {
       'msg-id': 12,
       'time': 25000,
       'scoreboard': [
-        {'player-id': 0, 'total-points': 1},
-        {'player-id': 1, 'total-points': 0},
-        {'player-id': 2, 'total-points': 2},
-        {'player-id': 3, 'total-points': 0}
+        {'player-id': 0, 'total-points': 4},
+        {'player-id': 1, 'total-points': 2},
+        {'player-id': 2, 'total-points': 3},
+        {'player-id': 3, 'total-points': 1}
       ]
     });
   }

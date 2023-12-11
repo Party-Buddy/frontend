@@ -71,38 +71,41 @@ class _ConstructorScreenState extends State<ConstructorScreen> {
                 const SizedBox(
                   height: kPadding,
                 ),
-                SizedBox(
-                  width: labelWidth,
-                  child: Row(
-                    children: [
-                      Text(
-                        "Сортировать",
-                        style: defaultTextStyle(),
-                      ),
-                      const SizedBox(
-                        width: kPadding,
-                      ),
-                      SizedBox(
-                        width: 100,
-                        child: CustomDropDownButton(
-                            initialItem: SortType.date,
-                            items: SortType.values,
-                            stringMapper: (t) => switch (t) {
-                                  SortType.date => "По дате",
-                                  SortType.type => "По типу"
-                                },
-                            onChanged: (s) {}),
-                      ),
-                      const SizedBox(
-                        width: kPadding,
-                      ),
-                      CustomIconButton(
-                          onPressed: () =>
-                              setState(() => descending = !descending),
-                          iconData: descending
-                              ? Icons.arrow_downward
-                              : Icons.arrow_upward)
-                    ],
+                Visibility(
+                  visible: false,
+                  child: SizedBox(
+                    width: labelWidth,
+                    child: Row(
+                      children: [
+                        Text(
+                          "Сортировать",
+                          style: defaultTextStyle(),
+                        ),
+                        const SizedBox(
+                          width: kPadding,
+                        ),
+                        SizedBox(
+                          width: 100,
+                          child: CustomDropDownButton(
+                              initialItem: SortType.date,
+                              items: SortType.values,
+                              stringMapper: (t) => switch (t) {
+                                    SortType.date => "По дате",
+                                    SortType.type => "По типу"
+                                  },
+                              onChanged: (s) {}),
+                        ),
+                        const SizedBox(
+                          width: kPadding,
+                        ),
+                        CustomIconButton(
+                            onPressed: () =>
+                                setState(() => descending = !descending),
+                            iconData: descending
+                                ? Icons.arrow_downward
+                                : Icons.arrow_upward)
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(

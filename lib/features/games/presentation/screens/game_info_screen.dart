@@ -4,7 +4,7 @@ import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/widgets/base_screen.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
 import 'package:party_games_app/core/widgets/custom_button.dart';
-import 'package:party_games_app/core/widgets/image_network.dart';
+import 'package:party_games_app/core/widgets/image_widget.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/tasks/presentation/screens/task_info_screen.dart';
 import 'package:party_games_app/features/tasks/presentation/widgets/task_header.dart';
@@ -37,7 +37,7 @@ class GameInfoScreen extends StatelessWidget {
                       const EdgeInsets.only(bottom: kPadding).add(kPaddingAll),
                   child: BorderWrapper(
                       shadow: true,
-                      child: ImageNetwork(
+                      child: ImageWidget(
                         url: game.imageUri!,
                         width: 200,
                         height: 200,

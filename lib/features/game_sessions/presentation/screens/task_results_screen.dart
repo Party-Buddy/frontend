@@ -5,7 +5,7 @@ import 'package:linear_timer/linear_timer.dart';
 import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/utils.dart';
 import 'package:party_games_app/config/view_config.dart';
-import 'package:party_games_app/core/widgets/image_network.dart';
+import 'package:party_games_app/core/widgets/image_widget.dart';
 import 'package:party_games_app/core/widgets/base_screen.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
 import 'package:party_games_app/core/widgets/custom_button.dart';
@@ -170,7 +170,7 @@ class TaskResultsScreen extends StatelessWidget {
                   height: kPadding,
                 ),
                 SizedBox(
-                    height: MediaQuery.of(context).size.height * .4,
+                    height: MediaQuery.of(context).size.height * .45,
                     child: SingleChildScrollView(
                         padding: const EdgeInsets.all(kPadding * 2),
                         child: buildContent(context))),
@@ -402,7 +402,7 @@ class TaskResultsScreen extends StatelessWidget {
                   showWidget(context,
                       content: ClipRRect(
                           borderRadius: kBorderRadius,
-                          child: ImageNetwork(
+                          child: ImageWidget(
                             url: answer.value,
                             width: 300,
                             height: 300,
@@ -412,7 +412,7 @@ class TaskResultsScreen extends StatelessWidget {
                     shadow: answer.score >= winnerScoreThreshold,
                     blurRadius: 8,
                     shadowColor: kPrimaryColor,
-                    child: ImageNetwork(
+                    child: ImageWidget(
                       url: answer.value,
                       width: 120,
                       height: 120,

@@ -27,7 +27,7 @@ class BorderWrapper extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: kBorderRadius,
             color: fillColor ?? kAppBarColor,
-            border: Border.all(color: borderColor?? Colors.transparent, width: 1.5),
+            border: Border.all(color: borderColor?? Colors.transparent, width: 2),
             boxShadow: shadow ? [highlightShadow(color: shadowColor, blurRadius: blurRadius)] : []),
         padding: EdgeInsets.all(padding),
         child: child);
