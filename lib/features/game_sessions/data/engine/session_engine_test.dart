@@ -17,6 +17,7 @@ import 'package:party_games_app/features/game_sessions/domain/engine/session_eng
 import 'package:party_games_app/features/game_sessions/domain/entities/current_task.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/game_results.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/poll_info.dart';
+import 'package:party_games_app/features/game_sessions/domain/entities/task_answer.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/task_results.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/game_session.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
@@ -435,14 +436,23 @@ class SessionEngineTestImpl implements SessionEngine {
   }
 
   @override
-  void sendAnswer(bool ready, int taskId) {
-    debugPrint(
-        'player send answer: (ready=$ready,taskId=$taskId, TODO answer)');
-    _sendMesage('task-answer', {
-      'ready': ready,
-      'task-idx': taskId,
-      'answer': {'type': 'text', 'value': 'answer'}
-    });
+  void sendAnswer(int taskId, Answer? answer, {bool? ready = false}) {
+    if (answer == null) {
+      debugPrint('player send answer: (ready=$ready, taskId=$taskId)');
+      _sendMesage('task-answer', {'ready': ready, 'task-idx': taskId});
+    } else if (answer is ImageTaskAnswer) {
+      // load http
+      debugPrint('player send answer HTTP IMAGE UPLOAD');
+      debugPrint('player send answer: (ready=$ready, taskId=$taskId)');
+      _sendMesage('task-answer', {'ready': ready, 'task-idx': taskId});
+    } else {
+      debugPrint('player send answer: (ready=$ready, taskId=$taskId)');
+      _sendMesage('task-answer', {
+        'ready': ready,
+        'task-idx': taskId,
+        'answer': {'type': answer.taskType, 'value': answer.answer}
+      });
+    }
   }
 
   @override

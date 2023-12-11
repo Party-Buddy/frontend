@@ -14,6 +14,7 @@ import 'package:party_games_app/features/game_sessions/domain/engine/session_eng
 import 'package:party_games_app/features/game_sessions/domain/entities/current_task.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/game_results.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/poll_info.dart';
+import 'package:party_games_app/features/game_sessions/domain/entities/task_answer.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/task_results.dart';
 import 'package:party_games_app/features/game_sessions/domain/repository/session_data_repository.dart';
 import 'package:party_games_app/features/games/data/models/game_model.dart';
@@ -127,7 +128,7 @@ class SessionEngineImpl implements SessionEngine {
     joinCompleter?.complete(const DataFailed('connection closed'));
   }
 
-  void _clearSessionInfo(){
+  void _clearSessionInfo() {
     _sessionRepository.clearSession();
   }
 
@@ -180,8 +181,8 @@ class SessionEngineImpl implements SessionEngine {
   }
 
   @override
-  Future<DataState<String>> startSession(
-      Game game, Username username, {int maxPlayersCount = 20, bool requireReady = false} ) async {
+  Future<DataState<String>> startSession(Game game, Username username,
+      {int maxPlayersCount = 20, bool requireReady = false}) async {
     uid = await uidGetter;
     try {
       var bodyJson = <String, dynamic>{
@@ -293,15 +294,19 @@ class SessionEngineImpl implements SessionEngine {
   }
 
   @override
-  void sendAnswer(
-    bool ready,
-    int taskId,
-  ) {
-    _sendMesage('task-answer', {
-      'ready': ready,
-      'task-idx': taskId,
-      'answer': {'type': 'text', 'value': 'answer'}
-    });
+  void sendAnswer(int taskId, Answer? answer, {bool? ready = false}) {
+    if (answer == null) {
+      _sendMesage('task-answer', {'ready': ready, 'task-idx': taskId});
+    } else if (answer is ImageTaskAnswer) {
+      // upload http
+      _sendMesage('task-answer', {'ready': ready, 'task-idx': taskId});
+    } else {
+      _sendMesage('task-answer', {
+        'ready': ready,
+        'task-idx': taskId,
+        'answer': {'type': answer.taskType, 'value': answer.answer}
+      });
+    }
   }
 
   @override

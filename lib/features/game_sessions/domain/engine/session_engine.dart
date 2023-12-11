@@ -3,6 +3,7 @@ import 'package:party_games_app/features/game_sessions/domain/entities/current_t
 import 'package:party_games_app/features/game_sessions/domain/entities/game_results.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/game_session.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/poll_info.dart';
+import 'package:party_games_app/features/game_sessions/domain/entities/task_answer.dart';
 import 'package:party_games_app/features/game_sessions/domain/entities/task_results.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/user_data/domain/entities/username.dart';
@@ -15,7 +16,7 @@ abstract class SessionEngine {
   void leaveSession();
   void kickPlayer(int playerId);
   void setReady(bool ready);
-  void sendAnswer(bool ready, int taskId);
+  void sendAnswer(int taskId, Answer? answer, {bool? ready = false});
   void sendPollChoice(bool ready, int taskId, int choice);
 
   // callbacks
