@@ -23,15 +23,17 @@ import 'package:party_games_app/features/game_sessions/domain/entities/game_sess
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/user_data/domain/entities/username.dart';
 import 'package:party_games_app/features/user_data/domain/usecases/get_uid.dart';
+import 'package:synchronized/synchronized.dart';
 
 class SessionEngineTestImpl implements SessionEngine {
   late final Future<String> uidGetter;
   String? uid;
+  final Lock _stateLock = Lock();
+  GameState state = GameState.closed;
 
   Function(GameSession)? _onGameStatus;
   Function(int?)? _onGameStart;
   Function(String)? _onGameInterrupted;
-  Function(String)? _onJoinFailure;
   Function(String)? _onOpError;
   Function(CurrentTask)? _onTaskStart;
   Function(TaskResults)? _onTaskEnd;
@@ -52,29 +54,36 @@ class SessionEngineTestImpl implements SessionEngine {
     _onGameStatus?.call(gameSession.toEntity());
   }
 
-  void _sendJoinFailure(String msg) {
-    _onJoinFailure?.call(msg);
+  void _onJoinedMessage(Map<String, dynamic> data) async {
+    await _stateLock.synchronized(() async {
+      if (state != GameState.start) {
+        return;
+      }
+      joinCompleter?.complete(DataSuccess(data['session-id'] ?? ''));
+      gameSession = GameSessionModel.fromJson(data);
+      _sendGameStatus();
+      state = GameState.lobby;
+    });
   }
 
-  void _onJoinedMessage(Map<String, dynamic> data) {
-    joinCompleter?.complete(DataSuccess(data['session-id'] ?? ''));
-    gameSession = GameSessionModel.fromJson(data);
-    _sendGameStatus();
-  }
-
-  void _onWaitingMessage(Map<String, dynamic> data) {
-    if (gameSession.players != null) {
-      var players = gameSession.players!
-          .map((player) =>
-              ((data['ready'] as List?)?.contains(player.id) ?? false)
-                  ? player.copyWith(ready: true)
-                  : player.copyWith(ready: false))
-          .toList();
-      gameSession = gameSession.copyWith(players: players);
-    } else {
-      // TODO
-    }
-    _sendGameStatus();
+  void _onWaitingMessage(Map<String, dynamic> data) async {
+    await _stateLock.synchronized(() async {
+      if (state != GameState.lobby) {
+        return;
+      }
+      if (gameSession.players != null) {
+        var players = gameSession.players!
+            .map((player) =>
+                ((data['ready'] as List?)?.contains(player.id) ?? false)
+                    ? player.copyWith(ready: true)
+                    : player.copyWith(ready: false))
+            .toList();
+        gameSession = gameSession.copyWith(players: players);
+      } else {
+        // TODO
+      }
+      _sendGameStatus();
+    });
   }
 
   void _onGameStatusMessage(Map<String, dynamic> data) {
@@ -95,36 +104,100 @@ class SessionEngineTestImpl implements SessionEngine {
     _sendGameStatus();
   }
 
-  void _onGameStartMessage(Map<String, dynamic> data) {
-    _onGameStart?.call(data['deadline']);
+  void _onGameStartMessage(Map<String, dynamic> data) async {
+    await _stateLock.synchronized(() async {
+      if (state != GameState.lobby) {
+        return;
+      }
+      _onGameStart?.call(data['deadline']);
+      state = GameState.game;
+    });
   }
 
-  void _onTaskStartMessage(Map<String, dynamic> data) {
-    _onTaskStart?.call(CurrentTaskModel.fromJson(data).toEntity());
+  void _onTaskStartMessage(Map<String, dynamic> data) async {
+    await _stateLock.synchronized(() async {
+      if (state != GameState.game) {
+        return;
+      }
+      _onTaskStart?.call(CurrentTaskModel.fromJson(data).toEntity());
+    });
   }
 
-  void _onTaskEndMessage(Map<String, dynamic> data) {
-    var tr = TaskResultsModel.fromJson(data).toEntity();
-    _onTaskEnd?.call(tr);
+  void _onTaskEndMessage(Map<String, dynamic> data) async {
+    await _stateLock.synchronized(() async {
+      if (state != GameState.game) {
+        return;
+      }
+      _onTaskEnd?.call(TaskResultsModel.fromJson(data).toEntity());
+    });
   }
 
-  void _onGameEndMessage(Map<String, dynamic> data) {
-    var gr = GameResultsModel.fromJson(data).toEntity();
-    _onGameEnd?.call(gr);
+  void _onPollStartMessage(Map<String, dynamic> data) async {
+    await _stateLock.synchronized(() async {
+      if (state != GameState.game) {
+        return;
+      }
+      _onPollStart?.call(PollInfoModel.fromJson(data).toEntity());
+    });
   }
 
-  void _onPollStartMessage(Map<String, dynamic> data) {
-    var pi = PollInfoModel.fromJson(data).toEntity();
-    _onPollStart?.call(pi);
+  void _onGameEndMessage(Map<String, dynamic> data) async {
+    await _stateLock.synchronized(() async {
+      if (state != GameState.game) {
+        return;
+      }
+      _clearSessionInfo();
+      _onGameEnd?.call(GameResultsModel.fromJson(data).toEntity());
+      state = GameState.finish;
+    });
   }
 
-  void _onJoinFailureMessage(Map<String, dynamic> data) {
-    joinCompleter?.complete(DataFailed(data['message'] ?? data['kind']));
-    _sendJoinFailure(data['message'] ?? data['kind']);
+  void _onJoinFailureMessage(Map<String, dynamic> data) async {
+    await _stateLock.synchronized(() async {
+      if (state != GameState.start) {
+        return;
+      }
+      joinCompleter?.complete(DataFailed(data['message'] ?? data['kind']));
+      state = GameState.closed;
+    });
   }
 
   void _onOpErrorMessage(Map<String, dynamic> data) {
     _onOpError?.call(data['message'] ?? data['kind']);
+  }
+
+  void _onConnectionClosed() async {
+    await _stateLock.synchronized(() async {
+      if (state == GameState.closed || state == GameState.finish) {
+        state = GameState.closed;
+        return;
+      }
+      joinCompleter?.complete(const DataFailed('connection closed'));
+      _onGameInterrupted?.call('connection closed');
+      state = GameState.closed;
+    });
+  }
+
+  void _clearSessionInfo() {
+    //_sessionRepository.clearSession();
+  }
+
+  void _onGameInterruptedMessage(Map<String, dynamic> data) async {
+    await _stateLock.synchronized(() async {
+      if (state == GameState.closed) {
+        return;
+      }
+      //_channel?.sink.close();
+      if (state == GameState.start) {
+        joinCompleter?.complete(DataFailed(data['message'] ?? data['kind']));
+        state = GameState.closed;
+        return;
+      }
+      gameSession = GameSessionModel();
+      _onGameInterrupted?.call(data['message'] ?? data['kind']);
+      _clearSessionInfo();
+      state = GameState.closed;
+    });
   }
 
   Future<void> _delayedMessage(int delay, Map<String, dynamic> data) async {
@@ -359,6 +432,7 @@ class SessionEngineTestImpl implements SessionEngine {
         {'player-id': 3, 'total-points': 1}
       ]
     });
+    _onConnectionClosed();
   }
 
   @override
@@ -380,6 +454,7 @@ class SessionEngineTestImpl implements SessionEngine {
     gameSession = GameSessionModel();
     nickname = username.username;
     try {
+      state = GameState.start;
       joinCompleter = Completer<DataState<String>>();
       _listen();
       _sendMesage('join', {'nickname': username.username});
@@ -419,9 +494,15 @@ class SessionEngineTestImpl implements SessionEngine {
   }
 
   @override
-  void leaveSession() {
-    _sendMesage('leave', {});
-    gameSession = GameSessionModel();
+  void leaveSession() async {
+    await _stateLock.synchronized(() async {
+      if (state == GameState.closed) {
+        return;
+      }
+      _sendMesage('leave', {});
+      gameSession = GameSessionModel();
+      state = GameState.closed;
+    });
   }
 
   @override
@@ -446,7 +527,9 @@ class SessionEngineTestImpl implements SessionEngine {
       debugPrint('player send answer: (ready=$ready, taskId=$taskId)');
       _sendMesage('task-answer', {'ready': ready, 'task-idx': taskId});
     } else {
-      debugPrint('player send answer: (ready=$ready, taskId=$taskId)');
+      debugPrint('player send answer: (ready=$ready, taskId=$taskId)${{
+        'answer': {'type': answer.taskType, 'value': answer.answer}
+      }}');
       _sendMesage('task-answer', {
         'ready': ready,
         'task-idx': taskId,
@@ -456,11 +539,9 @@ class SessionEngineTestImpl implements SessionEngine {
   }
 
   @override
-  void sendPollChoice(bool ready, int taskId, int choice) {
-    debugPrint(
-        'player send poll choice: (ready=$ready,taskId=$taskId, choice=$choice)');
-    _sendMesage('poll-choose',
-        {'task-idx': taskId, 'option-idx': ready ? choice : null});
+  void sendPollChoice(int taskId, int? choice) {
+    debugPrint('player send poll choice: (taskId=$taskId, choice=$choice)');
+    _sendMesage('poll-choose', {'task-idx': taskId, 'option-idx': choice});
   }
   // callbacks
 
@@ -478,11 +559,6 @@ class SessionEngineTestImpl implements SessionEngine {
   @override
   void onGameInterrupted(Function(String) callback) {
     _onGameInterrupted = callback;
-  }
-
-  @override
-  void onJoinFailure(Function(String) callback) {
-    _onJoinFailure = callback;
   }
 
   @override

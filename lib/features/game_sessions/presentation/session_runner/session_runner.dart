@@ -61,7 +61,10 @@ class SessionRunner {
     debugPrint(sessionId.data);
 
     if (sessionId.error != null) {
-      await Future.microtask(() => showMessage(context, sessionId.error!));
+      await Future.microtask(() {
+        Navigator.pushNamed(context, MainMenuScreen.routeName);
+        showMessage(context, "Не удалось присоединиться: ${sessionId.error!}");
+        });
       return;
     }
 
@@ -163,11 +166,6 @@ class SessionRunner {
     sessionEngine.onGameInterrupted((reason) {
       Navigator.pushNamed(context, MainMenuScreen.routeName);
       showMessage(context, "Данная игры была прервана.");
-    });
-
-    sessionEngine.onJoinFailure((p0) {
-      Navigator.pushNamed(context, MainMenuScreen.routeName);
-      showMessage(context, "Не удалось присоединиться.");
     });
   }
 }

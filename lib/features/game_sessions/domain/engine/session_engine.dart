@@ -9,7 +9,8 @@ import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/user_data/domain/entities/username.dart';
 
 abstract class SessionEngine {
-  Future<DataState<String>> startSession(Game game, Username username, {int maxPlayersCount = 20, bool requireReady = false});
+  Future<DataState<String>> startSession(Game game, Username username,
+      {int maxPlayersCount = 20, bool requireReady = false});
   Future<DataState<String>> joinSession(String inviteCode, Username username);
   Future<DataState<String>> reconnectSession(String sessionId);
 
@@ -17,7 +18,7 @@ abstract class SessionEngine {
   void kickPlayer(int playerId);
   void setReady(bool ready);
   void sendAnswer(int taskId, Answer? answer, {bool? ready = false});
-  void sendPollChoice(bool ready, int taskId, int choice);
+  void sendPollChoice(int taskId, int? choice);
 
   // callbacks
   void onGameStatus(Function(GameSession) callback);
@@ -27,7 +28,8 @@ abstract class SessionEngine {
   void onTaskEnd(Function(TaskResults) callback);
   void onGameEnd(Function(GameResults) callback);
   // failure callbacks
-  void onJoinFailure(Function(String) callback);
   void onOpError(Function(String) callback);
   void onGameInterrupted(Function(String) callback);
 }
+
+enum GameState { start, lobby, game, finish, closed }

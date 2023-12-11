@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 import 'package:party_games_app/core/database/app_database.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
@@ -135,13 +136,16 @@ class PublishedGameModel extends GameModel {
   }
 
   factory PublishedGameModel.fromJson(Map<String, dynamic> map) {
+    String? date = map['date-changed'];
     return PublishedGameModel(
         id: map['id'],
         name: map['name'],
         description: map['description'],
         imageUri: map['img-uri'],
         tasks: map['tasks'] ?? [],
-        updatedAt: map['date-changed']);
+        updatedAt: date != null
+            ? DateFormat('yyyy-MM-dd').parse(map['date-changed'])
+            : null);
   }
 
   @override
