@@ -48,6 +48,12 @@ class _GameJoinScreenState extends State<GameJoinScreen>
         duration: const Duration(seconds: 4),
         value: controllerValue);
     controller.repeat();
+    inviteCode = widget.inviteCode ?? "";
+    if (inviteCode != "") {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+      onJoinById();
+    });
+    }
   }
 
   @override
@@ -110,7 +116,7 @@ class _GameJoinScreenState extends State<GameJoinScreen>
         content: Column(
           children: [
             SingleLineInputLabel(
-                initialText: inviteCode,
+                initialText: widget.inviteCode ?? "",
                 labelText: "id сессии",
                 onSubmitted: (code) async {
                   inviteCode = code;

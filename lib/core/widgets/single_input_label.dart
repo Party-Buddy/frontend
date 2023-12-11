@@ -35,6 +35,12 @@ class _SingleLineInputLabelState extends State<SingleLineInputLabel> {
       };
 
   @override
+  void initState() {
+    super.initState();
+    controller.text = initialText;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(kPadding / 2),
