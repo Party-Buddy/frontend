@@ -165,7 +165,7 @@ class SessionRunner {
 
     sessionEngine.onGameInterrupted((reason) {
       Navigator.pushNamed(context, MainMenuScreen.routeName);
-      showMessage(context, "Данная игры была прервана.");
+      showMessage(context, "Игра завершена: $reason");
     });
   }
 }
