@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:party_games_app/config/consts.dart';
-import 'package:party_games_app/config/theme/commons.dart';
 import 'package:party_games_app/config/utils.dart';
 import 'package:party_games_app/config/view_config.dart';
-import 'package:party_games_app/core/resources/data_state.dart';
 import 'package:party_games_app/core/widgets/base_screen.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
+import 'package:party_games_app/core/widgets/future_builder_wrapper.dart';
 import 'package:party_games_app/core/widgets/labeled_slider.dart';
 import 'package:party_games_app/features/game_sessions/domain/engine/session_engine.dart';
-import 'package:party_games_app/features/game_sessions/domain/entities/game_session.dart';
-import 'package:party_games_app/features/game_sessions/domain/entities/task_info.dart';
-import 'package:party_games_app/features/game_sessions/presentation/screens/task_screen.dart';
-import 'package:party_games_app/features/game_sessions/presentation/screens/waiting_room_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/session_runner/session_runner.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/games/presentation/widgets/game_list.dart';
@@ -21,7 +16,9 @@ import 'package:party_games_app/core/widgets/custom_button.dart';
 import 'package:party_games_app/features/games/presentation/widgets/game_header.dart';
 import 'package:party_games_app/core/widgets/single_input_label.dart';
 import 'package:party_games_app/features/user_data/domain/entities/username.dart';
+import 'package:party_games_app/features/user_data/domain/usecases/get_username.dart';
 import 'package:party_games_app/features/user_data/domain/usecases/params/username_params.dart';
+import 'package:party_games_app/features/user_data/domain/usecases/save_username.dart';
 import 'package:party_games_app/features/user_data/domain/usecases/validate_username.dart';
 
 class GameStartScreen extends StatefulWidget {
@@ -52,6 +49,10 @@ class _GameStartScreenState extends State<GameStartScreen> {
   final SessionEngine _sessionEngine = GetIt.instance<SessionEngine>();
   final ValidateUsernameUseCase _validateUsernameUseCase =
       GetIt.instance<ValidateUsernameUseCase>();
+  final SaveUsernameUseCase _saveUsernameUseCase =
+      GetIt.instance<SaveUsernameUseCase>();
+  final GetUsernameUseCase _getUsernameUseCase =
+      GetIt.instance<GetUsernameUseCase>();
 
   String username = "";
   int maxPlayersCount = minPossiblePlayersCount;
@@ -71,9 +72,20 @@ class _GameStartScreenState extends State<GameStartScreen> {
               Row(
                 children: [
                   Flexible(
-                    child: SingleLineInputLabel(
-                        labelText: "Ваш никнейм",
-                        onSubmitted: onSubmittedUsername),
+                    child: username.isEmpty
+                        ? FutureBuilderWrapper(
+                            delayRatio: 0,
+                            future: _getUsernameUseCase.call(),
+                            notFoundWidget: () => const SizedBox(),
+                            builder: (username) => SingleLineInputLabel(
+                                initialText: username.username,
+                                labelText: "Ваш никнейм",
+                                onSubmitted: onSubmittedUsername),
+                          )
+                        : SingleLineInputLabel(
+                            initialText: username,
+                            labelText: "Ваш никнейм",
+                            onSubmitted: onSubmittedUsername),
                   ),
                   const SizedBox(
                     width: kPadding,
@@ -135,6 +147,8 @@ class _GameStartScreenState extends State<GameStartScreen> {
         params: UsernameParams(username: Username(username: username)));
 
     if (isValid) {
+      await _saveUsernameUseCase.call(
+          params: UsernameParams(username: Username(username: username)));
       this.username = username;
       return SubmitResult.success;
     }

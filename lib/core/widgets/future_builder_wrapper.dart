@@ -7,16 +7,18 @@ class FutureBuilderWrapper<T> extends StatelessWidget {
       {super.key,
       required this.future,
       required this.notFoundWidget,
-      required this.builder});
+      required this.builder,
+      this.delayRatio = 3});
 
   final Future<T> future;
   final Widget Function() notFoundWidget;
   final Widget Function(T) builder;
+  final int delayRatio;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Future.delayed(kAnimationDuration * 3, () => future),
+        future: Future.delayed(kAnimationDuration * delayRatio, () => future),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
