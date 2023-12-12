@@ -5,6 +5,7 @@ import 'package:party_games_app/config/consts.dart' as consts;
 
 class GameSessionModel {
   final String? sessionId;
+  final String? inviteCode;
   final String? name;
   final String? description;
   final String? imageUri;
@@ -16,6 +17,7 @@ class GameSessionModel {
 
   GameSessionModel(
       {this.sessionId,
+      this.inviteCode,
       this.name,
       this.description,
       this.imageUri,
@@ -28,6 +30,7 @@ class GameSessionModel {
   GameSession toEntity() {
     return GameSession(
         sessionId: sessionId ?? "",
+        invieCode: inviteCode ?? "",
         name: name ?? "",
         description: description ?? "",
         imageUri: imageUri,
@@ -41,6 +44,7 @@ class GameSessionModel {
   factory GameSessionModel.fromEntity(GameSession gameSession) {
     return GameSessionModel(
         sessionId: gameSession.sessionId,
+        inviteCode: gameSession.invieCode,
         name: gameSession.name,
         description: gameSession.description,
         imageUri: gameSession.imageUri,
@@ -55,6 +59,7 @@ class GameSessionModel {
   factory GameSessionModel.fromJson(Map<String, dynamic> map) {
     return GameSessionModel(
         sessionId: map['session-id'],
+        inviteCode: map['invite-code'],
         name: map['game']?['name'],
         description: map['game']?['description'],
         imageUri: map['game']?['img-uri'],
@@ -69,6 +74,7 @@ class GameSessionModel {
 
   GameSessionModel copyWith(
       {String? sessionId,
+      String? inviteCode,
       String? name,
       String? description,
       String? imageUri,
@@ -79,6 +85,7 @@ class GameSessionModel {
       List<GamePlayerModel>? players}) {
     return GameSessionModel(
       sessionId: sessionId ?? this.sessionId,
+      inviteCode: inviteCode ?? this.inviteCode,
       name: name ?? this.name,
       description: description ?? this.description,
       imageUri: imageUri ?? this.imageUri,

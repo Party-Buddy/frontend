@@ -243,6 +243,7 @@ class SessionEngineTestImpl implements SessionEngine {
       'time': 1000,
       'player-id': 0,
       'session-id': 'AB8HJ7',
+      'invite-code': 'AB8HJ7',
       'max-players': maxPlayers,
       'game': {
         'name': 'game name',

@@ -3,6 +3,7 @@ import 'package:party_games_app/features/game_sessions/domain/entities/task_info
 
 class GameSession {
   final String sessionId;
+  final String invieCode;
   final String name;
   final String description;
   final String? imageUri;
@@ -14,6 +15,7 @@ class GameSession {
 
   GameSession(
       {required this.sessionId,
+      required this.invieCode,
       required this.name,
       required this.description,
       this.imageUri,

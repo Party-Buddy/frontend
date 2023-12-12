@@ -34,7 +34,7 @@ class CurrentTaskModel {
       index: map['task-idx'],
       deadline: map['deadline'],
       imageUri: map['img-uri'],
-      options: map['options'],
+      options: (map['options'] as List<dynamic>?)?.cast<String>().toList(),
     );
   }
 }

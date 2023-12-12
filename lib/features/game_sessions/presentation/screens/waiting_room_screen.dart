@@ -15,7 +15,8 @@ import 'package:party_games_app/features/games/presentation/widgets/player_heade
 import 'package:qr_flutter/qr_flutter.dart';
 
 var gameSessionMock = GameSession(
-    sessionId: "AB89K3",
+    sessionId: "here should be session uid, but is is not used here",
+    invieCode: "AB89K3",
     name: '',
     description: '',
     tasks: [],
@@ -136,7 +137,7 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                               color: kAppBarColor, borderRadius: kBorderRadius),
                           padding: const EdgeInsets.all(kPadding / 2),
                           child: SelectableText(
-                            gameSession.sessionId,
+                            gameSession.invieCode,
                             style: const TextStyle(
                                 color: kPrimaryColor,
                                 fontFamily: "Roboto",
@@ -148,7 +149,7 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                         ),
                         CustomIconButton(
                           onPressed: () => Clipboard.setData(
-                              ClipboardData(text: gameSession.sessionId)),
+                              ClipboardData(text: gameSession.invieCode)),
                           iconData: Icons.link,
                         )
                       ],
@@ -178,7 +179,7 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                   CustomButton(
                       text: "Показать QR",
                       onPressed: () => showWidget(context,
-                          content: buildQRWidget(gameSession.sessionId))),
+                          content: buildQRWidget(gameSession.invieCode))),
                   const SizedBox(
                     height: kPadding,
                   ),
@@ -199,7 +200,7 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
     Navigator.pushNamed(context, MainMenuScreen.routeName);
   }
 
-  Widget buildQRWidget(String sessionId) {
+  Widget buildQRWidget(String invieCode) {
     return SizedBox(
       width: 260,
       child: Column(
@@ -210,7 +211,7 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
               width: 230,
               decoration: const BoxDecoration(
                   color: Colors.white, borderRadius: kBorderRadius),
-              child: QrImageView(data: sessionId)),
+              child: QrImageView(data: "partybuddy://prbd.ru/?invite-code=$invieCode")),
           const SizedBox(
             height: kPadding,
           ),
