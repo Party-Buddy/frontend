@@ -5,12 +5,16 @@ import 'package:party_games_app/config/utils.dart';
 import 'package:party_games_app/config/view_config.dart';
 import 'package:party_games_app/core/resources/data_state.dart';
 import 'package:party_games_app/core/widgets/base_screen.dart';
+import 'package:party_games_app/core/widgets/border_wrapper.dart';
 import 'package:party_games_app/core/widgets/custom_button.dart';
+import 'package:party_games_app/core/widgets/future_builder_wrapper.dart';
 import 'package:party_games_app/core/widgets/single_input_label.dart';
 import 'package:party_games_app/features/game_sessions/domain/engine/session_engine.dart';
 import 'package:party_games_app/features/game_sessions/presentation/session_runner/session_runner.dart';
 import 'package:party_games_app/features/user_data/domain/entities/username.dart';
+import 'package:party_games_app/features/user_data/domain/usecases/get_username.dart';
 import 'package:party_games_app/features/user_data/domain/usecases/params/username_params.dart';
+import 'package:party_games_app/features/user_data/domain/usecases/save_username.dart';
 import 'package:party_games_app/features/user_data/domain/usecases/validate_username.dart';
 
 class GameJoinScreenArguments {
@@ -39,6 +43,10 @@ class _GameJoinScreenState extends State<GameJoinScreen>
   final SessionEngine _sessionEngine = GetIt.instance<SessionEngine>();
   final ValidateUsernameUseCase _validateUsernameUseCase =
       GetIt.instance<ValidateUsernameUseCase>();
+  final SaveUsernameUseCase _saveUsernameUseCase =
+      GetIt.instance<SaveUsernameUseCase>();
+  final GetUsernameUseCase _getUsernameUseCase =
+      GetIt.instance<GetUsernameUseCase>();
 
   @override
   void initState() {
@@ -51,8 +59,8 @@ class _GameJoinScreenState extends State<GameJoinScreen>
     inviteCode = widget.inviteCode ?? "";
     if (inviteCode != "") {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-      onJoinById();
-    });
+        onJoinById();
+      });
     }
   }
 
@@ -125,10 +133,40 @@ class _GameJoinScreenState extends State<GameJoinScreen>
             const SizedBox(
               height: kPadding,
             ),
-            SingleLineInputLabel(
-                initialText: username,
-                labelText: "Ваш никнейм",
-                onSubmitted: onSubmittedUsername),
+            Row(
+              children: [
+                Flexible(
+                  child: username.isEmpty
+                      ? FutureBuilderWrapper(
+                          delayRatio: 0,
+                          future: _getUsernameUseCase.call(),
+                          notFoundWidget: () => const SizedBox(),
+                          builder: (username) {
+                            this.username = username.username;
+                            return SingleLineInputLabel(
+                                initialText: username.username,
+                                labelText: "Ваш никнейм",
+                                onSubmitted: onSubmittedUsername);
+                          },
+                        )
+                      : SingleLineInputLabel(
+                          initialText: username,
+                          labelText: "Ваш никнейм",
+                          onSubmitted: onSubmittedUsername),
+                ),
+                const SizedBox(
+                  width: kPadding,
+                ),
+                BorderWrapper(
+                  padding: kPadding * 1.35,
+                  child: Icon(
+                    Icons.person_2,
+                    size: 30,
+                    color: kBorderColor,
+                  ),
+                )
+              ],
+            ),
             const SizedBox(
               height: kPadding,
             ),
@@ -148,6 +186,8 @@ class _GameJoinScreenState extends State<GameJoinScreen>
         params: UsernameParams(username: Username(username: username)));
 
     if (isValid) {
+      await _saveUsernameUseCase.call(
+          params: UsernameParams(username: Username(username: username)));
       this.username = username;
       return SubmitResult.success;
     }

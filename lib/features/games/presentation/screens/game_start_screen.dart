@@ -77,10 +77,12 @@ class _GameStartScreenState extends State<GameStartScreen> {
                             delayRatio: 0,
                             future: _getUsernameUseCase.call(),
                             notFoundWidget: () => const SizedBox(),
-                            builder: (username) => SingleLineInputLabel(
+                            builder: (username) {
+                              this.username = username.username;
+                              return SingleLineInputLabel(
                                 initialText: username.username,
                                 labelText: "Ваш никнейм",
-                                onSubmitted: onSubmittedUsername),
+                                onSubmitted: onSubmittedUsername);},
                           )
                         : SingleLineInputLabel(
                             initialText: username,
@@ -158,6 +160,7 @@ class _GameStartScreenState extends State<GameStartScreen> {
   }
 
   void onGameStart() async {
+
     var runner = SessionRunner(sessionEngine: _sessionEngine);
     runner.runNewGame(context,
         game: game,
