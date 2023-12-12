@@ -51,7 +51,7 @@ class _CheckedTextTaskWidgetState extends State<CheckedTextTaskWidget> {
             labelText: "Введите ответ",
             onSubmitted: (answer) async {
               widget.sessionEngine.sendAnswer(widget.currentTask.index,
-                  CheckedTextTaskAnswer(answer: answer),
+                  CheckedTextTaskAnswer(answer: answer.toUpperCase()),
                   ready: readyNotifier.value);
               return SubmitResult.empty;
             }),
