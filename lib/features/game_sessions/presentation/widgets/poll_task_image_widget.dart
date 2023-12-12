@@ -24,7 +24,7 @@ class PollTaskImageWidget extends StatefulWidget {
 }
 
 class _PollTaskImageWidget extends State<PollTaskImageWidget> {
-  File? uploadedImage;
+  File? uploadedImageFile;
   final readyNotifier = ValueNotifier(false);
 
   @override
@@ -50,18 +50,18 @@ class _PollTaskImageWidget extends State<PollTaskImageWidget> {
       children: [
         ImageUploader(
             isOptional: false,
-            onUpdate: (image) {
+            onUpdate: (file) {
               widget.sessionEngine.sendAnswer(
                   widget.currentTask.index,
                   ImageTaskAnswer(
-                      file: image, uri: widget.currentTask.imageUri!),
+                      file: file, uri: widget.currentTask.imageUri!),
                   ready: readyNotifier.value);
               setState(() {
-                uploadedImage = image;
+                uploadedImageFile = file;
               });
             }),
         Visibility(
-            visible: uploadedImage != null,
+            visible: uploadedImageFile != null,
             child: Container(
                 alignment: Alignment.center,
                 child: ReadyConfirmationLabel(enabledNotifier: readyNotifier)))
