@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 import 'package:party_games_app/core/database/app_database.dart';
 import 'package:party_games_app/features/tasks/data/models/task_model.dart';
@@ -5,7 +6,7 @@ import 'package:party_games_app/features/tasks/domain/entities/choice_task.dart'
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 
 mixin ChoiceTaskMixin {
-  late final Set<ChoiceTaskOption>? options;
+  late final List<ChoiceTaskOption>? options;
 
   ChoiceTaskOptionsCompanion mixinToBinding(ChoiceTaskOption option) {
     return ChoiceTaskOptionsCompanion(
@@ -23,7 +24,7 @@ class OwnedChoiceTaskModel extends OwnedTaskModel with ChoiceTaskMixin {
       super.createdAt,
       super.updatedAt,
       super.sourceId,
-      Set<ChoiceTaskOption>? options})
+      List<ChoiceTaskOption>? options})
       : super(type: TaskType.choice) {
     this.options = options;
   }
@@ -33,10 +34,11 @@ class OwnedChoiceTaskModel extends OwnedTaskModel with ChoiceTaskMixin {
   @override
   Map<String, dynamic> toJson() {
     var json = baseToJson();
+    var correct = options?.firstWhere((option) => option.correct);
     json.addAll({
       'type': 'choice',
       'options': options?.map((option) => option.alternative).toList(),
-      'answer-idx': options?.firstWhere((option) => option.correct)
+      'answer-idx': correct!= null ? options?.indexOf(correct) : null
     });
     return json;
   }
@@ -54,7 +56,7 @@ class OwnedChoiceTaskModel extends OwnedTaskModel with ChoiceTaskMixin {
         createdAt: createdAt,
         updatedAt: updatedAt,
         sourceId: sourceId,
-        options: options ?? {});
+        options: options ?? []);
   }
 
   factory OwnedChoiceTaskModel.fromEntity(OwnedChoiceTask task) {
@@ -89,7 +91,7 @@ class OwnedChoiceTaskModel extends OwnedTaskModel with ChoiceTaskMixin {
         createdAt: baseTask.createdAt,
         updatedAt: baseTask.updatedAt,
         sourceId: baseTask.sourceId,
-        options: Set.from(options));
+        options: options);
   }
 }
 
@@ -102,7 +104,7 @@ class PublishedChoiceTaskModel extends PublishedTaskModel with ChoiceTaskMixin {
       super.duration,
       super.createdAt,
       super.updatedAt,
-      Set<ChoiceTaskOption>? options})
+      List<ChoiceTaskOption>? options})
       : super(type: TaskType.choice) {
     this.options = options;
   }
@@ -124,10 +126,11 @@ class PublishedChoiceTaskModel extends PublishedTaskModel with ChoiceTaskMixin {
   @override
   Map<String, dynamic> toJson() {
     var json = baseToJson();
+    var correct = options?.firstWhere((option) => option.correct);
     json.addAll({
       'type': 'choice',
       'options': options?.map((option) => option.alternative).toList(),
-      'answer-idx': options?.firstWhere((option) => option.correct)
+      'answer-idx': correct!= null ? options?.indexOf(correct) : null
     });
     return json;
   }
@@ -144,7 +147,7 @@ class PublishedChoiceTaskModel extends PublishedTaskModel with ChoiceTaskMixin {
         duration: duration ?? 0,
         createdAt: createdAt,
         updatedAt: updatedAt,
-        options: options ?? {});
+        options: options ?? []);
   }
 
   factory PublishedChoiceTaskModel.fromEntity(PublishedChoiceTask task) {
