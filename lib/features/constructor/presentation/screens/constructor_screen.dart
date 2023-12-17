@@ -150,8 +150,11 @@ class ConstructorScreen extends StatelessWidget {
                       text: value == ObjectType.game
                           ? "Создать игру"
                           : "Создать задание",
-                      onPressed: () =>
-                          Navigator.pushNamed(context, TaskCreateScreen.routeName)),
+                      onPressed: () => value == ObjectType.game
+                          ? Navigator.pushNamed(
+                              context, GameCreateScreen.routeName)
+                          : Navigator.pushNamed(
+                              context, TaskCreateScreen.routeName)),
                 ),
               ],
             ),
