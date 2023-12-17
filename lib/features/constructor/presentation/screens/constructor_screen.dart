@@ -10,6 +10,7 @@ import 'package:party_games_app/core/widgets/custom_icon_button.dart';
 import 'package:party_games_app/core/widgets/dropdown_button.dart';
 import 'package:party_games_app/core/widgets/option_switcher.dart';
 import 'package:party_games_app/features/constructor/presentation/screens/game_create_screen.dart';
+import 'package:party_games_app/features/constructor/presentation/screens/task_create_screen.dart';
 import 'package:party_games_app/features/games/presentation/screens/game_info_screen.dart';
 import 'package:party_games_app/features/games/presentation/widgets/game_list.dart';
 import 'package:party_games_app/features/tasks/presentation/screens/task_info_screen.dart';
@@ -28,10 +29,6 @@ class ConstructorScreen extends StatelessWidget {
   final currSourceNotifier = ValueNotifier(Source.owned);
 
   double get labelWidth => 300.0;
-
-  String get createText => currObjNotifier.value == ObjectType.game
-      ? "Создать игру"
-      : "Создать задание";
 
   @override
   Widget build(BuildContext context) {
@@ -147,10 +144,15 @@ class ConstructorScreen extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CustomButton(
-                    text: createText,
-                    onPressed: () =>
-                        Navigator.pushNamed(context, GameCreateScreen.routeName)),
+                ValueListenableBuilder(
+                  valueListenable: currObjNotifier,
+                  builder: (context, value, child) => CustomButton(
+                      text: value == ObjectType.game
+                          ? "Создать игру"
+                          : "Создать задание",
+                      onPressed: () =>
+                          Navigator.pushNamed(context, TaskCreateScreen.routeName)),
+                ),
               ],
             ),
           )

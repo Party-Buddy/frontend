@@ -6,11 +6,16 @@ enum SubmitResult { success, error, empty }
 
 class SingleLineInputLabel extends StatefulWidget {
   const SingleLineInputLabel(
-      {super.key, required this.onSubmitted, this.labelText, this.initialText = ""});
+      {super.key,
+      required this.onSubmitted,
+      this.labelText,
+      this.initialText = "",
+      this.clearAfterSubmit = false});
 
   final Future<SubmitResult> Function(String) onSubmitted;
   final String? labelText;
   final String initialText;
+  final bool clearAfterSubmit;
 
   @override
   State<SingleLineInputLabel> createState() => _SingleLineInputLabelState();
@@ -57,6 +62,10 @@ class _SingleLineInputLabelState extends State<SingleLineInputLabel> {
             s = s.trim();
             initialText = s;
             submitResult = result;
+            if (widget.clearAfterSubmit) {
+              initialText = "";
+              controller.text = "";
+            }
           });
         },
         cursorColor: Colors.white,
@@ -77,6 +86,10 @@ class _SingleLineInputLabelState extends State<SingleLineInputLabel> {
             var result = await widget.onSubmitted(current);
             setState(() {
               submitResult = result;
+              if (widget.clearAfterSubmit) {
+                initialText = "";
+                controller.text = "";
+              }
             });
           }
         },

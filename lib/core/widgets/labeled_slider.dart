@@ -10,6 +10,7 @@ class LabeledSlider extends StatefulWidget {
       required this.max,
       required this.initial,
       required this.onChanged,
+      this.fillColor,
       required this.displayValue});
 
   final int min;
@@ -17,6 +18,7 @@ class LabeledSlider extends StatefulWidget {
   final int initial;
   final void Function(int) onChanged;
   final String Function(int) displayValue;
+  final Color? fillColor;
 
   @override
   State<StatefulWidget> createState() => _LabeledSliderState();
@@ -30,10 +32,10 @@ class _LabeledSliderState extends State<LabeledSlider> {
     return Column(
       children: [
         BorderWrapper(
-            fillColor: lighten(kAppBarColor, 0.1),
+            fillColor: widget.fillColor?? lighten(kAppBarColor, 0.1),
             child: Text(
               widget.displayValue(currValue),
-              style: defaultTextStyle(),
+              style: defaultTextStyle(fontSize: 20),
             )),
         const SizedBox(
           height: kPadding,

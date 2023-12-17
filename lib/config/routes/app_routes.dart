@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:party_games_app/features/constructor/presentation/screens/constructor_screen.dart';
 import 'package:party_games_app/features/constructor/presentation/screens/game_create_screen.dart';
+import 'package:party_games_app/features/constructor/presentation/screens/task_create_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/game_results_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/task_results_screen.dart';
 import 'package:party_games_app/features/game_sessions/presentation/screens/task_screen.dart';
@@ -37,6 +38,9 @@ class AppRoutes {
 
       case GameCreateScreen.routeName:
         return _materialRoute(const GameCreateScreen());
+
+      case TaskCreateScreen.routeName:
+        return _materialRoute(const TaskCreateScreen());
 
       case TestsScreen.routeName:
         return _materialRoute(const TestsScreen());

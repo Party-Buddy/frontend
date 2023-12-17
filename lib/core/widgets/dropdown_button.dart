@@ -10,12 +10,14 @@ class CustomDropDownButton<T> extends StatefulWidget {
       required this.initialItem,
       required this.items,
       required this.stringMapper,
-      required this.onChanged});
+      required this.onChanged,
+      this.width = 100.0});
 
   final List<T> items;
   final T initialItem;
   final void Function(T) onChanged;
   final String Function(T) stringMapper;
+  final double width;
 
   @override
   State<CustomDropDownButton<T>> createState() => _CustomDropDownButtonState();
@@ -32,7 +34,7 @@ class _CustomDropDownButtonState<T> extends State<CustomDropDownButton<T>> {
       customButton: BorderWrapper(
           child: Container(
         alignment: Alignment.center,
-        width: 100,
+        width: widget.width,
         padding: const EdgeInsets.all(kPadding * .08),
         child: Text(widget.stringMapper(current)),
       )),
