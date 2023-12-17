@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:party_games_app/core/database/app_database.dart';
 import 'package:party_games_app/features/game_sessions/data/data_sources/local/local_datasource.dart';
+import 'package:party_games_app/features/game_sessions/data/engine/session_engine_impl.dart';
 import 'package:party_games_app/features/game_sessions/data/engine/session_engine_test.dart';
 import 'package:party_games_app/features/game_sessions/data/repository/session_data_repository_impl.dart';
 import 'package:party_games_app/features/game_sessions/domain/engine/session_engine.dart';
@@ -89,7 +90,7 @@ Future<void> initializeDependenices() async {
   sl.registerSingleton(ValidateUsernameUseCase());
 
   // engine
-  //final SessionEngine engine = SessionEngineImpl(sl(),sl());
-  final SessionEngine engine = SessionEngineTestImpl();
+  final SessionEngine engine = SessionEngineImpl(sl(),sl());
+  // final SessionEngine engine = SessionEngineTestImpl();
   sl.registerSingleton<SessionEngine>(engine);
 }

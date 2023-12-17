@@ -15,6 +15,7 @@ import 'package:party_games_app/core/widgets/image_uploader.dart';
 import 'package:party_games_app/core/widgets/labeled_slider.dart';
 import 'package:party_games_app/core/widgets/multiline_input_label.dart';
 import 'package:party_games_app/core/widgets/single_input_label.dart';
+import 'package:party_games_app/features/constructor/presentation/screens/constructor_screen.dart';
 import 'package:party_games_app/features/tasks/domain/entities/checked_text_task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/choice_task.dart';
 import 'package:party_games_app/features/tasks/domain/entities/poll_task.dart';
@@ -192,6 +193,7 @@ class _TaskCreateScreenState extends State<TaskCreateScreen> {
     }
     await _saveTaskUseCase.call(params: TaskParams(task: task));
     await Future.microtask(() => Navigator.of(context).pop());
+    ConstructorScreen.updateNotifier.value = ConstructorScreen.updateNotifier.value + 1;
     await Future.microtask(() => showMessage(context, "Задание создано."));
   }
 
