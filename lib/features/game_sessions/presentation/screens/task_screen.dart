@@ -71,7 +71,7 @@ class TaskScreen extends StatelessWidget {
                   const SizedBox(
                     height: kPadding,
                   ),
-                  if (taskInfo.photoUrl != null)
+                  if (taskInfo.photoUrl != null && taskInfo.photoUrl!.isNotEmpty)
                     Container(
                       padding: const EdgeInsets.only(bottom: kPadding),
                       alignment: Alignment.center,

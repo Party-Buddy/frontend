@@ -17,6 +17,9 @@ class ImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (url.startsWith("http://0.0.0.0")) {
+      return Container();
+    }
     return ClipRRect(
         borderRadius: kBorderRadius,
         child: url.startsWith("http")

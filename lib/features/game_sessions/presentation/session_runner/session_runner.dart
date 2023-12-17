@@ -63,7 +63,7 @@ class SessionRunner {
     if (sessionId.error != null) {
       await Future.microtask(() {
         Navigator.pushNamed(context, MainMenuScreen.routeName);
-        showMessage(context, "Не удалось присоединиться: ${sessionId.error!}");
+        showMessage(context, sessionId.error!);
         });
       return;
     }
