@@ -35,7 +35,7 @@ class OwnedCheckedTextTaskModel extends OwnedTaskModel
     var json = baseToJson();
     json.addAll(<String, dynamic>{
       'type': 'checked-text',
-      'answer': answer,
+      'answer': answer?.toUpperCase(),
     });
     return json;
   }

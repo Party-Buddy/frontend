@@ -30,7 +30,7 @@ class TaskRepositoryImpl implements TaskRepository {
   @override
   Future<List<OwnedTask>> getLocalTasks() async {
     List<OwnedTaskModel> allTasks = await _database.baseTaskDao
-        .getAllTasksByType(TaskType.choice.name)
+        .getAllTasksByType(TaskType.choice.toString())
         .then((baseTasks) => Future.wait(baseTasks.map((baseTask) async {
               return OwnedChoiceTaskModel.fromTables(
                   baseTask,
