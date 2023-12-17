@@ -133,6 +133,7 @@ class ConstructorScreen extends StatelessWidget {
                     : ValueListenableBuilder(
                         valueListenable: currSourceNotifier,
                         builder: (context, value, child) => buildTaskList(
+                            context,
                             onTapOnTask: (task) {
                               Navigator.pushNamed(
                                   context, TaskInfoScreen.routeName,

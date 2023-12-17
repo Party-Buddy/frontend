@@ -36,7 +36,7 @@ class _TaskListState extends State<TaskList> {
       const SizedBox(
         height: kPadding,
       ),
-      buildTaskList(onTapOnTask: widget.onTapOnTask, source: source)
+      buildTaskList(context, onTapOnTask: widget.onTapOnTask, source: source)
     ]);
   }
 }
@@ -48,6 +48,7 @@ final GetPublishedTasksUseCase _getPublishedTasksUseCase =
     GetIt.instance<GetPublishedTasksUseCase>();
 
 FutureBuilderWrapper<DataState<List<Task>>> buildTaskList(
+    BuildContext context,
     {required Function(Task) onTapOnTask, required Source source}) {
   return FutureBuilderWrapper(
       future: source == Source.public
@@ -69,14 +70,20 @@ FutureBuilderWrapper<DataState<List<Task>>> buildTaskList(
           }
           return buildNotFoundWidget(text: text);
         }
-        return SingleChildScrollView(
-          child: Column(
-            children: data.data!
-                .map((task) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: kPadding / 2),
-                    child:
-                        TaskHeader(task: task, onTap: () => onTapOnTask(task))))
-                .toList(),
+        return Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * .6,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: data.data!
+                  .map((task) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: kPadding / 2),
+                      child:
+                          TaskHeader(task: task, onTap: () => onTapOnTask(task))))
+                  .toList(),
+            ),
           ),
         );
       });

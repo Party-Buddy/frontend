@@ -70,14 +70,19 @@ FutureBuilderWrapper<DataState<List<Game>>> buildGameList(BuildContext context,
           }
           return buildNotFoundWidget(text: text);
         }
-        return SingleChildScrollView(
-          child: Column(
-            children: data.data!
-                .map((game) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: kPadding / 2),
-                    child:
-                        GameHeader(game: game, onTap: () => onTapOnGame(game))))
-                .toList(),
+        return Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * .6,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: data.data!
+                  .map((game) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: kPadding / 2),
+                      child:
+                          GameHeader(game: game, onTap: () => onTapOnGame(game))))
+                  .toList(),
+            ),
           ),
         );
       });
