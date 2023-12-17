@@ -18,7 +18,7 @@ class BaseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(gradient: kBackgroundGradient),
+      decoration: BoxDecoration(gradient: kBackgroundGradient),
       child: Scaffold(
           resizeToAvoidBottomInset: resizeToAvoidBottomInset,
           backgroundColor: Colors.transparent,

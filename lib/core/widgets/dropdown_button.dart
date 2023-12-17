@@ -30,8 +30,7 @@ class _CustomDropDownButtonState<T> extends State<CustomDropDownButton<T>> {
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
         child: DropdownButton2<T>(
-      // customButton: CustomButton(text: widget.stringMapper(current), width: 100, onPressed: () {}),
-      customButton: BorderWrapper(
+     customButton: BorderWrapper(
           child: Container(
         alignment: Alignment.center,
         width: widget.width,

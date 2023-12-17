@@ -6,6 +6,7 @@ const kFontColor = Color.fromARGB(255, 255, 226, 250);
 const kInputLabelBackgroundColor = Color.fromARGB(255, 71, 1, 73);
 
 
+// const kPrimaryColor = Color.fromARGB(255, 58, 255, 61);
 const kPrimaryColor = Color.fromARGB(255, 255, 89, 227);
 const kPrimaryDarkColor = Color.fromARGB(255, 175, 163, 175);//Color.fromARGB(255, 247, 89, 239);
 Color get kAppBarColor => darken(kPrimaryDarkColor, .45);
@@ -23,13 +24,13 @@ const kRadius = 10.0;
 const kBorderRadius = BorderRadius.all(Radius.circular(kRadius));
 const kAnimationDuration = Duration(milliseconds: 100);
 
-const kBackgroundGradient = LinearGradient(
+var kBackgroundGradient = LinearGradient(
   begin: Alignment.topRight,
   end: Alignment.bottomLeft,
   colors: [
-    Color.fromARGB(255, 40, 20, 40),
-    Color.fromARGB(255, 20, 20, 20),
-    Color.fromARGB(255, 10, 10, 10),
+    darken(kPrimaryColor, .55),
+    darken(kPrimaryColor, .7),
+    darken(kPrimaryColor, .8),
   ],
 );
 

@@ -61,6 +61,6 @@ TextStyle defaultTextStyle({double fontSize = 18, Color color = kFontColor}) {
 }
 
 BoxShadow highlightShadow(
-        {Color color = const Color.fromARGB(255, 255, 89, 227),
+        {Color color = kPrimaryColor,
         double blurRadius = 15.0}) =>
     BoxShadow(color: color, blurRadius: blurRadius);
