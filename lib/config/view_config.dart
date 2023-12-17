@@ -6,7 +6,7 @@ const kFontColor = Color.fromARGB(255, 255, 226, 250);
 const kInputLabelBackgroundColor = Color.fromARGB(255, 71, 1, 73);
 
 
-// const kPrimaryColor = Color.fromARGB(255, 58, 255, 61);
+// const kPrimaryColor = Color.fromARGB(255, 63, 242, 255);
 const kPrimaryColor = Color.fromARGB(255, 255, 89, 227);
 const kPrimaryDarkColor = Color.fromARGB(255, 175, 163, 175);//Color.fromARGB(255, 247, 89, 239);
 Color get kAppBarColor => darken(kPrimaryDarkColor, .45);

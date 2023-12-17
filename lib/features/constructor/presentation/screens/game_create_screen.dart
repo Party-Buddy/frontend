@@ -10,6 +10,7 @@ import 'package:party_games_app/core/widgets/custom_icon_button.dart';
 import 'package:party_games_app/core/widgets/image_uploader.dart';
 import 'package:party_games_app/core/widgets/multiline_input_label.dart';
 import 'package:party_games_app/core/widgets/single_input_label.dart';
+import 'package:party_games_app/features/constructor/presentation/screens/constructor_screen.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/games/domain/usecases/params/game_params.dart';
 import 'package:party_games_app/features/games/domain/usecases/save_game.dart';
@@ -87,6 +88,7 @@ class _GameCreateScreenState extends State<GameCreateScreen> {
                     Game game = OwnedGame(name: name, description: description, tasks: tasks, imageUri: image?.path);
                     await _saveGameUseCase.call(params: GameParams(game: game));
                     await Future.microtask(() => Navigator.of(context).pop());
+                    ConstructorScreen.updateNotifier.value = ConstructorScreen.updateNotifier.value + 1;
                     await Future.microtask(() => showMessage(context, "Игра была создана"));
                   }),
                   const SizedBox(
