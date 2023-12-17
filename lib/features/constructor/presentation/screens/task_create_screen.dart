@@ -189,11 +189,12 @@ class _TaskCreateScreenState extends State<TaskCreateScreen> {
             options: optionsNotifier.value
                 .map((option) => ChoiceTaskOption(
                     alternative: option, correct: option == answer))
-                .toSet());
+                .toList());
     }
     await _saveTaskUseCase.call(params: TaskParams(task: task));
     await Future.microtask(() => Navigator.of(context).pop());
-    ConstructorScreen.updateNotifier.value = ConstructorScreen.updateNotifier.value + 1;
+    ConstructorScreen.updateNotifier.value =
+        ConstructorScreen.updateNotifier.value + 1;
     await Future.microtask(() => showMessage(context, "Задание создано."));
   }
 
@@ -355,8 +356,7 @@ class _TaskCreateScreenState extends State<TaskCreateScreen> {
         labelText: "Правильный ответ",
         onSubmitted: (submittedAnswer) async {
           answer = submittedAnswer;
-          setState(() {
-          });
+          setState(() {});
           if (answer.isNotEmpty) {
             return SubmitResult.success;
           }

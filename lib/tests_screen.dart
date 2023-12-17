@@ -22,12 +22,12 @@ class TestsScreen extends StatelessWidget {
       description:
           "Здесь должно быть описание задания, но пока тут будет просто текст для теста, чтобы проверить, что все хорошо отображается.",
       duration: 30,
-      options: {
+      options: [
         const ChoiceTaskOption(alternative: "Огурец", correct: false),
         const ChoiceTaskOption(alternative: "Помидор", correct: true),
         const ChoiceTaskOption(alternative: "Баклажан", correct: false),
         const ChoiceTaskOption(alternative: "Винегрет", correct: false),
-      });
+      ]);
 
   static OwnedPollTask pollTaskTextExample = OwnedPollTask(
       name: "Напишите стих про монады",

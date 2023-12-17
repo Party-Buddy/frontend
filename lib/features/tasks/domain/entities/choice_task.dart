@@ -8,7 +8,7 @@ class ChoiceTaskOption {
 }
 
 class OwnedChoiceTask extends OwnedTask {
-  final Set<ChoiceTaskOption> options;
+  final List<ChoiceTaskOption> options;
 
   OwnedChoiceTask(
       {super.id,
@@ -23,7 +23,7 @@ class OwnedChoiceTask extends OwnedTask {
       : super(type: TaskType.choice);
 
   factory OwnedChoiceTask.fromOtherTask(
-      Task baseTask, Set<ChoiceTaskOption> options) {
+      Task baseTask, List<ChoiceTaskOption> options) {
     return OwnedChoiceTask(
         name: baseTask.name,
         description: baseTask.description,
@@ -45,7 +45,7 @@ class OwnedChoiceTask extends OwnedTask {
       TaskType? type,
       DateTime? createdAt,
       DateTime? updatedAt,
-      Set<ChoiceTaskOption>? options}) {
+      List<ChoiceTaskOption>? options}) {
     return OwnedChoiceTask(
         id: id ?? super.id,
         sourceId: sourceId ?? super.sourceId,
@@ -60,7 +60,7 @@ class OwnedChoiceTask extends OwnedTask {
 }
 
 class PublishedChoiceTask extends PublishedTask {
-  final Set<ChoiceTaskOption> options;
+  final List<ChoiceTaskOption> options;
 
   PublishedChoiceTask(
       {super.id,
@@ -74,7 +74,7 @@ class PublishedChoiceTask extends PublishedTask {
       : super(type: TaskType.choice);
 
   factory PublishedChoiceTask.fromOtherTask(
-      Task baseTask, Set<ChoiceTaskOption> options) {
+      Task baseTask, List<ChoiceTaskOption> options) {
     return PublishedChoiceTask(
         name: baseTask.name,
         description: baseTask.description,
@@ -95,7 +95,7 @@ class PublishedChoiceTask extends PublishedTask {
       TaskType? type,
       DateTime? createdAt,
       DateTime? updatedAt,
-      Set<ChoiceTaskOption>? options}) {
+      List<ChoiceTaskOption>? options}) {
     return PublishedChoiceTask(
         id: id ?? super.id,
         name: name ?? super.name,
