@@ -19,6 +19,7 @@ import 'package:party_games_app/features/game_sessions/domain/entities/task_answ
 import 'package:party_games_app/features/game_sessions/domain/entities/task_results.dart';
 import 'package:party_games_app/features/game_sessions/domain/repository/session_data_repository.dart';
 import 'package:party_games_app/features/games/data/models/game_model.dart';
+import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 import 'package:party_games_app/features/user_data/domain/usecases/get_uid.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:web_socket_channel/io.dart';
@@ -373,7 +374,12 @@ class SessionEngineImpl implements SessionEngine {
       _sendMesage('task-answer', {
         'ready': ready,
         'task-idx': taskId,
-        'answer': {'type': answer.taskType, 'value': answer.answer}
+        'answer': {
+          'type': answer.taskType,
+          'value': answer.taskType == 'checked-text'
+              ? (answer.answer as String).toUpperCase()
+              : answer.answer
+        }
       });
     }
   }
@@ -382,6 +388,7 @@ class SessionEngineImpl implements SessionEngine {
   void sendPollChoice(int taskId, int? choice) {
     _sendMesage('poll-choose', {'task-idx': taskId, 'option-idx': choice});
   }
+
   // callbacks
 
   @override

@@ -74,13 +74,17 @@ FutureBuilderWrapper<DataState<List<Game>>> buildGameList(BuildContext context,
           constraints: BoxConstraints(
             maxHeight: MediaQuery.of(context).size.height * .6,
           ),
+          padding: const EdgeInsets.only(bottom: kPadding),
           child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(vertical: kPadding),
             child: Column(
               children: data.data!
                   .map((game) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: kPadding / 2),
-                      child:
-                          GameHeader(game: game, onTap: () => onTapOnGame(game))))
+                      padding: const EdgeInsets.all(kPadding / 2).add(
+                          const EdgeInsets.symmetric(horizontal: kPadding / 2)),
+                      child: GameHeader(
+                          game: game, onTap: () => onTapOnGame(game))))
                   .toList(),
             ),
           ),

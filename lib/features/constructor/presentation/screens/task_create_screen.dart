@@ -195,7 +195,6 @@ class _TaskCreateScreenState extends State<TaskCreateScreen> {
     await Future.microtask(() => Navigator.of(context).pop());
     ConstructorScreen.updateNotifier.value =
         ConstructorScreen.updateNotifier.value + 1;
-    await Future.microtask(() => showMessage(context, "Задание создано."));
   }
 
   bool isTaskInfoReady() {

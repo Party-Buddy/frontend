@@ -66,7 +66,7 @@ class OwnedCheckedTextTaskModel extends OwnedTaskModel
         createdAt: task.createdAt,
         updatedAt: task.updatedAt,
         sourceId: task.sourceId,
-        answer: task.answer);
+        answer: task.answer.toUpperCase());
   }
 
   // Storage

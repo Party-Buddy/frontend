@@ -41,14 +41,12 @@ class _TaskListState extends State<TaskList> {
   }
 }
 
-
 final GetLocalTasksUseCase _getLocalTasksUseCase =
     GetIt.instance<GetLocalTasksUseCase>();
 final GetPublishedTasksUseCase _getPublishedTasksUseCase =
     GetIt.instance<GetPublishedTasksUseCase>();
 
-FutureBuilderWrapper<DataState<List<Task>>> buildTaskList(
-    BuildContext context,
+FutureBuilderWrapper<DataState<List<Task>>> buildTaskList(BuildContext context,
     {required Function(Task) onTapOnTask, required Source source}) {
   return FutureBuilderWrapper(
       future: source == Source.public
@@ -74,14 +72,17 @@ FutureBuilderWrapper<DataState<List<Task>>> buildTaskList(
           constraints: BoxConstraints(
             maxHeight: MediaQuery.of(context).size.height * .6,
           ),
+          padding: const EdgeInsets.only(bottom: kPadding),
           child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(vertical: kPadding),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               children: data.data!
                   .map((task) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: kPadding / 2),
-                      child:
-                          TaskHeader(task: task, onTap: () => onTapOnTask(task))))
+                      padding: const EdgeInsets.all(kPadding / 2).add(
+                          const EdgeInsets.symmetric(horizontal: kPadding / 2)),
+                      child: TaskHeader(
+                          task: task, onTap: () => onTapOnTask(task))))
                   .toList(),
             ),
           ),

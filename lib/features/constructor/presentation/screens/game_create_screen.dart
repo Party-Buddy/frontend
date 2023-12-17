@@ -89,7 +89,6 @@ class _GameCreateScreenState extends State<GameCreateScreen> {
                     await _saveGameUseCase.call(params: GameParams(game: game));
                     await Future.microtask(() => Navigator.of(context).pop());
                     ConstructorScreen.updateNotifier.value = ConstructorScreen.updateNotifier.value + 1;
-                    await Future.microtask(() => showMessage(context, "Игра была создана"));
                   }),
                   const SizedBox(
                     height: kPadding * 2,

@@ -52,9 +52,7 @@ class GameHeader extends StatelessWidget {
               ),
               game.imageUri != null
                   ? ImageWidget(url: game.imageUri!, height: 90, width: 90)
-                  : const Image(
-                      image: AssetImage('assets/images/no-photo.png'),
-                      height: 90)
+                  : Container()
             ]));
   }
 
