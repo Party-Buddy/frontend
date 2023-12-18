@@ -9,7 +9,9 @@ import 'package:party_games_app/core/widgets/future_builder_wrapper.dart';
 import 'package:party_games_app/core/widgets/option_switcher.dart';
 import 'package:party_games_app/features/tasks/domain/entities/task.dart';
 import 'package:party_games_app/features/tasks/domain/usecases/get_local_tasks.dart';
+import 'package:party_games_app/features/tasks/domain/usecases/get_local_tasks_sorted.dart';
 import 'package:party_games_app/features/tasks/domain/usecases/get_published_tasks.dart';
+import 'package:party_games_app/features/tasks/domain/usecases/params/tasks_sort_params.dart';
 import 'package:party_games_app/features/tasks/presentation/widgets/task_header.dart';
 
 class TaskList extends StatefulWidget {
@@ -43,15 +45,22 @@ class _TaskListState extends State<TaskList> {
 
 final GetLocalTasksUseCase _getLocalTasksUseCase =
     GetIt.instance<GetLocalTasksUseCase>();
+final GetLocalTasksSortedUseCase _getLocalTasksSortedUseCase =
+    GetIt.instance<GetLocalTasksSortedUseCase>();
 final GetPublishedTasksUseCase _getPublishedTasksUseCase =
     GetIt.instance<GetPublishedTasksUseCase>();
 
 FutureBuilderWrapper<DataState<List<Task>>> buildTaskList(BuildContext context,
-    {required Function(Task) onTapOnTask, required Source source}) {
+    {required Function(Task) onTapOnTask,
+    required Source source,
+    TasksSortParams? params}) {
   return FutureBuilderWrapper(
       future: source == Source.public
           ? convertFutureDataState(_getPublishedTasksUseCase.call())
-          : convertFuture(_getLocalTasksUseCase.call()),
+          : params == null
+              ? convertFuture(_getLocalTasksUseCase.call())
+              : convertFuture(
+                  _getLocalTasksSortedUseCase.call(params: params)),
       notFoundWidget: () =>
           buildNotFoundWidget(text: "У вас пока нет своих заданий."),
       builder: (data) {

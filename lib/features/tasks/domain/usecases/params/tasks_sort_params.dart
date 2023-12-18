@@ -1,3 +1,5 @@
+enum SortType { name, date }
+
 class TasksSortParams {
   final bool? nameAscending;
   final bool? updateDateAscending;

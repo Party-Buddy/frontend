@@ -10,7 +10,9 @@ import 'package:party_games_app/core/widgets/future_builder_wrapper.dart';
 import 'package:party_games_app/core/widgets/option_switcher.dart';
 import 'package:party_games_app/features/games/domain/entities/game.dart';
 import 'package:party_games_app/features/games/domain/usecases/get_local_games.dart';
+import 'package:party_games_app/features/games/domain/usecases/get_local_games_sorted.dart';
 import 'package:party_games_app/features/games/domain/usecases/get_published_games.dart';
+import 'package:party_games_app/features/games/domain/usecases/params/games_sort_params.dart';
 import 'package:party_games_app/features/games/presentation/widgets/game_header.dart';
 
 class GameList extends StatefulWidget {
@@ -44,16 +46,22 @@ class _GameListState extends State<GameList> {
 
 final GetLocalGamesUseCase _getLocalGamesUseCase =
     GetIt.instance<GetLocalGamesUseCase>();
+final GetLocalGamesSortedUseCase _getLocalGamesSortedUseCase =
+    GetIt.instance<GetLocalGamesSortedUseCase>();
 final GetPublishedGamesUseCase _getPublishedGamesUseCase =
     GetIt.instance<GetPublishedGamesUseCase>();
 
 FutureBuilderWrapper<DataState<List<Game>>> buildGameList(BuildContext context,
-    {required Function(Game) onTapOnGame, required Source source}) {
+    {required Function(Game) onTapOnGame,
+    required Source source,
+    GamesSortParams? params}) {
   return FutureBuilderWrapper(
       key: Key(source.name),
       future: source == Source.public
           ? convertFutureDataState(_getPublishedGamesUseCase.call())
-          : convertFuture(_getLocalGamesUseCase.call()),
+          : params == null
+              ? convertFuture(_getLocalGamesUseCase.call())
+              : convertFuture(_getLocalGamesSortedUseCase.call(params: params)),
       notFoundWidget: () =>
           buildNotFoundWidget(text: "У вас пока нет своих игр"),
       builder: (data) {

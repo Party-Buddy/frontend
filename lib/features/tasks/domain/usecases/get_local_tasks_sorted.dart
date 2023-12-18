@@ -36,7 +36,7 @@ class GetLocalTasksSortedUseCase
             ? _typeValue(a).compareTo(_typeValue(b))
             : _typeValue(b).compareTo(_typeValue(a)));
       } else if (params.nameAscending != null) {
-        tasks.sort((a, b) => params.typeAscending!
+        tasks.sort((a, b) => params.nameAscending!
             ? a.name.compareTo(b.name)
             : b.name.compareTo(a.name));
       } else {
