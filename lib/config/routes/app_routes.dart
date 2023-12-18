@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:party_games_app/features/games/presentation/screens/qr_scaner_screen.dart';
 import 'package:party_games_app/features/constructor/presentation/screens/constructor_screen.dart';
 import 'package:party_games_app/features/constructor/presentation/screens/game_create_screen.dart';
 import 'package:party_games_app/features/constructor/presentation/screens/task_create_screen.dart';
@@ -41,6 +42,9 @@ class AppRoutes {
 
       case TaskCreateScreen.routeName:
         return _materialRoute(const TaskCreateScreen());
+
+      case QRScannerScreen.routeName:
+        return _materialRoute(const QRScannerScreen());
 
       case TestsScreen.routeName:
         return _materialRoute(const TestsScreen());

@@ -8,6 +8,7 @@ import 'package:party_games_app/core/widgets/base_screen.dart';
 import 'package:party_games_app/core/widgets/border_wrapper.dart';
 import 'package:party_games_app/core/widgets/custom_button.dart';
 import 'package:party_games_app/core/widgets/future_builder_wrapper.dart';
+import 'package:party_games_app/features/games/presentation/screens/qr_scaner_screen.dart';
 import 'package:party_games_app/core/widgets/single_input_label.dart';
 import 'package:party_games_app/features/game_sessions/domain/engine/session_engine.dart';
 import 'package:party_games_app/features/game_sessions/presentation/session_runner/session_runner.dart';
@@ -102,8 +103,7 @@ class _GameJoinScreenState extends State<GameJoinScreen>
           CustomButton(
               text: "Сканировать QR",
               width: 220,
-              onPressed: () =>
-                  showMessage(context, "В данный момент камера недоступна.")),
+              onPressed: onScanQR),
           const SizedBox(
             height: kPadding,
           ),
@@ -117,6 +117,11 @@ class _GameJoinScreenState extends State<GameJoinScreen>
               width: 220,
               onPressed: () => Navigator.of(context).pop())
         ]));
+  }
+
+  void onScanQR() {
+    Navigator.pushNamed(context, QRScannerScreen.routeName);
+    // showMessage(context, "В данный момент камера недоступна.");
   }
 
   void onJoinById() {
