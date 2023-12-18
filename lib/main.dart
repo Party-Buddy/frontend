@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:party_games_app/core/injection_container.dart';
 import 'package:party_games_app/party_games_app.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
@@ -21,6 +22,9 @@ void main() async {
     databaseFactory = databaseFactoryFfi;
   }
   if (Platform.isAndroid) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.black,
+    ));
     var sid = await handleIntents();
     runApp(PartyGamesApp(initData: sid));
   } else {

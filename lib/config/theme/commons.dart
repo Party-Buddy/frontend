@@ -5,6 +5,8 @@ ThemeData theme() {
   return ThemeData(
       fontFamily: 'Muli',
       appBarTheme: appBarTheme(),
+      bottomAppBarTheme: const BottomAppBarTheme(
+          color: Colors.black),
       colorScheme: ColorScheme.fromSwatch(
         accentColor: kPrimaryColor
       ),
